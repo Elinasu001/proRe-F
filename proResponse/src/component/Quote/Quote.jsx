@@ -3,6 +3,7 @@ import {
     LogoTitleWrapper,
     MainLine
 } from './../Common/Title/Title.styled';
+import NavigationHeader from './NavigationHeader';
 
 const Quote = () => {
     return <>
@@ -15,7 +16,9 @@ const Quote = () => {
             </MainLine>
         </LogoTitleWrapper>
 
-        
+        <NavigationHeader/>
+
+
     
     </>;
 };

@@ -41,6 +41,6 @@ export const MainContent = styled.main`
   margin:0 auto;
   margin-top: 40px;
   padding: 1rem;
-  min-width: 1200px;
-
+  max-width: 1200px;
+  width:100%;
 `;
