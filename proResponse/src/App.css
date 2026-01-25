@@ -1,42 +1,97 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+@charset "UTF-8";
+@import url("https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.css");
+
+
+/* Fonts */
+:root {
+  --default-font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji", sans-serif;
+  --heading-font: "Pretendard Variable", Pretendard, sans-serif;
+  --nav-font: "Pretendard Variable", Pretendard, sans-serif;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Global Colors */
+:root { 
+  --background-color: #ffffff;
+  --default-color:#333333;
+  --heading-color: #222222;
+  --accent-color: #005EFF;
+  --surface-color: #6D6D6D;
+  --contrast-color: #ffffff;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Nav Menu Colors */
+:root {
+  --nav-color: #222222;
+  --nav-hover-color: #005EFF;
+  --nav-mobile-background-color: #ffffff;
+  --nav-dropdown-background-color: #ffffff;
+  --nav-dropdown-hover-color: #005EFF;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Color Presets */
+.light-background {
+  --background-color: #f7fbfa;
+  --surface-color: #ffffff;
 }
 
-.card {
-  padding: 2em;
+.dark-background {
+  --background-color: #005EFF;
+  --default-color: #ffffff;
+  --heading-color: #ffffff;
+  --surface-color: #252525;
+  --contrast-color: #ffffff;
 }
 
-.read-the-docs {
-  color: #888;
+/* Smooth scroll */
+:root {
+  scroll-behavior: smooth;
+}
+
+/*--------------------------------------------------------------
+# General Styling & Shared Classes
+--------------------------------------------------------------*/
+body {
+  color: var(--default-color);
+  background-color: var(--background-color);
+  font-family: var(--default-font);
+  overflow-x: hidden;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+a:hover {
+  color: color-mix(in srgb, var(--accent-color), transparent 25%);
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--heading-color);
+  font-family: var(--heading-font);
+}
+
+.userTable { 
+  display: block;
+  max-height: 500px;
+  overflow-y: scroll;
+}
+
+.userTable tbody td{
+  width: 300px;
+}
+
+.userDropDown {
+  width: 97%;
+  margin-left: 30px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
 }
