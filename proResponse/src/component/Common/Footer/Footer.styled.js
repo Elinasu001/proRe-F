@@ -37,7 +37,7 @@ export const SrOnly = styled.span`
 export const FooterContainer = styled.footer`
   background-color: #f8f9fa;
   border-top: 1px solid #e0e0e0;
-  padding: 60px 20px 0;
+  padding: 30px 20px 0;
   width: 100%;
 
   @media (prefers-color-scheme: dark) {
@@ -66,7 +66,7 @@ export const FooterMain = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 40px;
-  padding-bottom: 40px;
+  padding-bottom: 30px;
   border-bottom: 1px solid #e0e0e0;
 
   @media (prefers-color-scheme: dark) {
@@ -107,6 +107,9 @@ export const FooterLogo = styled.a`
   width: fit-content;
   transition: opacity 0.2s ease;
 
+  img {
+    width: 140px;
+  }
   &:hover {
     opacity: 0.8;
   }

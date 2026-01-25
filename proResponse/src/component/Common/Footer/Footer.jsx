@@ -1,3 +1,4 @@
+import logo from '../../../assets/images/common/logo.png';
 import {
     FooterBottom,
     FooterBrand,
@@ -12,12 +13,10 @@ import {
     FooterMain,
     FooterPolicy,
     FooterWrapper,
-    LogoIcon,
     PolicyLink,
     SkipLink,
     SrOnly
 } from './Footer.styled';
-
 const Footer = () => {
     const currentYear = new Date().getFullYear();
 
@@ -35,7 +34,8 @@ const Footer = () => {
                 {/* Brand Section */}
                 <FooterBrand>
                 <FooterLogo href="/" aria-label="ProResponse 홈으로 이동">
-                    <LogoIcon>P</LogoIcon>roResponse
+                    {/* 로고 */}
+                    <img src={logo} alt="ProResponse 로고" />
                 </FooterLogo>
                 <FooterDescription>
                     Our vision is to provide convenience and help increase your sales business.

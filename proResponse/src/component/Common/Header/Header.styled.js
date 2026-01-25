@@ -13,7 +13,7 @@ export const HeaderContainer = styled.header`
 export const HeaderWrapper = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 2rem;
+  padding: 1rem;
   display: flex;
   align-items: center;
   width: 100%;
