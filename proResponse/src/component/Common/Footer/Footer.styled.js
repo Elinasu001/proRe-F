@@ -46,13 +46,7 @@ export const FooterContainer = styled.footer`
   }
 
   @media (max-width: 768px) {
-   
     padding: 0 20px;
- 
-  }
-
-  @media (max-width: 480px) {
-    padding: 40px 16px 0;
   }
 `;
 
@@ -250,12 +244,6 @@ export const FooterBottom = styled.div`
 
   @media (prefers-color-scheme: dark) {
     color: #b0b0b0;
-  }
-
-  @media (max-width: 768px) {
-    ${'' /* flex-direction: column; */}
-    gap: 16px;
-    text-align: center;
   }
 
   @media (max-width: 480px) {

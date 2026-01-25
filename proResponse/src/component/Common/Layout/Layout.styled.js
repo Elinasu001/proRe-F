@@ -38,11 +38,9 @@ export const LayoutContainer = styled.div`
 // Main Content
 export const MainContent = styled.main`
   flex: 1;
-  margin-top: 80px;
-  padding: 2rem 1rem;
+  margin:0 auto;
+  margin-top: 40px;
+  padding: 1rem;
+  min-width: 1200px;
 
-  @media (max-width: 768px) {
-    margin-top: 70px;
-    padding: 1rem 0.5rem;
-  }
 `;

@@ -1,5 +1,23 @@
+import {
+    Highlight,
+    LogoTitleWrapper,
+    MainLine
+} from './../Common/Title/Title.styled';
+
 const Quote = () => {
-  return <div>견적 요청 페이지</div>;
+    return <>
+        <LogoTitleWrapper>
+            <MainLine>
+            원하시는 <Highlight>전문가</Highlight>를 찾아
+            </MainLine>
+            <MainLine>
+            <Highlight>견적 요청</Highlight>을 받아보세요!
+            </MainLine>
+        </LogoTitleWrapper>
+
+        
+    
+    </>;
 };
 
 export default Quote;
