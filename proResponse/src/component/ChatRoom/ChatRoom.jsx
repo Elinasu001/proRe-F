@@ -31,10 +31,9 @@ import {
 } from './ChatRoom.styled.js';
 
 const ChatRoom = () => {
-
     const { id } = useParams();
     const navi = useNavigate();
-    const [, setRoomInfo] = useState(null);
+    const [RoomInfo, setRoomInfo] = useState(null);
     const [message, setMessage] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const [messages, setMessages] = useState([
@@ -87,15 +86,18 @@ const ChatRoom = () => {
     useEffect(() => {
         // 채팅방 상세 정보 불러오기
         fetchChatRoomDetails(id)
-            .then((res) =>{
-                console.log(res.data.data);
-                setRoomInfo(res.data.data);
+            .then((res) => {
+                const roomData = res?.data?.data;
+                if (roomData) {
+                    setRoomInfo(roomData);
+                } else {
+                    console.error("채팅방 정보가 없습니다.", res);
+                }
             })
             .catch((err) => {
-                // console.error("채팅방 정보 불러오기 실패:", err);
-                const message = err.res.data.message;
+                const message = err?.response?.data?.message || "채팅방 정보 불러오기 실패";
                 console.log(message);
-            })
+            });
     }, [id]);
 
     const handleClose = () => {

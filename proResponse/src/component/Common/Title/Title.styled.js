@@ -5,6 +5,7 @@ export const LogoTitleWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   font-family: inherit;
+  margin-bottom:40px;
 `;
 
 export const MainLine = styled.div`

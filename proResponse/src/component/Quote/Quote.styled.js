@@ -6,7 +6,7 @@ export const HeaderContainer = styled.header`
   top: 0;
   ${'' /* background: #000; */}
   color: #fff;
-  z-index: 1000;
+  z-index: 999;
   width: 100%;
 `;
 

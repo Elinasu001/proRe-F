@@ -6,7 +6,7 @@ const initialRooms = [
     { id: 1, name: "홍길동", role: "EXPERT", estimateStatus: "REQUESTED" },
     { id: 2, name: "김철수", role: "EXPERT", estimateStatus: "QUOTED" },
     { id: 3, name: "이영희", role: "EXPERT", estimateStatus: "MATCHED" },
-    { id: 4, name: "박민수", role: "EXPERT", estimateStatus: "MATCHED" },
+    { id: 41, estimateStatus: "MATCHED" },
     { id: 5, name: "정지원", role: "EXPERT", estimateStatus: "DONE" },
     { id: 6, name: "최유진", role: "USER", estimateStatus: "EXPIRED" }
 ];

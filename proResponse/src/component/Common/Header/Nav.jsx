@@ -31,7 +31,7 @@ const NavMenu = ({
     mobileMenuRef,
     setIsDropdownOpen,
     isLoggedIn = false,
-    favoriteCount = 0
+    // favoriteCount = 0
 }) => {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
