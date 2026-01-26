@@ -291,7 +291,8 @@ export const ImageUploadBox = styled.label`
   cursor: pointer;
   transition: all 0.2s;
   background-color: ${props => props.$error ? '#FFF5F5' : '#F8F9FA'};
-
+  margin-bottom:20px;
+  
   &:hover {
     border-color: ${props => props.$error ? '#FF4444' : '#4A90E2'};
     background-color: ${props => props.$error ? '#FFF5F5' : '#E3F2FD'};
@@ -316,6 +317,7 @@ export const ImagePreview = styled.div`
   height: 100px;
   border-radius: 8px;
   overflow: hidden;
+
 
   img {
     width: 100%;
