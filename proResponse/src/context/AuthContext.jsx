@@ -115,11 +115,25 @@ export const AuthProvider = ({ children }) => {
 
   // 3) 로그아웃(클라 초기화)
   const logout = async () => {
+  const accessToken = localStorage.getItem(STORAGE_KEYS.accessToken);
+  const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken);
+
   try {
-    await axios.post(`${apiUrl}/api/auth/logout`);
+    // ✅ 백엔드가 refreshToken(@RequestBody) + CustomUserDetails(@AuthenticationPrincipal) 받는 구조
+    await axios.post(
+      `${apiUrl}/api/auth/logout`,
+      { refreshToken }, // ✅ request body 필수
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`, // ✅ CustomUserDetails 세팅용
+          "Content-Type": "application/json",
+        },
+      }
+    );
   } catch (e) {
-    console.error("서버 로그아웃 실패 (무시하고 진행)", e);
+    console.error("서버 로그아웃 실패(무시하고 진행)", e);
   } finally {
+    // ✅ 클라 초기화(기존 코드 그대로)
     setAuth({
       userNo: null,
       userRole: null,
