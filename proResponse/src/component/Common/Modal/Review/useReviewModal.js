@@ -1,26 +1,6 @@
 import { useCallback, useState } from 'react';
 
-/**
- * useReviewModal - 리뷰 모달을 더 쉽게 사용하기 위한 커스텀 훅
- * 
- * @returns {Object} 리뷰 모달 제어 객체
- * 
- * @example
- * const { viewModal, writeModal, openViewModal, openWriteModal, closeModals } = useReviewModal();
- * 
- * // 리뷰 보기 모달 열기
- * openViewModal({
- *   userName: '박바라',
- *   date: '2주 전',
- *   rating: 5.0,
- *   images: ['url1', 'url2'],
- *   text: '너무 좋아요!',
- *   tags: ['친절해요', '전문가예요']
- * });
- * 
- * // 리뷰 작성 모달 열기
- * openWriteModal();
- */
+
 const useReviewModal = () => {
   // 리뷰 조회 모달 상태
   const [viewModal, setViewModal] = useState({

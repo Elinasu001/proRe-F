@@ -4,8 +4,11 @@ import {
     Button,
 }
 from "./ExportCards.styled.js";
+import ExpertDetailModal from '../Modal/ExportDetail/ExpertDetailModal.jsx'
+import useExpertDetailModal from '../Modal/ExportDetail/ExpertDetailModalExample.jsx';
 import ExportBasicInfo from "../Export/ExportBasicInfo.jsx";
 
+const { modalState, openModal, closeModal } = useExpertDetailModal();
 
 const ExportCardItem = ({ data }) => {
 
