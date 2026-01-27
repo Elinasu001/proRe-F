@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import * as S from './ExpertDetailModal.styled';
-import ExportBasicInfo from '../../Export/ExportBasicInfo.jsx';
+import ExportCardItem from '../../ExportCards/ExportCardItem.jsx';
 import ExpertDetail from '../../Export/ExportDetail.jsx';
-
+import dummyExpertBasicInfo from '../../../Common/dummy/dummyExpertBasicInfo.js';
+import ExportBasicInfo from '../../Export/ExportBasicInfo.jsx';
 
 /**
  * ExpertDetailModal - 전문가 상세 정보 모달

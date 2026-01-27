@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import ExpertDetailModal from './ExpertDetailModal';
 import useExpertDetailModal from './useExpertDetailModal';
-import dummyExpertBasicInfo from "../../Export/dummyExpertBasicInfo.js";
+import dummyExpertBasicInfo from "../../../Common/dummy/dummyExpertBasicInfo.js";
 
 /**
  * 전문가 상세 모달 사용 예제 컴포넌트

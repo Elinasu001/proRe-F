@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import eventIcon from '../../assets/images/common/event.png';
 import musicIcon from '../../assets/images/common/music.png';
 import programIcon from '../../assets/images/common/program.png';
-import dummyExportCategory from './dummyExportCategory.js';
-import dummyExportDetailCategory from './dummyExportDetialCategory.js';
+import dummyExportCategory from '../../component/Common/dummy/dummyExportCategory.js';
+import dummyExportDetailCategory from '../../component/Common/dummy/dummyExportDetialCategory.js';
 import {
   CategoryButton,
   CategoryText,

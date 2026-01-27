@@ -1,4 +1,4 @@
-import dummyExpertBasicInfoList from '../Export/dummyExpertBasicInfoList';
+import dummyExpertBasicInfoList from '../dummy/dummyExpertBasicInfoList.js';
 import { CardListWrapper } from "./ExportCards.styled.js";
 import ExportCardItem from './ExportCardItem';
 
