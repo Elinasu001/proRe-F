@@ -1,4 +1,4 @@
-import { API_BASE_URL, createApiInstance } from '../api.js';
+import { API_BASE_URL, createApiInstance } from '../api_.js';
 
 export const chatApi = createApiInstance(`${API_BASE_URL}/api/rooms`);
 export const websocketApi = createApiInstance(`ws:${API_BASE_URL}/ws/chat`);
