@@ -40,6 +40,8 @@ const FontsStyle = createGlobalStyle`
     --gray-primary: #F1F1F1;
     --gray-secondary: #EFF1F5;
     --gray-thirdary: #F4F6F8;
+    --color-75: #757575;
+    --color-f8: #F8F8F8;
 
 
     --color-2: #222222;

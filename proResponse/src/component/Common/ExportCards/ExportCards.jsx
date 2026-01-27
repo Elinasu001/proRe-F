@@ -1,11 +1,17 @@
-import dummyList from './dummyData';
+import dummyExpertBasicInfoList from '../Export/dummyExpertBasicInfoList';
 import { CardListWrapper } from "./ExportCards.styled.js";
 import ExportCardItem from './ExportCardItem';
 
-const ExportCard = ({ data = dummyList, currentPage = 1, itemsPerPage = 6 }) => {
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+
+const ExportCard = ({ data = dummyExpertBasicInfoList, currentPage, itemsPerPage }) => {
+    // data 구조: [{ message, data: { list: [...] }, pageInfo, ... }]
+    const expertList = data[0]?.data?.list || [];
+    const pageInfo = data[0]?.pageInfo || {};
+    const page = currentPage || pageInfo.currentPage || 1;
+    const perPage = itemsPerPage || pageInfo.boardList || 6;
+    const indexOfLastItem = page * perPage;
+    const indexOfFirstItem = indexOfLastItem - perPage;
+    const currentItems = expertList.slice(indexOfFirstItem, indexOfLastItem);
 
     return (
         <CardListWrapper>

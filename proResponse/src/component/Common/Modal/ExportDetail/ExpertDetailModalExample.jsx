@@ -1,6 +1,8 @@
+
 import { useState } from 'react';
 import ExpertDetailModal from './ExpertDetailModal';
 import useExpertDetailModal from './useExpertDetailModal';
+import dummyExpertBasicInfo from "../../Export/dummyExpertBasicInfo.js";
 
 /**
  * 전문가 상세 모달 사용 예제 컴포넌트
@@ -12,30 +14,9 @@ const ExpertDetailModalExample = () => {
   // 찜하기 상태 (실제로는 전역 상태나 API로 관리)
   const [favorites, setFavorites] = useState([]);
 
-  // 샘플 전문가 데이터
-  const sampleExpert = {
-    id: 1,
-    name: '홍길동 전문가',
-    avatar: 'https://via.placeholder.com/100',
-    rating: 4.9,
-    reviewCount: 230,
-    employmentCount: 87,
-    location: '서울특별시 강남구',
-    career: '10년',
-    availableTime: '오전 7시 ~ 오후 11시',
-    description: `안녕하세요 아리랑익스프레스 입니다😊
-👉아버지사업을 같이해서 오래된 노하우와
-시대에 맞는 저의 젊은 생각을 더하여 운영중입니다.
-👉저가 직접 견적보구 이사업일 추가요금 및 불리스리본일이 없도록 하고 있습니다.
-👉한리적인 가격과 안심포장 서비스를 보증합니다💕
-👉저희의 서비스는 친절인가요.`,
-    images: [
-      'https://via.placeholder.com/600x450',
-      'https://via.placeholder.com/600x450/ff6b6b',
-      'https://via.placeholder.com/600x450/4ecdc4',
-    ],
-    isFavorite: false,
-  };
+    // 더미 전문가 데이터 적용
+  // 더미 전문가 데이터 적용 (구조에 맞게 data만 추출)
+  const sampleExpert = { expertNo: 1, ...dummyExpertBasicInfo[0].data };
 
   // ============================================
   // 이벤트 핸들러
@@ -48,7 +29,7 @@ const ExpertDetailModalExample = () => {
     // 찜하기 상태를 expert 데이터에 포함
     const expertWithFavorite = {
       ...sampleExpert,
-      isFavorite: favorites.includes(sampleExpert.id),
+      userLiked: favorites.includes(sampleExpert.expertNo),
     };
     openModal(expertWithFavorite);
   };
@@ -56,14 +37,14 @@ const ExpertDetailModalExample = () => {
   /**
    * 찜하기 토글
    */
-  const handleToggleFavorite = (expertId) => {
+  const handleToggleFavorite = (expertNo) => {
     setFavorites(prev => {
-      if (prev.includes(expertId)) {
+      if (prev.includes(expertNo)) {
         // 찜 해제
-        return prev.filter(id => id !== expertId);
+        return prev.filter(id => id !== expertNo);
       } else {
         // 찜 추가
-        return [...prev, expertId];
+        return [...prev, expertNo];
       }
     });
   };
@@ -105,7 +86,7 @@ const ExpertDetailModalExample = () => {
         <h3>현재 찜한 전문가: {favorites.length}명</h3>
         <p>
           {favorites.length > 0 
-            ? `전문가 ID: ${favorites.join(', ')}`
+            ? `전문가 No: ${favorites.join(', ')}`
             : '찜한 전문가가 없습니다.'}
         </p>
       </div>
@@ -117,7 +98,7 @@ const ExpertDetailModalExample = () => {
         background: '#f8f9fa',
         borderRadius: '12px'
       }}>
-        <h2>💡 사용 방법</h2>
+        <h2>사용 방법</h2>
         
         <h3>1. 기본 import</h3>
         <pre style={{ 
@@ -147,19 +128,21 @@ import useExpertDetailModal from './useExpertDetailModal';`}
           borderRadius: '8px',
           overflow: 'auto'
         }}>
-{`const expert = {
-  id: 1,
-  name: '홍길동 전문가',
-  avatar: 'url',
-  rating: 4.9,
+{`const data = {
+  expertNo: 1,
+  nickName: '홍길동 전문가',
+  profileImg: 'https://via.placeholder.com/100',
+  starScore: 4.9,
   reviewCount: 230,
-  employmentCount: 87,
-  location: '서울특별시 강남구',
+  totalLike: 3,
+  completedJobs: 87,
+  address: '서울특별시 강남구',
   career: '10년',
-  availableTime: '오전 7시 ~ 오후 11시',
-  description: '서비스 설명...',
+  startTime: '오후 11시',
+  endTime: '오후 11시',
+  content: '서비스 설명...',
   images: ['url1', 'url2', 'url3'],
-  isFavorite: false
+  userLiked: false
 };`}
         </pre>
 
@@ -182,7 +165,7 @@ import useExpertDetailModal from './useExpertDetailModal';`}
         }}>
 {`<ExpertDetailModal
   isOpen={modalState.isOpen}
-  expert={modalState.expert}
+  data={modalState.data}
   onClose={closeModal}
   onToggleFavorite={handleToggleFavorite}
 />`}
@@ -190,16 +173,16 @@ import useExpertDetailModal from './useExpertDetailModal';`}
 
         <h3>6. 주요 기능</h3>
         <ul>
-          <li>✅ 전문가 프로필 정보 표시</li>
-          <li>✅ 별점 및 리뷰 수 표시</li>
-          <li>✅ 고용 횟수, 위치, 경력, 연락 가능 시간 표시</li>
-          <li>✅ 찜하기 토글 기능</li>
-          <li>✅ 상세 설명 / 리뷰 탭 전환</li>
-          <li>✅ 서비스 상세 설명</li>
-          <li>✅ 이미지 갤러리 (메인 이미지 + 썸네일 4개)</li>
-          <li>✅ 썸네일 클릭으로 메인 이미지 변경</li>
-          <li>✅ ESC 키 및 오버레이 클릭으로 닫기</li>
-          <li>✅ 반응형 디자인</li>
+          <li> 전문가 프로필 정보 표시</li>
+          <li> 별점 및 리뷰 수 표시</li>
+          <li> 고용 횟수, 위치, 경력, 연락 가능 시간 표시</li>
+          <li> 찜하기 토글 기능</li>
+          <li> 상세 설명 / 리뷰 탭 전환</li>
+          <li> 서비스 상세 설명</li>
+          <li> 이미지 갤러리 (메인 이미지 + 썸네일 4개)</li>
+          <li> 썸네일 클릭으로 메인 이미지 변경</li>
+          <li> ESC 키 및 오버레이 클릭으로 닫기</li>
+          <li> 반응형 디자인</li>
         </ul>
       </div>
 
@@ -208,7 +191,7 @@ import useExpertDetailModal from './useExpertDetailModal';`}
         isOpen={modalState.isOpen}
         expert={{
           ...modalState.expert,
-          isFavorite: modalState.expert ? favorites.includes(modalState.expert.id) : false
+          userLiked: modalState.expert ? favorites.includes(modalState.expert.expertNo) : false
         }}
         onClose={closeModal}
         onToggleFavorite={handleToggleFavorite}

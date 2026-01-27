@@ -13,15 +13,15 @@
 
 ## 🚀 주요 기능
 
-- ✅ 전문가 프로필 정보 (이름, 아바타, 별점, 리뷰 수)
-- ✅ 찜하기 토글 기능
-- ✅ 상세 정보 (고용 횟수, 위치, 경력, 연락 가능 시간)
-- ✅ 상세 설명 및 리뷰 버튼
-- ✅ 서비스 상세 설명
-- ✅ 이미지 갤러리 (메인 이미지 + 썸네일)
-- ✅ 썸네일 클릭으로 메인 이미지 변경
-- ✅ ESC 키 / 오버레이 클릭으로 닫기
-- ✅ 반응형 디자인
+-  전문가 프로필 정보 (이름, 아바타, 별점, 리뷰 수)
+-  찜하기 토글 기능
+-  상세 정보 (고용 횟수, 위치, 경력, 연락 가능 시간)
+-  상세 설명 및 리뷰 버튼
+-  서비스 상세 설명
+-  이미지 갤러리 (메인 이미지 + 썸네일)
+-  썸네일 클릭으로 메인 이미지 변경
+-  ESC 키 / 오버레이 클릭으로 닫기
+-  반응형 디자인
 
 ## 📖 사용 방법
 
@@ -103,9 +103,9 @@ const handleToggleFavorite = (expertId) => {
 
 | Prop | Type | Required | Description |
 |------|------|----------|-------------|
-| `isOpen` | boolean | ✅ | 모달 표시 여부 |
-| `expert` | object | ✅ | 전문가 데이터 |
-| `onClose` | function | ✅ | 닫기 콜백 |
+| `isOpen` | boolean |  | 모달 표시 여부 |
+| `expert` | object |  | 전문가 데이터 |
+| `onClose` | function |  | 닫기 콜백 |
 | `onEstimate` | function | ❌ | 상세 설명 버튼 클릭 콜백 |
 | `onToggleFavorite` | function | ❌ | 찜하기 토글 콜백 |
 
@@ -113,20 +113,20 @@ const handleToggleFavorite = (expertId) => {
 
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
-| `id` | number/string | ✅ | 전문가 고유 ID |
-| `name` | string | ✅ | 전문가 이름 |
-| `avatar` | string | ✅ | 프로필 이미지 URL |
-| `rating` | number | ✅ | 별점 (0-5) |
-| `reviewCount` | number | ✅ | 리뷰 수 |
-| `employmentCount` | number | ✅ | 고용 횟수 |
-| `location` | string | ✅ | 위치 |
-| `career` | string | ✅ | 경력 |
-| `availableTime` | string | ✅ | 연락 가능 시간 |
-| `description` | string | ✅ | 서비스 상세 설명 |
+| `id` | number/string |  | 전문가 고유 ID |
+| `name` | string |  | 전문가 이름 |
+| `avatar` | string |  | 프로필 이미지 URL |
+| `rating` | number |  | 별점 (0-5) |
+| `reviewCount` | number |  | 리뷰 수 |
+| `employmentCount` | number |  | 고용 횟수 |
+| `location` | string |  | 위치 |
+| `career` | string |  | 경력 |
+| `availableTime` | string |  | 연락 가능 시간 |
+| `description` | string |  | 서비스 상세 설명 |
 | `images` | string[] | ❌ | 작업 이미지 배열 (최대 4개) |
 | `isFavorite` | boolean | ❌ | 찜하기 여부 (기본: false) |
 
-## 💡 주요 기능 설명
+## 주요 기능 설명
 
 ### 1. 이미지 갤러리
 - 메인 이미지와 썸네일 4개 표시
@@ -272,7 +272,7 @@ export const EstimateButton = styled(BaseActionButton)`
 ### 1. 상태 관리
 
 ```jsx
-// ✅ 좋은 예: 전역 상태로 찜 목록 관리
+//  좋은 예: 전역 상태로 찜 목록 관리
 const [favorites, setFavorites] = useRecoilState(favoritesState);
 
 // ❌ 나쁜 예: 로컬 상태만 사용
@@ -282,7 +282,7 @@ const [isFavorite, setIsFavorite] = useState(false);
 ### 2. 에러 처리
 
 ```jsx
-// ✅ 좋은 예: try-catch로 에러 처리
+//  좋은 예: try-catch로 에러 처리
 const handleEstimate = async (expert) => {
   try {
     await requestEstimate(expert.id);
@@ -297,7 +297,7 @@ const handleEstimate = async (expert) => {
 ### 3. 데이터 검증
 
 ```jsx
-// ✅ 좋은 예: 데이터 유효성 검사
+//  좋은 예: 데이터 유효성 검사
 const openExpertDetail = (expert) => {
   if (!expert || !expert.id) {
     console.error('유효하지 않은 전문가 데이터');

@@ -142,10 +142,10 @@ export const ScrollContent = styled.div`
 // ===================================
 
 export const ExpertHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+  /* margin-bottom: 20px; */
 `;
 
 export const ExpertInfo = styled.div`
@@ -222,7 +222,7 @@ export const FavoriteButton = styled.button`
 // 구분선
 export const Divider = styled.hr`
   border: none;
-  border-top: 1px solid #E8E8E8;
+  /* border-top: 1px solid #E8E8E8; */
   margin: 20px 0;
 `;
 
@@ -260,42 +260,27 @@ export const InfoText = styled.span`
 
 export const TabButtons = styled.div`
   display: flex;
-  gap: 0;
+  gap: 0.8rem;
   margin-bottom: 32px;
-  border-bottom: 2px solid #f0f0f0;
+  /* border-bottom: 2px solid #f0f0f0; */
+
 `;
 
 export const TabButton = styled.button`
-  flex: 1;
-  padding: 14px 24px;
+  /* flex: 1; */
+  width:auto;
+  padding: 10px 16px;
   background: none;
   border: none;
-  font-size: 15px;
-  font-weight: 600;
+  border-radius:32px;
+  font-size: var(--font14);
+  font-weight: var(--font-w-m);
   cursor: pointer;
   transition: all 0.2s;
-  position: relative;
-  color: ${props => props.$isActive ? '#0066ff' : '#999'};
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: ${props => props.$isActive ? '#0066ff' : 'transparent'};
-    transition: all 0.2s;
-  }
-
-  &:hover {
-    color: ${props => props.$isActive ? '#0066ff' : '#666'};
-  }
-
-  @media (max-width: 768px) {
-    padding: 12px 20px;
-    font-size: 14px;
-  }
+  /* position: relative; */
+  color: ${props => props.$isActive ? 'var(--white)' : 'var(--color-75)'};
+  background-color: ${props => props.$isActive ? 'var(--primary)' : 'var(--color-f8)'};  
+  border: 1px solid ${props => props.$isActive ? 'var(--primary)' : 'var(--color-f8)'};
 `;
 
 // ===================================

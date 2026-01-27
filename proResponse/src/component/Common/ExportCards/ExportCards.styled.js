@@ -99,7 +99,7 @@ export const TextWrapper = styled.div`
 export const InfoBox = styled.div`
   margin: 20px 0 16px 0;
   padding: 16px 0;
-  border-top: 1px solid var(--secondary);
+  border-top: 2px solid var(--secondary);
   border-bottom: 1px solid var(--secondary);
 `;
 export const InfoRow = styled.div`
