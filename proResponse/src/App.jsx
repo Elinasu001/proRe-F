@@ -1,7 +1,6 @@
 
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-
 import CommonGlobalStyles from './assets/styles/CommonGlobalStyles';
 import ChatRoom from './component/ChatRoom/ChatRoom.jsx';
 import AlertExample from './component/Common/Alert/AlertExample.jsx';
@@ -16,9 +15,8 @@ import MyPage from './component/MyPage/MyPage.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
-import EstimateRequestExample from './component/Quote/EstimateRequestExample.jsx';
+import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
 import Login from "./component/Login/Login";
-
 
 function App() {
   return (

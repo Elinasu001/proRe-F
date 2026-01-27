@@ -2,7 +2,7 @@
 import ReviewViewModal from './ReviewViewModal';
 import ReviewWriteModal from './ReviewWriteModal';
 import useReviewModal from './useReviewModal';
-import dummyChatExportReview from '../../Export/dummyChatExportReview.js';
+import dummyChatExportReview from '../../../Common/dummy/dummyChatExportReview.js';
 
 /**
  * 리뷰 모달 사용 예제 컴포넌트
