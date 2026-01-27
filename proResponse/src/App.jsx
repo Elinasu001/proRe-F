@@ -1,7 +1,6 @@
 
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-
 import CommonGlobalStyles from './assets/styles/CommonGlobalStyles';
 import ChatRoom from './component/ChatRoom/ChatRoom.jsx';
 import AlertExample from './component/Common/Alert/AlertExample.jsx';
@@ -17,6 +16,7 @@ import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
+import Login from "./component/Login/Login";
 
 function App() {
   return (
@@ -37,8 +37,8 @@ function App() {
           <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
           <Route path="/TestChatRooms" element={<TestChatRooms />} />
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
-          <Route path="/EstimateRequestExample" element={<EstimateRequestExample />} />
-
+          <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
+          <Route path="/auth/loginForm" element={<Login />} />
         </Route>
       </Routes>
     </>
