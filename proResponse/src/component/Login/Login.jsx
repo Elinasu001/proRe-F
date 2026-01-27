@@ -18,7 +18,7 @@ export default function Login() {
     setErrorMsg("");
 
     try {
-      // 백엔드 로그인 API 경로만 너희꺼로 맞춰라
+      
       const res = await axios.post(`${apiUrl}/api/auth/login`, {
         email,
         userPwd,
