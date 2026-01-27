@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import CommonModal from '../CommonModal';
 import grayStarImg from '../../../../assets/images/common/gray_star.png';
 import starImg from '../../../../assets/images/common/star.png';
 import { ImageUpload, TextArea } from '../../../Common/Input/Input.jsx';
-import * as S from './ReviewModal.styled';
+import * as S from './Modal.styled';
+import * as W from './ReviewWrite.styled.js';
 
 /**
  * ReviewWriteModal - 리뷰 작성 모달
@@ -14,9 +16,10 @@ import * as S from './ReviewModal.styled';
  * @param {Array} props.tagOptions - 선택 가능한 태그 목록
  */
 const ReviewWriteModal = ({ isOpen, onClose, onSubmit, tagOptions = [] }) => {
+  
   // 폼 상태
-  const [rating, setRating] = useState(0);
-  const [hoveredRating, setHoveredRating] = useState(0);
+  const [starScore, setStarScore] = useState(0);
+  const [hoveredStarScore, setHoveredStarScore] = useState(0);
   const [images, setImages] = useState([]);
   const [reviewText, setReviewText] = useState('');
   const [selectedTags, setSelectedTags] = useState([]);
@@ -59,29 +62,24 @@ const ReviewWriteModal = ({ isOpen, onClose, onSubmit, tagOptions = [] }) => {
   /**
    * 모달이 닫힐 때 폼 초기화
    */
+
+  // 모달이 열릴 때만 폼 초기화 (useEffect에서 처리)
   useEffect(() => {
-    if (!isOpen) {
-      setRating(0);
+    if (isOpen) {
+      setStarScore(0);
       setImages([]);
       setReviewText('');
       setSelectedTags([]);
     }
+    // eslint-disable-next-line
   }, [isOpen]);
 
-  /**
-   * 오버레이 클릭 시 닫기
-   */
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
 
   /**
    * 별점 클릭
    */
-  const handleRatingClick = (value) => {
-    setRating(value);
+  const handleStarScoreClick = (value) => {
+    setStarScore(value);
   };
 
   /**
@@ -99,7 +97,7 @@ const ReviewWriteModal = ({ isOpen, onClose, onSubmit, tagOptions = [] }) => {
    * 폼 제출
    */
   const handleSubmit = () => {
-    if (rating === 0) {
+    if (starScore === 0) {
       alert('별점을 선택해주세요.');
       return;
     }
@@ -110,7 +108,7 @@ const ReviewWriteModal = ({ isOpen, onClose, onSubmit, tagOptions = [] }) => {
     }
 
     onSubmit({
-      rating,
+      starScore,
       images: images.map(img => img.preview), // preview URL 전달
       text: reviewText,
       tags: selectedTags,
@@ -120,77 +118,72 @@ const ReviewWriteModal = ({ isOpen, onClose, onSubmit, tagOptions = [] }) => {
   if (!isOpen) return null;
 
   return (
-    <S.Overlay onClick={handleOverlayClick}>
-      <S.ModalContainer
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="write-review-title"
-      >
-        {/* 헤더 */}
-        <S.ModalHeader>
-          <S.ModalTitle id="write-review-title">후기 보내기</S.ModalTitle>
-        </S.ModalHeader>
+    <CommonModal isOpen={isOpen} onClose={onClose} ariaLabelledby="write-review-title">
+      
+      {/* 헤더 */}
+      <S.ModalHeader>
+        <S.ModalTitle id="write-review-title">후기 보내기</S.ModalTitle>
+      </S.ModalHeader>
 
-        {/* 리뷰 작성 폼 */}
-        <S.WriteContent>
-          {/* 별점 선택 */}
-          <S.RatingSection>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <S.Star
-                key={star}
-                $filled={star <= (hoveredRating || rating)}
-                onClick={() => handleRatingClick(star)}
-                onMouseEnter={() => setHoveredRating(star)}
-                onMouseLeave={() => setHoveredRating(0)}
-                aria-label={`${star}점`}
+      {/* 리뷰 작성 폼 */}
+      <W.WriteContent>
+        {/* 별점 선택 */}
+        <W.RatingSection>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <W.Star
+              key={star}
+              $filled={star <= (hoveredStarScore || starScore)}
+              onClick={() => handleStarScoreClick(star)}
+              onMouseEnter={() => setHoveredStarScore(star)}
+              onMouseLeave={() => setHoveredStarScore(0)}
+              aria-label={`${star}점`}
+            >
+              <img
+                src={star <= (hoveredStarScore || starScore) ? starImg : grayStarImg}
+                alt={`${star}점`}
+              />
+            </W.Star>
+          ))}
+        </W.RatingSection>
+
+        {/* 이미지 업로드 */}
+        <ImageUpload
+          label="상세 설명"
+          images={images}
+          onChange={setImages}
+          maxImages={MAX_IMAGES}
+        />
+
+        {/* 텍스트 입력 */}
+        <TextArea
+          placeholder="예) 친절하고 상담이 자세해요"
+          value={reviewText}
+          onChange={(e) => setReviewText(e.target.value)}
+          maxLength={MAX_TEXT_LENGTH}
+        />
+
+        {/* 태그 선택 */}
+        {tagOptions.length > 0 && (
+          <W.TagSelectSection>
+            {tagOptions.map((tag, index) => (
+              <W.SelectableTag
+                key={index}
+                $selected={selectedTags.includes(tag)}
+                onClick={() => handleTagToggle(tag)}
               >
-                <img
-                  src={star <= (hoveredRating || rating) ? starImg : grayStarImg}
-                  alt={`${star}점`}
-                />
-              </S.Star>
+                {tag}
+              </W.SelectableTag>
             ))}
-          </S.RatingSection>
+          </W.TagSelectSection>
+        )}
+      </W.WriteContent>
 
-          {/* 이미지 업로드 */}
-          <ImageUpload
-            label="상세 설명"
-            images={images}
-            onChange={setImages}
-            maxImages={MAX_IMAGES}
-          />
-
-          {/* 텍스트 입력 */}
-          <TextArea
-            placeholder="예) 친절하고 상담이 자세해요"
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            maxLength={MAX_TEXT_LENGTH}
-          />
-
-          {/* 태그 선택 */}
-          {tagOptions.length > 0 && (
-            <S.TagSelectSection>
-              {tagOptions.map((tag, index) => (
-                <S.SelectableTag
-                  key={index}
-                  $selected={selectedTags.includes(tag)}
-                  onClick={() => handleTagToggle(tag)}
-                >
-                  {tag}
-                </S.SelectableTag>
-              ))}
-            </S.TagSelectSection>
-          )}
-        </S.WriteContent>
-
-        {/* 버튼 그룹 */}
-        <S.ButtonGroup>
-          <S.CancelButton onClick={onClose}>취소</S.CancelButton>
-          <S.ConfirmButton onClick={handleSubmit}>확인</S.ConfirmButton>
-        </S.ButtonGroup>
-      </S.ModalContainer>
-    </S.Overlay>
+      {/* 버튼 그룹 */}
+      <S.ButtonGroup>
+        <S.CancelButton onClick={onClose}>취소</S.CancelButton>
+        <S.ConfirmButton onClick={handleSubmit}>확인</S.ConfirmButton>
+      </S.ButtonGroup>
+    </CommonModal>
   );
 };
 

@@ -312,6 +312,7 @@ export const ServiceDescription = styled.p`
 
 export const PhotoSection = styled.div`
   margin-bottom: 20px;
+  width:60%;
 `;
 
 // 메인 이미지 컨테이너
