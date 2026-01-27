@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchChatRoomDetails } from "../../api/chat/chatApi.js";
+// import { fetchChatRoomDetails } from "../../api/chat/chatApi.js";
+import { Api } from "../../api/api.js";
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
@@ -85,7 +86,7 @@ const ChatRoom = () => {
 
     useEffect(() => {
         // 채팅방 상세 정보 불러오기
-        fetchChatRoomDetails(id)
+        Api.getMessage(id)
             .then((res) => {
                 const roomData = res?.data?.data;
                 if (roomData) {
