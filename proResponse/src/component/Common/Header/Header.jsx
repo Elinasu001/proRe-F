@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAuth } from "../../../context/AuthContext";
 import closeIcon from '../../../assets/images/common/close.svg';
 import logo from '../../../assets/images/common/logo.png';
 import menuIcon from '../../../assets/images/common/menu.svg';
@@ -17,7 +18,7 @@ const Header = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
     // 로그인 상태 (실제 앱에서는 전역 상태나 Context로 관리)
-    const [isLoggedIn, setIsLoggedIn] = useState(true); // 테스트용으로 true로 설정
+    const { isLoggedIn, currentUser, logout } = useAuth();
     const [favoriteCount, setFavoriteCount] = useState(3); // 찜 목록 개수
     
     // Ref
@@ -112,6 +113,8 @@ const Header = () => {
                         setIsDropdownOpen={setIsDropdownOpen}
                         isLoggedIn={isLoggedIn}
                         favoriteCount={favoriteCount}
+                        currentUser={currentUser}
+                        logout={logout}
                     />
 
                     {/* 햄버거 메뉴 버튼 (모바일) */}
