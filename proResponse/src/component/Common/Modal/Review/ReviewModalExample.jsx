@@ -1,6 +1,8 @@
+
 import ReviewViewModal from './ReviewViewModal';
 import ReviewWriteModal from './ReviewWriteModal';
 import useReviewModal from './useReviewModal';
+import dummyChatExportReview from '../../Export/dummyChatExportReview.js';
 
 /**
  * 리뷰 모달 사용 예제 컴포넌트
@@ -15,19 +17,8 @@ const ReviewModalExample = () => {
     closeModals,
   } = useReviewModal();
 
-  // 샘플 리뷰 데이터
-  const sampleReview = {
-    userName: '박바라',
-    date: '2주 전',
-    rating: 5.0,
-    images: [
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-      'https://via.placeholder.com/300',
-    ],
-    text: '이번에 이사를 진행하게 됐을 때 민준스러운 정말로 해주셔 정정 기쁘던 추가를 남겨드립니다. 자랑 이사 당일엔 에어키 팀장 사업으로 같게 대가 상업이 3시간이나 빌려주시는 등비 상생의 너무 자연사러면 안졸를 리뷰를 작잏ね 정서와 주시며 조언내 기대면 주석여 조력써 오히려 저로 추석이 지로 안친시기',
-    tags: ['직접 숙달가 뻘쯤요', '정말과 느허항가 없어요', '응대가 친절해요', '상담이 자세해요'],
-  };
+  // 실제 더미 리뷰 데이터 적용
+  const sampleReview = dummyChatExportReview.data;
 
   // 태그 옵션
   const tagOptions = [

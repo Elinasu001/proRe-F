@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import eventIcon from '../../assets/images/common/event.png';
 import musicIcon from '../../assets/images/common/music.png';
 import programIcon from '../../assets/images/common/program.png';
+import dummyExportCategory from './dummyExportCategory.js';
+import dummyExportDetailCategory from './dummyExportDetialCategory.js';
 import {
   CategoryButton,
   CategoryText,
@@ -19,72 +21,43 @@ import {
   TopNav,
 } from './Quote.styled';
 
+// 카테고리별 아이콘 매핑
+const ICON_MAP = [programIcon, eventIcon, musicIcon];
 
 const NavigationHeader = () => {
+
   // 상태 관리
-  const [activeCategory, setActiveCategory] = useState('programming'); // 현재 활성화된 카테고리
+  const [activeCategory, setActiveCategory] = useState(1); // 현재 활성화된 카테고리 (categoryNo)
   const [activeSection, setActiveSection] = useState(''); // 현재 활성화된 섹션
 
   // Ref 관리
   const rightMenuRef = useRef(null); // 오른쪽 메뉴 스크롤 감지용
   const sectionRefs = useRef({}); // 각 섹션 엘리먼트 참조
 
-  // 메뉴 데이터 구조
-  const menuData = {
-    programming: {
-      icon: <img src={programIcon} alt="프로그래밍"/>,
-      label: '프로그래밍',
-      sections: [
-        {
-          id: 'event-prep',
-          title: '행사 준비',
-          items: ['꽃장식', '파티/행사기획', '굿즈/판촉물제작', '전시부스 제작', '트로피/상패 제작']
-        },
-        {
-          id: 'event-setup',
-          title: '행사 설의',
-          items: ['무술공연', '타로 행사', '예언/점술', '매직/버블쇼', '스카이댄스 제작']
-        },
-        {
-          id: 'event-staff',
-          title: '행사 인력',
-          items: ['업서 제작(초대장/성첩장)', '트로피/상패 제작']
-        }
-      ]
-    },
-    event: {
-      icon: <img src={eventIcon} alt="이벤트"/>, 
-      label: '이벤트',
-      sections: [
-        {
-          id: 'event-planning',
-          title: '행사 기획',
-          items: ['기업 행사', '공연 기획', '축제 기획', '전시회']
-        },
-        {
-          id: 'event-management',
-          title: '행사 관리',
-          items: ['일정 관리', '예산 관리', '참가자 관리', '장소 섭외']
-        }
-      ]
-    },
-    music: {
-      icon: <img src={musicIcon} alt="음악"/>,
-      label: '음악',
-      sections: [
-        {
-          id: 'performance',
-          title: '공연',
-          items: ['라이브 공연', '콘서트', '버스킹', '페스티벌']
-        },
-        {
-          id: 'recording',
-          title: '녹음',
-          items: ['스튜디오 녹음', '믹싱', '마스터링', '편곡']
-        }
-      ]
-    }
-  };
+  // 더미 데이터를 menuData 형식으로 변환
+  const menuData = useMemo(() => {
+
+    const result = {};
+      dummyExportCategory.data.forEach((category, index) => {
+        const categoryNo = category.categoryNo;
+        const detailData = dummyExportDetailCategory[categoryNo];
+
+        // 카테고리 상세 데이터에서 sections 생성
+        const sections = detailData?.data.map((section, sectionIndex) => ({
+          id: `section-${categoryNo}-${sectionIndex}`,
+          title: section.categoryName,
+          items: section.details.map(detail => detail.categoryName)
+        })) || [];
+
+        result[categoryNo] = {
+          icon: <img src={ICON_MAP[index % ICON_MAP.length]} alt={category.expertName}/>,
+          label: category.expertName,
+          sections
+        };
+    });
+
+    return result;
+  }, []);
 
 
   // 현재 활성화된 카테고리의 섹션들
@@ -147,7 +120,7 @@ const NavigationHeader = () => {
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
     
-    // 카테고리 변경 시 첫 번째 섹션을 활성화 (숨고 스타일)
+    // 카테고리 변경 시 첫 번째 섹션을 활성화
     const firstSectionId = menuData[category]?.sections[0]?.id;
     if (firstSectionId) {
       setActiveSection(firstSectionId);
