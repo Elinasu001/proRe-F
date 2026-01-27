@@ -17,6 +17,8 @@ import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import EstimateRequestExample from './component/Quote/EstimateRequestExample.jsx';
+import Login from "./component/Login/Login";
+
 
 function App() {
   return (
@@ -38,6 +40,7 @@ function App() {
           <Route path="/TestChatRooms" element={<TestChatRooms />} />
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
+          <Route path="/auth/loginForm" element={<Login />} />
         </Route>
       </Routes>
     </>

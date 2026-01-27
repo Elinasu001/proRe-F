@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import likeIcon from '../../../assets/images/common/like.png';
 import transIcon from '../../../assets/images/common/trans.png';
 import userIcon from '../../../assets/images/common/user.png';
@@ -31,8 +32,10 @@ const NavMenu = ({
     mobileMenuRef,
     setIsDropdownOpen,
     isLoggedIn = false,
+    logout,
     // favoriteCount = 0
 }) => {
+    const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const toggleProfile = () => {
@@ -40,6 +43,7 @@ const NavMenu = ({
     };
 
     const handleLogout = () => {
+        logout();
         console.log('로그아웃');
         setIsProfileOpen(false);
         closeMobileMenu();
@@ -130,6 +134,7 @@ const NavMenu = ({
                         onClick={() => {
                             console.log('로그인 버튼 클릭');
                             closeMobileMenu();
+                            navigate("/auth/loginForm");
                         }}
                         aria-label="로그인"
                     >
