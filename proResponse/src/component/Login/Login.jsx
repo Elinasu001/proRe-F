@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useAuth } from "../../context/AuthContext"; // 경로는 너희 폴더에 맞게 수정
+import { useAuth } from "../../context/AuthContext"; 
 
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 
