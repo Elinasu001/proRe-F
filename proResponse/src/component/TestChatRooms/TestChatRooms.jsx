@@ -7,10 +7,10 @@ const TestChatRooms = () => {
     const [content, setContent] = useState('안녕하세요');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
-    const [roomNo, setRoomNo] = useState('');
+    const [enterEstimateNo, setEnterEstimateNo] = useState('');  // ⭐ roomNo → estimateNo
     const navi = useNavigate();
 
-    // 채팅방 생성 (POST /api/rooms?estimateNo=xxx)
+    // 채팅방 생성
     const handleCreateRoom = async () => {
         if (!estimateNo) {
             alert('견적 번호를 입력하세요');
@@ -34,13 +34,13 @@ const TestChatRooms = () => {
         }
     };
 
-    // roomNo로 바로 입장
+    // ⭐ estimateNo로 입장
     const handleEnterRoom = () => {
-        if (!roomNo) {
-            alert('방 번호를 입력하세요');
+        if (!enterEstimateNo) {
+            alert('견적 번호를 입력하세요');
             return;
         }
-        navi(`/chatRoom/${roomNo}`);
+        navi(`/chatRoom/${enterEstimateNo}`);  // ⭐ estimateNo로 이동
     };
 
     return (
@@ -78,7 +78,8 @@ const TestChatRooms = () => {
                         <p><b>생성 완료!</b></p>
                         <p>roomNo: {result.roomNo}</p>
                         <p>estimateNo: {result.estimateNo}</p>
-                        <button onClick={() => navi(`/chatRoom/${result.roomNo}`)}>
+                        {/* ⭐ estimateNo로 이동 */}
+                        <button onClick={() => navi(`/chatRoom/${result.estimateNo}`)}>
                             채팅방 입장
                         </button>
                     </div>
@@ -89,12 +90,13 @@ const TestChatRooms = () => {
             <div style={{ padding: '15px', border: '1px solid #ccc' }}>
                 <h3>2. 기존 채팅방 입장</h3>
                 <div style={{ marginBottom: '10px' }}>
-                    <label>방 번호 (roomNo): </label>
+                    {/* ⭐ 라벨 수정 */}
+                    <label>견적 번호 (estimateNo): </label>
                     <input
                         type="number"
-                        value={roomNo}
-                        onChange={(e) => setRoomNo(e.target.value)}
-                        placeholder="예: 41"
+                        value={enterEstimateNo}
+                        onChange={(e) => setEnterEstimateNo(e.target.value)}
+                        placeholder="예: 81"
                     />
                 </div>
                 <button onClick={handleEnterRoom}>채팅방 입장</button>

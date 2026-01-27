@@ -7,20 +7,22 @@ import AlertExample from './component/Common/Alert/AlertExample.jsx';
 import Layout from './component/Common/Layout/Layout.jsx';
 import ExpertDetailModalExample from './component/Common/Modal/ExportDetail/ExpertDetailModalExample.jsx';
 import ReviewModalExample from './component/Common/Modal/Review/ReviewModalExample.jsx';
+import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
 import ExportList from './component/ExportList/ExportList.jsx';
 import Favorite from './component/Favorite/Favorite.jsx';
 import Home from './component/Home/Home.jsx';
 import InputTest from './component/InputTest/InputTest.jsx';
+import Login from "./component/Login/Login";
 import MyPage from './component/MyPage/MyPage.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
-import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
-import Login from "./component/Login/Login";
+import { AuthProvider } from './context/AuthContext';
+
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <CommonGlobalStyles />
       <Routes>
         <Route element={<Layout />}>
@@ -41,7 +43,7 @@ function App() {
           <Route path="/auth/loginForm" element={<Login />} />
         </Route>
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 

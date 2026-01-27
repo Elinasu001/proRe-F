@@ -1,219 +1,135 @@
+import axios from 'axios';
 import { useEffect, useRef, useState } from "react";
-import useChatWebSocket from "../../hooks/useChatWebSocket";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchChatRoomDetails } from "../../api/chat/chatApi.js";
+import useWebSocket from 'react-use-websocket';
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
 import reportImg from '../../assets/images/common/report.png';
 import sendImg from '../../assets/images/common/send.png';
-
 import {
-    ActionButton,
-    ActionLightWrapper,
-    ActionRightWrapper,
-    ChatActions,
-    ChatBox,
-    ChatHeader,
-    ChatImage,
-    ChatInput,
-    ChatInputContainer,
-    ChatMessages,
-    ChatPopup,
-    ChatPopupOverlay,
-    ChatSubtitle,
-    ChatTitle,
-    CloseButton,
-    EmojiItem,
-    EmojiPicker,
-    IconButton,
-    Message,
-    MessageBubble
+    ActionButton, ActionLightWrapper, ActionRightWrapper,
+    ChatActions, ChatBox, ChatHeader, ChatInput,
+    ChatInputContainer, ChatMessages, ChatPopup,
+    ChatPopupOverlay, ChatSubtitle, ChatTitle,
+    CloseButton, EmojiItem, EmojiPicker, IconButton,
+    Message, MessageBubble
 } from './ChatRoom.styled.js';
 
 const ChatRoom = () => {
-
-    
-    const { id: roomNo } = useParams();  // URL의 id는 roomNo
+    const { id:estimateNo } = useParams();
     const navi = useNavigate();
     const userNo = Number(localStorage.getItem('userNo'));
-
-    const [estimateNo, setEstimateNo] = useState(null);  // API 응답에서 가져옴
-    const [roomInfo, setRoomInfo] = useState(null);
-    const [message, setMessage] = useState('');
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [messages, setMessages] = useState([]);
-    const [animateIndex, setAnimateIndex] = useState(null);
-
-    // WebSocket 연결 (estimateNo가 있을 때만)
-    const { sendMessage } = useChatWebSocket(estimateNo, (msg) => {
-        console.log('📩 브로드캐스트 수신:', msg);
-        console.log('내 userNo:', userNo, '(type:', typeof userNo, ') / 메시지 userNo:', msg.userNo, '(type:', typeof msg.userNo, ')');
-
-        // 숫자로 변환하여 비교 (타입 불일치 방지)
-        const isMyMessage = Number(msg.userNo) === userNo;
-        console.log('isMyMessage:', isMyMessage);
-
-        if (isMyMessage) {
-            console.log('✅ 내 메시지 브로드캐스트 확인됨');
-            // 내 메시지: pending 상태를 sent로 변경하고 서버 데이터 병합
-            setMessages((prev) =>
-                prev.map((m) =>
-                    m._tempId && m.content === msg.content && m.pending
-                        ? {
-                            ...m,           // 기존 로컬 데이터 유지
-                            ...msg,         // 서버 데이터 병합 (messageNo, attachments 등)
-                            mine: true,     // 명시적으로 mine 설정
-                            pending: false,
-                            sent: true
-                        }
-                        : m
-                )
-            );
-        } else {
-            console.log('📨 상대방 메시지 수신');
-            // 상대방 메시지 추가 (mine: false 명시)
-            setMessages((prev) => [...prev, { ...msg, mine: false }]);
-            setAnimateIndex((prev) => (prev || 0) + 1);
-        }
-    });
-
-    const messagesEndRef = useRef(null);
-        // Ref for file input
-        const fileInputRef = useRef(null);
-        // Handle file button click
-        const handleFileButtonClick = () => {
-            if (fileInputRef.current) {
-                fileInputRef.current.click();
-            }
-    };
-
-    // Handle file selection
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (!file || !userNo) return;
-
-        const tempId = `temp_file_${Date.now()}`;
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-            const newMsg = {
-                _tempId: tempId,
-                estimateNo: estimateNo,
-                type: 'FILE',
-                content: file.name,
-                mine: true,
-                userNo: userNo,
-                sentDate: new Date().toISOString(),
-                pending: true,
-                attachments: [{
-                    filePath: event.target.result,  // 로컬 미리보기 URL
-                    originName: file.name
-                }]
-            };
-            setMessages((prev) => [...prev, newMsg]);
-            setAnimateIndex((prev) => (prev || 0) + 1);
-
-            // TODO: REST API로 파일 전송 후 pending -> sent 변경
-        };
-        reader.readAsDataURL(file);
-
-        // 같은 파일을 연속 첨부할 수 있도록 value 초기화
-        e.target.value = '';
-    };
     
-    useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+    
+    const messagesEndRef = useRef(null);
+    const fileInputRef = useRef(null);
+
+    const WS_URL = `ws://localhost:8080/ws/chat/${estimateNo}`;
+    
+    const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
+        WS_URL,
+        {
+            onOpen: () => console.log('WebSocket 연결 성공'),
+            onClose: () => console.log('WebSocket 연결 종료'),
+            onError: (error) => console.error('WebSocket 에러:', error),
+            shouldReconnect: () => true,
+            reconnectAttempts: 10,
+            reconnectInterval: 3000,
         }
-    }, [messages]);
+    );
 
-    const emojis = ['😊', '😂', '❤️', '👍', '🙏', '😍', '🎉', '👏', '🔥', '💯', '😢', '😭', '😅', '🤔', '😎', '🙌', '✨', '💪', '👌', '🤗'];
+    const connectionStatus = {
+        [WebSocket.CONNECTING]: '연결 중...',
+        [WebSocket.OPEN]: '연결됨',
+        [WebSocket.CLOSING]: '종료 중...',
+        [WebSocket.CLOSED]: '연결 끊김',
+    }[readyState];
 
+    // 1. 과거 메시지 불러오기
     useEffect(() => {
-        // 채팅방 상세 정보 및 과거 메시지 불러오기
-        fetchChatRoomDetails(roomNo)
-            .then((res) => {
-                const roomData = res?.data?.data;
-                console.log('📋 API 응답 전체:', roomData);
-                console.log('📋 현재 로그인 userNo:', userNo);
-                if (roomData) {
-                    setRoomInfo(roomData);
-                    // estimateNo 설정 (WebSocket 연결에 필요)
-                    if (roomData.estimateNo) {
-                        setEstimateNo(roomData.estimateNo);
-                    }
-                    // 서버 응답 구조에 맞게 messages 배열을 setMessages에 반영
-                    if (Array.isArray(roomData.messages)) {
-                        console.log('📋 메시지 목록:', roomData.messages.map(m => ({
-                            messageNo: m.messageNo,
-                            content: m.content?.substring(0, 20),
-                            userNo: m.userNo,
-                            mine: m.mine,
-                            mineType: typeof m.mine
-                        })));
-                        setMessages(roomData.messages);
-                    }
-                } else {
-                    console.error("채팅방 정보가 없습니다.", res);
-                }
-            })
-            .catch((err) => {
-                const message = err?.response?.data?.message || "채팅방 정보 불러오기 실패";
-                console.log(message);
-            });
-    }, [roomNo]);
+        const fetchMessages = async () => {
+            try {
+                const msgRes = await axios.get(
+                    `http://localhost:8080/api/rooms/${estimateNo}/messages`,
+                    { params: { size: 50 } }
+                );
 
-    const handleClose = () => {
-        navi(-1); // 이전 페이지로 이동
-    };
+                const data = msgRes.data.data;
+                if (data?.messages) {
+                    const sortedMessages = [...data.messages]
+                        .reverse()
+                        .map(msg => ({
+                            ...msg,
+                            mine: Number(msg.userNo) === userNo
+                        }));
+                    
+                    setMessages(sortedMessages);
+                    
+                    setTimeout(() => {
+                        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                }
+            } catch (error) {
+                console.error('메시지 조회 실패:', error);
+                alert('채팅방을 불러올 수 없습니다.');
+                navi(-1);
+            }
+        };
+
+        fetchMessages();
+    }, [estimateNo, navi, userNo]);
+
+    // 2. WebSocket 메시지 수신
+    useEffect(() => {
+        if (lastJsonMessage !== null) {
+            const isMine = Number(lastJsonMessage.userNo) === userNo;
+            
+            // [핵심] 내가 보낸 파일 메시지는 이미 UI에 있으므로 중복 방지
+            if (lastJsonMessage.type === 'FILE' && isMine) {
+                // 임시 메시지를 실제 메시지로 교체
+                setMessages(prev => 
+                    prev.map(msg => 
+                        msg.tempId === `temp_${lastJsonMessage.messageNo}` 
+                            ? { ...lastJsonMessage, mine: true }
+                            : msg
+                    )
+                );
+            } else {
+                // 다른 사람이 보낸 메시지 또는 내 텍스트 메시지
+                const newMessage = {
+                    ...lastJsonMessage,
+                    mine: isMine
+                };
+                
+                setMessages(prev => [...prev, newMessage]);
+            }
+            
+            setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+    }, [lastJsonMessage, userNo]);
 
     const handleSendMessage = () => {
-        if (!estimateNo) {
-            console.error('❌ WebSocket 연결 대기 중 - estimateNo 없음');
+        if (!message.trim()) return;
+        
+        if (readyState !== WebSocket.OPEN) {
+            alert('WebSocket 연결이 끊어졌습니다. 새로고침해주세요.');
             return;
         }
-        if (message.trim() && userNo) {
-            const tempId = `temp_${Date.now()}`;
-            const newMsg = {
-                content: message,
-                estimateNo: estimateNo,
-                type: 'TEXT',
-                userNo: userNo,
-                mine: true,
-                sentDate: new Date().toISOString(),
-                _tempId: tempId,
-                pending: true  // 전송 중 상태
-            };
 
-            // 로컬에 먼저 표시 (Optimistic Update)
-            setMessages((prev) => [...prev, newMsg]);
-            setAnimateIndex((prev) => (prev || 0) + 1);
+        const payload = {
+            content: message,
+            type: 'TEXT',
+            userNo: userNo
+        };
 
-            // WebSocket으로 메시지 전송
-            sendMessage({
-                content: message,
-                estimateNo: estimateNo,
-                type: 'TEXT',
-                userNo: userNo
-            });
-
-            // 5초 후에도 pending이면 실패 처리
-            setTimeout(() => {
-                setMessages((prev) => {
-                    const updated = prev.map((m) => {
-                        if (m._tempId === tempId && m.pending) {
-                            console.error('❌ 브로드캐스트 타임아웃 - 메시지 전송 실패:', m.content);
-                            return { ...m, pending: false, failed: true };
-                        }
-                        return m;
-                    });
-                    return updated;
-                });
-            }, 5000);
-
-            setMessage('');
-        }
+        sendJsonMessage(payload);
+        setMessage('');
     };
 
     const handleKeyPress = (e) => {
@@ -228,30 +144,119 @@ const ChatRoom = () => {
         setShowEmojiPicker(false);
     };
 
-    const toggleEmojiPicker = () => {
-        setShowEmojiPicker(!showEmojiPicker);
+    // [개선] 파일 업로드 (카톡 스타일)
+    const handleFileChange = async (e) => {
+        const files = e.target.files;
+        if (!files || files.length === 0) return;
+
+        // [1] 임시 메시지 즉시 생성 (낙관적 UI)
+        const tempId = `temp_${Date.now()}`;
+        const tempMessage = {
+            messageNo: tempId,
+            tempId: tempId,
+            type: 'FILE',
+            content: files[0].name,
+            userNo: userNo,
+            mine: true,
+            status: 'UPLOADING',
+            progress: 0,
+            sentDate: new Date().toISOString(),
+            attachments: Array.from(files).map(file => ({
+                originName: file.name,
+                fileSize: file.size,
+                filePath: URL.createObjectURL(file)
+            }))
+        };
+
+        // [2] 즉시 UI에 표시
+        setMessages(prev => [...prev, tempMessage]);
+        
+        setTimeout(() => {
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+
+        // [3] 백그라운드에서 실제 업로드
+        const formData = new FormData();
+        Array.from(files).forEach(file => {
+            formData.append('files', file);
+        });
+        formData.append('type', 'FILE');
+        formData.append('content', files[0].name);
+
+        try {
+            const response = await axios.post(
+                `http://localhost:8080/api/rooms/${estimateNo}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    // [4] 진행률 실시간 업데이트
+                    onUploadProgress: (progressEvent) => {
+                        const percentCompleted = Math.round(
+                            (progressEvent.loaded * 100) / progressEvent.total
+                        );
+                        
+                        setMessages(prev => 
+                            prev.map(msg => 
+                                msg.tempId === tempId 
+                                    ? { ...msg, progress: percentCompleted }
+                                    : msg
+                            )
+                        );
+                    }
+                }
+            );
+
+            console.log('파일 전송 성공:', response.data);
+
+            // [5] 업로드 완료: 상태를 SENT로 변경
+            setMessages(prev => 
+                prev.map(msg => 
+                    msg.tempId === tempId 
+                        ? { 
+                            ...msg, 
+                            status: 'SENT',
+                            tempId: `temp_${response.data.data.messageNo}`
+                        }
+                        : msg
+                )
+            );
+
+        } catch (error) {
+            console.error('파일 전송 실패:', error);
+            
+            // [6] 실패 시 재시도 버튼 표시
+            setMessages(prev => 
+                prev.map(msg => 
+                    msg.tempId === tempId 
+                        ? { ...msg, status: 'FAILED', error: error.message }
+                        : msg
+                )
+            );
+            
+            alert('파일 전송에 실패했습니다.');
+        }
+
+        e.target.value = '';
     };
 
-    useEffect(() => {
-        if (animateIndex !== null) {
-            const timer = setTimeout(() => setAnimateIndex(null), 400);
-            return () => clearTimeout(timer);
-        }
-    }, [animateIndex]);
+    const emojis = [
+        '😊', '😂', '❤️', '👍', '🙏', '😍', '🎉', '👏', '🔥', '💯',
+        '😢', '😭', '😅', '🤔', '😎', '🙌', '✨', '💪', '👌', '🤗'
+    ];
 
     return (
         <ChatPopupOverlay>
             <ChatPopup>
-                {/* 헤더 */}
                 <ChatHeader>
                     <div>
                         <ChatTitle>채팅하기</ChatTitle>
-                        <ChatSubtitle>채팅으로 서비스 거래해 보세요.</ChatSubtitle>
+                        <ChatSubtitle>{connectionStatus}</ChatSubtitle>
                     </div>
-                    <CloseButton onClick={handleClose}>✕</CloseButton>
+                    <CloseButton onClick={() => navi(-1)}>✕</CloseButton>
                 </ChatHeader>
 
-                {/* 액션 버튼 */}
                 <ChatActions>
                     <ActionLightWrapper>
                         <ActionButton>
@@ -267,37 +272,79 @@ const ChatRoom = () => {
                     </ActionRightWrapper>
                 </ChatActions>
 
-                {/* 메시지 영역 */}
                 <ChatMessages>
                     {messages.map((msg, index) => (
-                        <Message
-                            key={msg._tempId || msg.messageNo || `msg_${index}`}
-                            className={msg.mine ? 'message-me' : 'message-other'}
+                        <Message 
+                            key={msg.messageNo || msg.tempId || index} 
+                            className={msg.mine ? "message-me" : "message-other"}
                         >
-                            <MessageBubble $sender={msg.mine ? 'me' : 'other'} $animate={index === animateIndex}>
-                                {/* 파일 메시지 */}
-                                {msg.type === 'FILE' && Array.isArray(msg.attachments) && msg.attachments.length > 0 ? (
-                                    <>
-                                        {msg.attachments.map((file, fIdx) => (
-                                            file.filePath ? (
-                                                <ChatImage
-                                                    key={file.fileNo || fIdx}
-                                                    src={file.filePath}
-                                                    alt={file.originName || '첨부파일'}
-                                                />
-                                            ) : null
+                            <MessageBubble $sender={msg.mine ? 'me' : 'other'}>
+                                {msg.type === 'TEXT' && msg.content}
+                                
+                                {msg.type === 'FILE' && (
+                                    <div style={{ position: 'relative' }}>
+                                        <div>{msg.content}</div>
+                                        
+                                        {msg.status === 'UPLOADING' && (
+                                            <div style={{
+                                                marginTop: '8px',
+                                                padding: '8px',
+                                                background: 'rgba(0,0,0,0.1)',
+                                                borderRadius: '4px'
+                                            }}>
+                                                <div style={{
+                                                    fontSize: '12px',
+                                                    marginBottom: '4px'
+                                                }}>
+                                                    업로드 중... {msg.progress}%
+                                                </div>
+                                                <div style={{
+                                                    height: '4px',
+                                                    background: '#e0e0e0',
+                                                    borderRadius: '2px',
+                                                    overflow: 'hidden'
+                                                }}>
+                                                    <div style={{
+                                                        height: '100%',
+                                                        width: `${msg.progress}%`,
+                                                        background: '#4CAF50',
+                                                        transition: 'width 0.3s'
+                                                    }} />
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        {msg.status === 'FAILED' && (
+                                            <div style={{
+                                                marginTop: '8px',
+                                                padding: '8px',
+                                                background: 'rgba(255,0,0,0.1)',
+                                                borderRadius: '4px',
+                                                color: '#f44336',
+                                                fontSize: '12px'
+                                            }}>
+                                                전송 실패
+                                            </div>
+                                        )}
+                                        
+                                        {msg.attachments?.map((att, i) => (
+                                            <img 
+                                                key={i}
+                                                src={att.filePath}
+                                                alt={att.originName}
+                                                style={{ 
+                                                    maxWidth: '200px',
+                                                    marginTop: '8px',
+                                                    borderRadius: '8px',
+                                                    opacity: msg.status === 'UPLOADING' ? 0.6 : 1
+                                                }}
+                                            />
                                         ))}
-                                        {msg.content && <div>{msg.content}</div>}
-                                    </>
-                                ) : (
-                                    // 텍스트 메시지
-                                    msg.content
+                                    </div>
                                 )}
-                                {/* 내 메시지 전송 상태 표시 */}
-                                {msg.mine && (
-                                    <span style={{ fontSize: '10px', marginLeft: '4px', opacity: 0.7 }}>
-                                        {msg.pending ? '⏳' : msg.sent ? '✓' : msg.failed ? '❌' : ''}
-                                    </span>
+                                
+                                {msg.type === 'PAYMENT' && (
+                                    <div>{msg.content}</div>
                                 )}
                             </MessageBubble>
                         </Message>
@@ -305,7 +352,6 @@ const ChatRoom = () => {
                     <div ref={messagesEndRef} />
                 </ChatMessages>
 
-                {/* 입력 영역 */}
                 <ChatInputContainer>
                     {showEmojiPicker && (
                         <EmojiPicker>
@@ -319,6 +365,7 @@ const ChatRoom = () => {
                             ))}
                         </EmojiPicker>
                     )}
+                    
                     <ChatBox>
                         <ChatInput
                             type="text"
@@ -326,11 +373,14 @@ const ChatRoom = () => {
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
+                            disabled={readyState !== WebSocket.OPEN}
                         />
-                        <IconButton className="emoji-button" onClick={toggleEmojiPicker}>
+                        
+                        <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                             <img src={emojiImg} alt="emoji" />
                         </IconButton>
-                        <IconButton className="attach-button" onClick={handleFileButtonClick}>
+                        
+                        <IconButton onClick={() => fileInputRef.current?.click()}>
                             <img src={fileImg} alt="file" />
                         </IconButton>
                         <input
@@ -338,8 +388,14 @@ const ChatRoom = () => {
                             ref={fileInputRef}
                             style={{ display: 'none' }}
                             onChange={handleFileChange}
+                            multiple
+                            accept="image/*"
                         />
-                        <IconButton className="send-button" onClick={handleSendMessage}>
+                        
+                        <IconButton 
+                            onClick={handleSendMessage}
+                            disabled={readyState !== WebSocket.OPEN}
+                        >
                             <img src={sendImg} alt="send" />
                         </IconButton>
                     </ChatBox>
@@ -347,6 +403,6 @@ const ChatRoom = () => {
             </ChatPopup>
         </ChatPopupOverlay>
     );
-}
+};
 
 export default ChatRoom;
