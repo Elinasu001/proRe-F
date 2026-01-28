@@ -99,7 +99,7 @@ const ExpertDetailModal = ({
 
           {/* 전문가 정보 헤더 */}
           <S.ExpertHeader>
-            <ExportBasicInfo data={data} />
+            <ExportBasicInfo data={expert} />
           </S.ExpertHeader>
 
           {/* 탭 버튼 */}
@@ -119,6 +119,7 @@ const ExpertDetailModal = ({
           </S.TabButtons>
 
           <ExpertDetail data={data} selectedImageIndex={selectedImageIndex} setSelectedImageIndex={setSelectedImageIndex} />
+          
 
         </S.ScrollContent>
       </S.ModalContainer>
