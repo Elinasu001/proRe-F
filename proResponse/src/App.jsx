@@ -34,13 +34,13 @@ function App() {
           <Route path="/favorite" element={<Favorite />} />
           <Route path="/inputTest" element={<InputTest />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           <Route path="/AlertExample" element={<AlertExample />} />
           <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
           <Route path="/TestChatRooms" element={<TestChatRooms />} />
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
+          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Route>
       </Routes>
     </AuthProvider>
