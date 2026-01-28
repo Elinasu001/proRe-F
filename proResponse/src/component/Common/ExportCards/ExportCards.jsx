@@ -8,6 +8,8 @@ const ExportCard = ({ data = [], currentPage, itemsPerPage,categoryName , detail
   const indexOfFirstItem = indexOfLastItem - perPage;
   const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
+  
+
   return (
     <CardListWrapper>
       {currentItems.map((item, idx) => (

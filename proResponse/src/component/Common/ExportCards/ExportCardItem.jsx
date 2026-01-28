@@ -5,14 +5,16 @@ import ExportBasicInfo from "../Export/ExportBasicInfo.jsx";
 import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
 import ExpertDetailModal from "../Modal/ExportDetail/ExpertDetailModal.jsx";
 import EstimateRequest from "../../EstimateRequest/EstimateRequest.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
 
 const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
   const { modalState, openModal, closeModal } = useExpertDetailModal();
   const [isEstimateOpen, setIsEstimateOpen] = useState(false);
   //console.log(`categoryName : ${categoryName}`);
   //console.log(`detailCategoryNo : ${detailCategoryNo}`);
-
-
+  const { auth } = useAuth();
+  const navigate = useNavigate();
   const handleDetailClick = async () => {
     try {
       const response = await axiosPublic.getList(
@@ -47,6 +49,22 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
   };
 
   const handleRequest = () => {
+    if (!auth?.accessToken) {
+      alert("로그인부터 해주세요.");
+      navigate("/auth/loginForm", { replace: true });
+      return;
+    }
+
+    // 권한 체크
+    if (!["ROLE_USER"].includes(auth?.userRole)) {
+      alert("접근 권한이 없습니다.");
+      navigate("/", { replace: true });
+      return;
+    }
+
+    // 로그인/권한 OK → 실제 처리
+    setIsEstimateOpen(true);
+
     setIsEstimateOpen(true);
   };
 
