@@ -12,6 +12,11 @@ const ExportList = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const experts = location.state?.experts || {}; // API에서 전달된 데이터
+    const categoryName = location.state?.categoryName;
+    const detailCategoryNo = location.state?.detailCategoryNo;
+
+    //console.log(categoryName);
+    //onsole.log(detailCategoryNo);
 
        useEffect(() => {
         
@@ -41,8 +46,8 @@ const ExportList = () => {
     const startIdx = (currentPage - 1) * itemsPerPage;
     const currentData = expertInfo.slice(startIdx, startIdx + itemsPerPage);
 
-    console.log(expertInfo);
-    console.log(itemsPerPage);
+    //console.log(expertInfo);
+    //console.log(itemsPerPage);
 
     return (
         <>
@@ -59,6 +64,8 @@ const ExportList = () => {
                 data={currentData}
                 currentPage={currentPage}
                 itemsPerPage={itemsPerPage}
+                categoryName={categoryName}
+                detailCategoryNo={detailCategoryNo}
             />
 
             <Pagination

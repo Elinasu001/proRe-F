@@ -93,14 +93,14 @@ const NavigationHeader = () => {
       .catch(console.error);
   };
 
-  const handleDetailClick = (detailCategoryNo) => {
+  const handleDetailClick = (detailCategoryNo , sectionTitle) => {
     axiosPublic
       .getList(`/api/categories/experts/${detailCategoryNo}`)
       .then((res) => {
         const expertsData = res.data || [];
 
         // ExportList 페이지로 이동, state로 전문가 데이터 전달
-        navigate("/exportList", { state: { experts: expertsData } });
+        navigate("/exportList", { state: { experts: expertsData , categoryName: sectionTitle ,detailCategoryNo : detailCategoryNo } });
       })
       .catch(console.error);
   };
@@ -248,7 +248,7 @@ const NavigationHeader = () => {
                       href={`#${section.id}-${index}`}
                       onClick={(e) => {
                         e.preventDefault();
-                        handleDetailClick(item.detailCategoryNo); // ID 전달
+                        handleDetailClick(item.detailCategoryNo,section.title); // ID 전달
                       }}
                     >
                       {item.name}
