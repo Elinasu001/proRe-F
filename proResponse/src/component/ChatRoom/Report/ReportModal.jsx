@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import CommonModal from '../CommonModal';
+import CommonModal from '../../Common/Modal/CommonModal.jsx';
 import { TextArea } from '../../Common/Input/Input.jsx';
 import * as S from '../../Common/Modal/Review/Modal.styled';
 import * as W from '../../Common/Modal/Review/ReviewWrite.styled.js';

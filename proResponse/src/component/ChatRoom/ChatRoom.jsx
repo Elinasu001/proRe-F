@@ -9,7 +9,11 @@ import reportImg from '../../assets/images/common/report.png';
 import reviewImg from '../../assets/images/common/review_btn.png';
 import sendImg from '../../assets/images/common/send.png';
 import * as S from './ChatRoom.styled.js';
+
+
 import useReportModal from './Report/useReportModal.js';
+import ReportModal from './Report/ReportModal.jsx';
+
 
 
 import { useAuth } from '../../context/AuthContext.jsx';
@@ -288,6 +292,7 @@ const ChatRoom = () => {
     ];
 
     const {
+        reportModal,
         openReportModal,
         closeReportModal,
     } = useReportModal();
@@ -312,8 +317,10 @@ const ChatRoom = () => {
     };
 
     return (
-        <S.ChatPopupOverlay>
-            <S.ChatPopup>
+        <>
+            <ReportModal {...reportModal} />
+            <S.ChatPopupOverlay>
+                <S.ChatPopup>
                 <S.ChatHeader>
                     <div>
                         <S.ChatTitle>채팅하기</S.ChatTitle>
@@ -439,8 +446,9 @@ const ChatRoom = () => {
                         </S.IconButton>
                     </S.ChatBox>
                 </S.ChatInputContainer>
-            </S.ChatPopup>
-        </S.ChatPopupOverlay>
+                </S.ChatPopup>
+            </S.ChatPopupOverlay>
+        </>
     );
 };
 
