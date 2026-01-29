@@ -99,6 +99,7 @@ export const ActionLightWrapper = styled.div`
 
 export const ActionRightWrapper = styled.div`
     display: flex;
+    gap:12px;
 `;
 
 export const ChatMessages = styled.div`

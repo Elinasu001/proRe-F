@@ -8,6 +8,7 @@ import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
 import reportImg from '../../assets/images/common/report.png';
+import reviewImg from '../../assets/images/common/review_btn.png';
 import sendImg from '../../assets/images/common/send.png';
 import {
     ActionButton,
@@ -37,6 +38,8 @@ import {
     ChatAttachmentImage
 } from './ChatRoom.styled.js';
 
+import { useAuth } from '../../context/AuthContext.jsx';
+
 const ChatRoom = () => {
     
     const { id:estimateNo } = useParams();
@@ -46,7 +49,10 @@ const ChatRoom = () => {
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    
+    // 현재 유저의 역할: AuthContext에서 currentUser로 가져옴
+    const { currentUser } = useAuth();
+    const userRole = currentUser?.userRole || '';
+
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
 
@@ -177,8 +183,6 @@ const ChatRoom = () => {
         if (!files || files.length === 0) return;
 
         console.log('업로드파일정보 : ', files);
-        // console.log('업로드파일타입 : ', files[0].type);
-
 
         // 파일 타입 검증
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
@@ -327,7 +331,16 @@ const ChatRoom = () => {
                             신고하기
                         </ActionButton>
                     </ActionLightWrapper>
+                    
                     <ActionRightWrapper>
+                        {userRole === 'ROLE_USER' && (
+                            <ActionLightWrapper>
+                                <ActionButton>
+                                    <img src={reviewImg} alt="review" />
+                                    후기쓰기
+                                </ActionButton>
+                            </ActionLightWrapper>
+                        )}
                         <ActionButton>
                             <img src={payImg} alt="pay" />
                             송금하기
