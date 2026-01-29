@@ -5,6 +5,7 @@ import * as TB from '../../Common/Button/Tab.styled.js';
 import * as T from '../../Common/Title/Title.styled.js';
 import * as L from '../../Common/Layout/EstimateLayout.styled.js';
 import Pagination from '../../Common/Pagination/Pagination.jsx';
+import defaultImg from '../../../assets/images/common/default_profile.png';
 
 const UserCards = () => {
     const [reservations, setReservations] = useState([]);
@@ -133,7 +134,7 @@ const UserCards = () => {
                     <CardItem
                         key={reservation.requestNo}
                         data={{
-                            profileImg: reservation.profileImg || '/assets/images/common/default_profile.png',
+                            profileImg: reservation.profileImg || defaultImg,
                             nickName: reservation.nickName,
                             starScore: reservation.starScore,
                             reviewCount: reservation.reviewCount,
