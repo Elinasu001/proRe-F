@@ -46,8 +46,8 @@ export const Profile = styled.div`
   align-items: center;
 `;
 export const ProfileImg = styled.img`
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   margin-right: 12px;
   border: 1px solid var(--secondary);
