@@ -1,8 +1,5 @@
-import { keyframes } from 'styled-components';
 
-
-
-import styled from 'styled-components';
+import {styled, keyframes } from 'styled-components';
 
 export const ChatPopupOverlay = styled.div`
     position: fixed;
@@ -227,6 +224,7 @@ export const ChatBox = styled.div`
 export const ChatInput = styled.input`
     flex: 1;
     padding: 16px;
+    border: none;
     font-size: var(--font16);
     outline: none;
     &:focus {
@@ -257,4 +255,46 @@ export const IconButton = styled.button`
     &.send-button:hover {
         background: #e8f4ff;
     }
+`;
+
+
+export const UploadingBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+`;
+
+export const UploadingText = styled.div`
+    font-size: 12px;
+    margin-bottom: 4px;
+`;
+
+export const UploadingBarWrapper = styled.div`
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+`;
+
+export const UploadingBar = styled.div`
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s;
+`;
+
+export const FailedBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(255,0,0,0.1);
+    border-radius: 4px;
+    color: #f44336;
+    font-size: 12px;
+`;
+
+export const ChatAttachmentImage = styled.img`
+    max-width: 200px;
+    margin-top: 8px;
+    border-radius: 8px;
+    opacity: ${({ $uploading }) => $uploading ? 0.6 : 1};
 `;
