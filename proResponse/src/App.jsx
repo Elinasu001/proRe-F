@@ -18,6 +18,7 @@ import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import { AuthProvider } from './context/AuthContext';
+import Map from './component/Common/Map/Map.jsx';
 
 
 function App() {
@@ -41,7 +42,8 @@ function App() {
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
-        </Route>
+          <Route path="/nearby" element= {<Map />} />
+            </Route>
       </Routes>
     </AuthProvider>
   );
