@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import * as S from './EstimateRequest.styled';
-import { ImageUpload, TextArea } from '../Common/Input/Input';
+import { useState } from "react";
+import * as S from "./EstimateRequest.styled";
+import { ImageUpload, TextArea } from "../Common/Input/Input";
 
 /**
  * EstimateRequest - 견적 요청 Multi-step Form
@@ -14,43 +14,140 @@ import { ImageUpload, TextArea } from '../Common/Input/Input';
 const EstimateRequest = ({
   isOpen,
   onClose,
-  expertInfo = { name: '홍길동' },
-  onSubmit
+  expertInfo = { expertName: "" },
+  categoryName,
+  detailCategoryNo,
+  onSubmit,
 }) => {
   // 현재 단계 (1: 유형 선택, 2: 희망 서비스, 3: 상세 요청)
   const [currentStep, setCurrentStep] = useState(1);
 
   // 폼 데이터
   const [formData, setFormData] = useState({
-    type: '',           // 유형
-    service: '',        // 희망 서비스
-    images: [],         // 이미지들
-    description: ''     // 상세 설명
+    requestType: "", // 유형
+    requestService: "", // 희망 서비스
+    images: [], // 이미지들
+    content: "", // 상세 설명
   });
 
-  // 유형 옵션
-  const typeOptions = [
-    { value: '10', label: '10명 미만' },
-    { value: '20', label: '20명 미만' },
-    { value: '30', label: '30명 미만' },
-    { value: '40', label: '40명 미만' }
-  ];
+  //console.log(`categoryName 체크 : ${categoryName}`)
 
-  // 희망 서비스 옵션
-  const serviceOptions = [
-    { value: 'specific_date', label: '원하는 날짜가 있어요' },
-    { value: 'flexible', label: '협의 가능해요' },
-    { value: 'fast', label: '빨리 진행하고 싶어요' },
-    { value: 'week', label: '일주일 이내로 진행하고 싶어요' }
-  ];
+  const QUESTION_CONFIG = {
+    "촬영 및 편집": {
+      typeOptions: [
+        { value: "개인 영상", label: "개인 영상" },
+        { value: "상업 영상", label: "상업 영상" },
+        { value: "기업 영상", label: "기업 영상" },
+        { value: "기타", label: "기타" },
+      ],
+      serviceOptions: [
+        { value: "기획부터 촬영까지", label: "기획부터 촬영까지" },
+        { value: "촬영만", label: "촬영만" },
+        { value: "편집만", label: "편집만" },
+        { value: "전체 서비스", label: "전체 서비스" },
+      ],
+    },
+    "음향 및 편집": {
+      typeOptions: [
+        { value: "제작", label: "제작" },
+        { value: "편집", label: "편집" },
+        { value: "녹음", label: "녹음" },
+        { value: "기타", label: "기타" },
+      ],
+      serviceOptions: [
+        { value: "녹음만", label: "녹음만" },
+        { value: "믹싱/마스터링", label: "믹싱/마스터링" },
+        { value: "전체 제작", label: "전체 제작" },
+        { value: "컨설팅", label: "컨설팅" },
+      ],
+    },
+    제2외국어: {
+      typeOptions: [
+        { value: "취미", label: "취미" },
+        { value: "시험", label: "시험" },
+        { value: "여행", label: "여행" },
+        { value: "비즈니스", label: "비즈니스" },
+      ],
+      serviceOptions: [
+        { value: "정기 수업 (주 1-2회)", label: "정기 수업 (주 1-2회)" },
+        { value: "집중 수업 (주 3회 이상)", label: "집중 수업 (주 3회 이상)" },
+        { value: "원데이 클래스", label: "원데이 클래스" },
+        { value: "온라인 수업", label: "온라인 수업" },
+      ],
+    },
+    음악: {
+      typeOptions: [
+        { value: "취미", label: "취미" },
+        { value: "입시", label: "입시" },
+        { value: "전공심화", label: "전공심화" },
+        { value: "기타", label: "기타" },
+      ],
+      serviceOptions: [
+        { value: "정기 레슨 (주 1-2회)", label: "정기 레슨 (주 1-2회)" },
+        { value: "집중 레슨 (주 3회 이상)", label: "집중 레슨 (주 3회 이상)" },
+        { value: "원데이 클래스", label: "원데이 클래스" },
+        { value: "온라인 레슨", label: "온라인 레슨" },
+      ],
+    },
+    "게임 개발": {
+      typeOptions: [
+        { value: "취미", label: "취미" },
+        { value: "입문", label: "입문" },
+        { value: "개인 게임 제작", label: "개인 게임 제작" },
+        { value: "상업용", label: "상업용" },
+        { value: "출시 목표", label: "출시 목표" },
+      ],
+      serviceOptions: [
+        { value: "정기 강의", label: "정기 강의" },
+        { value: "프로젝트 멘토링", label: "프로젝트 멘토링" },
+        { value: "포트폴리오 제작", label: "포트폴리오 제작" },
+        { value: "1:1 컨설팅", label: "1:1 컨설팅" },
+      ],
+    },
+    "백엔드 개발": {
+      typeOptions: [
+        { value: "입문", label: "입문" },
+        { value: "기초", label: "기초" },
+        { value: "실무", label: "실무" },
+        { value: "포트폴리오", label: "포트폴리오" },
+      ],
+      serviceOptions: [
+        { value: "정기 강의", label: "정기 강의" },
+        { value: "코드 리뷰", label: "코드 리뷰" },
+        { value: "프로젝트 멘토링", label: "프로젝트 멘토링" },
+        { value: "1:1 컨설팅", label: "1:1 컨설팅" },
+      ],
+    },
+    "프론트엔드 개발": {
+      typeOptions: [
+        { value: "입문", label: "입문" },
+        { value: "기초", label: "기초" },
+        { value: "실무", label: "실무" },
+        { value: "포트폴리오", label: "포트폴리오" },
+      ],
+      serviceOptions: [
+        { value: "정기 강의", label: "정기 강의" },
+        { value: "코드 리뷰", label: "코드 리뷰" },
+        { value: "프로젝트 멘토링", label: "프로젝트 멘토링" },
+        { value: "1:1 컨설팅", label: "1:1 컨설팅" },
+      ],
+    },
+  };
+
+  const currentQuestionSet = QUESTION_CONFIG[categoryName] || {
+    typeOptions: [],
+    serviceOptions: [],
+  };
+
+  const { typeOptions, serviceOptions } = currentQuestionSet;
 
   /**
    * 옵션 선택 핸들러
    */
   const handleSelectOption = (field, value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -58,9 +155,9 @@ const EstimateRequest = ({
    * 이미지 변경 핸들러
    */
   const handleImagesChange = (newImages) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      images: newImages
+      images: newImages,
     }));
   };
 
@@ -69,7 +166,7 @@ const EstimateRequest = ({
    */
   const handleNext = () => {
     if (currentStep < 3) {
-      setCurrentStep(prev => prev + 1);
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
@@ -78,7 +175,7 @@ const EstimateRequest = ({
    */
   const handlePrev = () => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
   };
 
@@ -86,9 +183,22 @@ const EstimateRequest = ({
    * 제출 핸들러
    */
   const handleSubmit = () => {
+    const form = new FormData();
+
+    form.append("requestType", formData.requestType);
+    form.append("requestService", formData.requestService);
+    form.append("content", formData.content);
+    form.append("expertNo", expertInfo.expertNo);
+    form.append("categoryDetailNo", detailCategoryNo);
+    // 이미지
+    formData.images.forEach((image) => {
+      form.append("images", image);
+    });
+
     if (onSubmit) {
-      onSubmit(formData);
+      onSubmit(form);
     }
+
     if (onClose) {
       onClose();
     }
@@ -100,11 +210,11 @@ const EstimateRequest = ({
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return formData.type !== '';
+        return formData.requestType !== "";
       case 2:
-        return formData.service !== '';
+        return formData.requestService !== "";
       case 3:
-        return formData.description.trim() !== '';
+        return formData.content.trim() !== "";
       default:
         return false;
     }
@@ -126,30 +236,40 @@ const EstimateRequest = ({
         return (
           <>
             <S.ExpertBanner>
-              <S.ExpertName>{expertInfo.name}</S.ExpertName>
+              <S.ExpertName>{expertInfo.expertName}</S.ExpertName>
               <S.ExpertMessage>
-                전문가님에게 멋진 정보만 알려주시면 전문가가 검토를 받을 수 있어요
+                전문가님에게 멋진 정보만 알려주시면 전문가가 검토를 받을 수
+                있어요
               </S.ExpertMessage>
             </S.ExpertBanner>
 
             <S.Section>
               <S.SectionTitle>유형</S.SectionTitle>
               <S.OptionList>
-                {typeOptions.map(option => (
+                {typeOptions.map((option) => (
                   <S.OptionItem
                     key={option.value}
-                    $selected={formData.type === option.value}
-                    onClick={() => handleSelectOption('type', option.value)}
+                    $selected={formData.requestType === option.value}
+                    onClick={() =>
+                      handleSelectOption("requestType", option.value)
+                    }
                   >
                     {option.label}
-                    <S.CheckIcon $checked={formData.type === option.value} />
+                    <S.CheckIcon
+                      $checked={formData.requestType === option.value}
+                    />
                   </S.OptionItem>
                 ))}
               </S.OptionList>
             </S.Section>
 
-            {formData.type && (
-              <S.SelectedBadge>{typeOptions.find(o => o.value === formData.type)?.label}</S.SelectedBadge>
+            {formData.requestType && (
+              <S.SelectedBadge>
+                {
+                  typeOptions.find((o) => o.value === formData.requestType)
+                    ?.label
+                }
+              </S.SelectedBadge>
             )}
           </>
         );
@@ -157,29 +277,42 @@ const EstimateRequest = ({
       case 2:
         return (
           <>
-            {formData.type && (
-              <S.SelectedBadge>{typeOptions.find(o => o.value === formData.type)?.label}</S.SelectedBadge>
+            {formData.requestType && (
+              <S.SelectedBadge>
+                {
+                  typeOptions.find((o) => o.value === formData.requestType)
+                    ?.label
+                }
+              </S.SelectedBadge>
             )}
 
             <S.Section>
               <S.SectionTitle>희망 서비스</S.SectionTitle>
               <S.OptionList>
-                {serviceOptions.map(option => (
+                {serviceOptions.map((option) => (
                   <S.OptionItem
                     key={option.value}
-                    $selected={formData.service === option.value}
-                    onClick={() => handleSelectOption('service', option.value)}
+                    $selected={formData.requestService === option.value}
+                    onClick={() =>
+                      handleSelectOption("requestService", option.value)
+                    }
                   >
                     {option.label}
-                    <S.CheckIcon $checked={formData.service === option.value} />
+                    <S.CheckIcon
+                      $checked={formData.requestService === option.value}
+                    />
                   </S.OptionItem>
                 ))}
               </S.OptionList>
             </S.Section>
 
-            {formData.service && (
-              <S.SelectedBadge style={{ top: '70px' }}>
-                {serviceOptions.find(o => o.value === formData.service)?.label}
+            {formData.requestService && (
+              <S.SelectedBadge style={{ top: "70px" }}>
+                {
+                  serviceOptions.find(
+                    (o) => o.value === formData.requestService,
+                  )?.label
+                }
               </S.SelectedBadge>
             )}
           </>
@@ -196,8 +329,13 @@ const EstimateRequest = ({
             />
 
             <TextArea
-              value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              value={formData.content}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  content: e.target.value,
+                }))
+              }
               placeholder="견적 요청 시 문의 사항 설명을 작성해주세요"
               maxLength={1000}
             />
@@ -219,32 +357,26 @@ const EstimateRequest = ({
       <S.Header>
         <div>
           <S.Title>
-            {currentStep === 1 && '전적 요청'}
-            {currentStep === 2 && '전적 요청'}
-            {currentStep === 3 && '문의 상세 요청'}
+            {currentStep === 1 && "견적 요청"}
+            {currentStep === 2 && "견적 요청"}
+            {currentStep === 3 && "문의 상세 요청"}
           </S.Title>
           {currentStep === 3 && (
             <S.Subtitle>견적 요청 시 문의 사항 설명을 작성해주세요</S.Subtitle>
           )}
         </div>
-        {onClose && (
-          <S.CloseButton onClick={onClose}>×</S.CloseButton>
-        )}
+        {onClose && <S.CloseButton onClick={onClose}>×</S.CloseButton>}
       </S.Header>
 
       <S.ProgressBar>
         <S.ProgressFill $width={getProgress()} />
       </S.ProgressBar>
 
-      <S.Content>
-        {renderStepContent()}
-      </S.Content>
+      <S.Content>{renderStepContent()}</S.Content>
 
       <S.ButtonGroup>
         {currentStep > 1 && (
-          <S.PrevButton onClick={handlePrev}>
-            뒤로가기
-          </S.PrevButton>
+          <S.PrevButton onClick={handlePrev}>뒤로가기</S.PrevButton>
         )}
         {currentStep < 3 ? (
           <S.NextButton onClick={handleNext} disabled={!canProceed()}>
@@ -262,20 +394,16 @@ const EstimateRequest = ({
   // 모달 형태로 렌더링
   if (onClose) {
     return (
-      <S.ModalOverlay onClick={(e) => e.target === e.currentTarget && onClose()}>
-        <S.ModalContainer>
-          {content}
-        </S.ModalContainer>
+      <S.ModalOverlay
+        onClick={(e) => e.target === e.currentTarget && onClose()}
+      >
+        <S.ModalContainer>{content}</S.ModalContainer>
       </S.ModalOverlay>
     );
   }
 
   // 페이지 형태로 렌더링
-  return (
-    <S.Container>
-      {content}
-    </S.Container>
-  );
+  return <S.Container>{content}</S.Container>;
 };
 
 export default EstimateRequest;

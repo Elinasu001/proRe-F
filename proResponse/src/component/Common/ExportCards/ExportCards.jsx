@@ -1,25 +1,22 @@
-import dummyExpertBasicInfoList from '../dummy/dummyExpertBasicInfoList.js';
 import { CardListWrapper } from "./ExportCards.styled.js";
-import ExportCardItem from './ExportCardItem';
+import ExportCardItem from "./ExportCardItem";
 
+const ExportCard = ({ data = [], currentPage, itemsPerPage,categoryName , detailCategoryNo  }) => {
+  const page = currentPage || 1;
+  const perPage = itemsPerPage || 6;
+  const indexOfLastItem = page * perPage;
+  const indexOfFirstItem = indexOfLastItem - perPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
-const ExportCard = ({ data = dummyExpertBasicInfoList, currentPage, itemsPerPage }) => {
-    // data 구조: [{ message, data: { list: [...] }, pageInfo, ... }]
-    const expertList = data[0]?.data?.list || [];
-    const pageInfo = data[0]?.pageInfo || {};
-    const page = currentPage || pageInfo.currentPage || 1;
-    const perPage = itemsPerPage || pageInfo.boardList || 6;
-    const indexOfLastItem = page * perPage;
-    const indexOfFirstItem = indexOfLastItem - perPage;
-    const currentItems = expertList.slice(indexOfFirstItem, indexOfLastItem);
+  
 
-    return (
-        <CardListWrapper>
-            {currentItems.map((item, idx) => (
-                <ExportCardItem key={idx} data={item} />
-            ))}
-        </CardListWrapper>
-    );
+  return (
+    <CardListWrapper>
+      {currentItems.map((item, idx) => (
+        <ExportCardItem key={idx} data={item} categoryName={categoryName} detailCategoryNo = {detailCategoryNo}/>
+      ))}
+    </CardListWrapper>
+  );
 };
 
 export default ExportCard;

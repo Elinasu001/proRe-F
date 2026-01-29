@@ -63,7 +63,7 @@ const ExportCardItem = ({ data }) => {
                     <Name><span>{data?.nickName}</span> 전문가</Name>
                 </Profile>
                 <img
-                    src={liked ? iHeart : heart}
+                    src={data.userLiked === 0 ? iHeart : heart}
                     alt="좋아요"
                     style={{
                         width: 28,
@@ -86,7 +86,7 @@ const ExportCardItem = ({ data }) => {
                 <Row>
                     <Icon src={mLikeImg} alt="좋아요" />
                     <TextWrapper>
-                        <Data>{data?.totalLike}</Data>
+                        <Data>{data?.totalLikes}</Data>
                     </TextWrapper>
                 </Row>
             </Col>
@@ -101,7 +101,7 @@ const ExportCardItem = ({ data }) => {
                 </InfoRow>
                 <InfoRow>
                     <Icon src={mCarerImg} alt="경력" />
-                    경력 <Data>{data?.career}</Data>년
+                    경력 &nbsp;<Data>{data?.career}</Data>년
                 </InfoRow>
                 <InfoRow>
                     <Icon src={mTimeImg} alt="시간" />

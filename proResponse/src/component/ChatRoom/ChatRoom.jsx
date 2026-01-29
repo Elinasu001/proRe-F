@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useWebSocket from 'react-use-websocket';
+import { fetchChatRoomDetails } from "../../api/chat/chatApi.js";
+// import { Api } from "../../api/chat";
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
