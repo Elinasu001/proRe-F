@@ -17,10 +17,12 @@ import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
 import Login from "./component/Login/Login";
+import { AuthProvider } from './context/AuthContext.jsx';
 
 function App() {
   return (
     <>
+    <AuthProvider>
       <CommonGlobalStyles />
       <Routes>
         <Route element={<Layout />}>
@@ -41,6 +43,7 @@ function App() {
           <Route path="/auth/loginForm" element={<Login />} />
         </Route>
       </Routes>
+      </AuthProvider>
     </>
   );
 }
