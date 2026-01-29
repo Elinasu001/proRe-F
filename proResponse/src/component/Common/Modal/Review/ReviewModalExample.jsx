@@ -1,8 +1,9 @@
-
 import ReviewViewModal from './ReviewViewModal';
 import ReviewWriteModal from './ReviewWriteModal';
 import useReviewModal from './useReviewModal';
 import dummyChatExportReview from '../../../Common/dummy/dummyChatExportReview.js';
+import ReportModal from '../Report/ReportModal';
+import useReportModal from '../Report/useReportModal';
 
 /**
  * 리뷰 모달 사용 예제 컴포넌트
@@ -16,6 +17,13 @@ const ReviewModalExample = () => {
     openWriteModal,
     closeModals,
   } = useReviewModal();
+
+  // useReportModal 훅 사용
+  const {
+    reportModal,
+    openReportModal,
+    closeReportModal,
+  } = useReportModal();
 
   // 실제 더미 리뷰 데이터 적용
   const sampleReview = dummyChatExportReview.data;
@@ -67,6 +75,17 @@ const ReviewModalExample = () => {
     );
   };
 
+  /**
+   * 신고 모달 열기
+   */
+  const handleOpenReportModal = () => {
+    openReportModal(tagOptions, (reportData) => {
+      console.log('제출된 신고:', reportData);
+      alert('신고가 제출되었습니다!');
+      closeReportModal();
+    });
+  };
+
   return (
     <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
       <h1>리뷰 모달 컴포넌트 사용 예제</h1>
@@ -107,6 +126,21 @@ const ReviewModalExample = () => {
           }}
         >
           후기 보내기
+        </button>
+        {/* 신고 모달 열기 */}
+        <button
+          onClick={handleOpenReportModal}
+          style={{
+            padding: '12px 24px',
+            fontSize: '16px',
+            background: '#ff4444',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+          }}
+        >
+          신고하기 테스트
         </button>
       </div>
 
@@ -189,6 +223,7 @@ import useReviewModal from './useReviewModal';`}
       {/* 리뷰 모달들 */}
       <ReviewViewModal {...viewModal} />
       <ReviewWriteModal {...writeModal} />
+      <ReportModal {...reportModal} />
     </div>
   );
 };
