@@ -6,6 +6,8 @@ import dummyExpertBasicInfo from "../../../Common/dummy/dummyExpertBasicInfo.js"
 import ExportBasicInfo from "../../Export/ExportBasicInfo.jsx";
 import { axiosPublic } from "../../../../api/reqApi.js";
 import * as SR from "../../Review/Review.styled.js";
+import starImg from '../../../../assets/images/common/m_star.png';
+import { useReviewItemFeatures } from '../../Review/useReviewItemFeatures.js';
 
 /**
  * ExpertDetailModal - 전문가 상세 정보 모달
@@ -18,12 +20,14 @@ import * as SR from "../../Review/Review.styled.js";
  * @param {function} props.onToggleFavorite - 찜하기 토글 콜백
  */
 
-const ExpertDetailModal = ({ isOpen, onClose, expert }) => {
+const ExpertDetailModal = ({ isOpen, onClose, textRef, expert }) => {
   const data = expert || dummyExpertBasicInfo[0];
   const [activeTab, setActiveTab] = useState("detail"); // 'detail' or 'review'
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [reviews, setReviews] = useState([]);
   const [loadingReviews, setLoadingReviews] = useState(false);
+  const features = useReviewItemFeatures(reviews);
+
 
   /**
    * ESC 키로 모달 닫기
@@ -141,7 +145,7 @@ const ExpertDetailModal = ({ isOpen, onClose, expert }) => {
               setSelectedImageIndex={setSelectedImageIndex}
             />
           ) : (
-            <SR.ReviewContent>
+            <>
               {loadingReviews ? (
                 <p>리뷰 로딩 중...</p>
               ) : reviews.length === 0 ? (
@@ -170,10 +174,15 @@ const ExpertDetailModal = ({ isOpen, onClose, expert }) => {
                       <SR.UserDetails>
                         <SR.UserName>{r.nickname}</SR.UserName>
                         <SR.ReviewDate>{r.categoryName}</SR.ReviewDate>
+                      </SR.UserDetails>
+                      <SR.UserDetails>
+                        <SR.Rating>
+                        <SR.StarImg src={starImg} alt="별점" style={{ width: 16, height: 16, marginRight: 4 }} />
+                        {r.starScore}
+                      </SR.Rating>
                         <SR.ReviewDate>{r.createDate}</SR.ReviewDate>
                       </SR.UserDetails>
-
-                      <SR.Rating>⭐ {r.starScore}</SR.Rating>
+                      
                     </SR.UserInfo>
 
                     {/* 이미지 */}
@@ -190,7 +199,18 @@ const ExpertDetailModal = ({ isOpen, onClose, expert }) => {
                     )}
 
                     {/* 리뷰 내용 */}
-                    <SR.ReviewText>{r.content}</SR.ReviewText>
+                    <SR.ReviewText
+                    ref={textRef}
+                    $collapsed={!features.isExpanded && features.needsShowMore}
+                    > 
+                      {r.content}
+                    </SR.ReviewText>
+                     {/* 더보기 버튼 */}
+                    {features.needsShowMore && (
+                      <S.ShowMoreButton onClick={() => features.setIsExpanded(!features.isExpanded)}>
+                          {features.isExpanded ? '접기' : '더보기'}
+                      </S.ShowMoreButton>
+                    )}
 
                     {/* 태그 */}
                     {r.tagNames?.length > 0 && (
@@ -203,7 +223,7 @@ const ExpertDetailModal = ({ isOpen, onClose, expert }) => {
                   </div>
                 ))
               )}
-            </SR.ReviewContent>
+            </>
           )}
         </S.ScrollContent>
       </S.ModalContainer>
