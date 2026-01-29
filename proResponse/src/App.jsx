@@ -13,11 +13,15 @@ import Favorite from './component/Favorite/Favorite.jsx';
 import Home from './component/Home/Home.jsx';
 import InputTest from './component/InputTest/InputTest.jsx';
 import Login from "./component/Login/Login";
-import MyPage from './component/MyPage/MyPage.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import { AuthProvider } from './context/AuthContext';
+import EstimateLayout from './component/Common/Layout/EstimateLayout.jsx';
+import EstimateUser from './component/MyEstimate/EstimateUser/EstimateUser.jsx';
+import EstimateExpert from './component/MyEstimate/EstimateExpert/EstimateExpert.jsx';
+import MypageUser from './component/MyPage/MypageUser.jsx';
+import MypageExpert from './component/Mypage/MypageExpert.jsx';
 
 
 function App() {
@@ -33,7 +37,6 @@ function App() {
           <Route path="/chatRoom/:id" element={<ChatRoom />} />
           <Route path="/favorite" element={<Favorite />} />
           <Route path="/inputTest" element={<InputTest />} />
-          <Route path="/mypage" element={<MyPage />} />
           <Route path="/AlertExample" element={<AlertExample />} />
           <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
           <Route path="/TestChatRooms" element={<TestChatRooms />} />
@@ -41,6 +44,13 @@ function App() {
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
+          <Route path="/mypageUser" element={<MypageUser />} />
+          {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
+          <Route path="/mypageExpert" element={<MypageExpert />} />
+        </Route>
+        <Route element={<EstimateLayout />}>
+          <Route path="/estimateUser" element={<EstimateUser />} />
+          <Route path="/estimateExpert" element={<EstimateExpert />} />
         </Route>
       </Routes>
     </AuthProvider>
