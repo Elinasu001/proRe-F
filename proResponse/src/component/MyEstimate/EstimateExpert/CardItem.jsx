@@ -55,7 +55,7 @@ const CardItem = ({ data }) => {
                         variant="primary"
                         onClick={() => setIsDetailOpen(true)}
                     >
-                    내 문의 상세
+                    견적 보내기
                     </Button>
                 </S.ButtonGroup>
             </S.ActionContainer>

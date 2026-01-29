@@ -111,7 +111,7 @@ const ExpertCards = () => {
                     </T.SubLine>
                     <T.SubLine>거래하기</T.SubLine>
                 </T.TitleWrapper>
-                </L.Section>
+            </L.Section>
             <TB.TabContainer>
             {tabs.map(tab => (
                 <TB.Tab

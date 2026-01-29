@@ -6,9 +6,7 @@ const EstimateExpert = () => {
   return (
     <>
       <S.LeftContent>
-        <S.Section>
           <ExpertCards />
-        </S.Section>
         {/* 카드리스트 */}
         <S.Section>
           {/* <ExpertCards /> */}
