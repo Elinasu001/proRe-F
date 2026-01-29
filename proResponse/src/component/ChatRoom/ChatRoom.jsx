@@ -72,6 +72,7 @@ const ChatRoom = () => {
     }[readyState];
 
     // 1. 과거 메시지 불러오기
+
     useEffect(() => {
         const fetchMessages = async () => {
             try {
@@ -88,12 +89,7 @@ const ChatRoom = () => {
                             ...msg,
                             mine: Number(msg.userNo) === userNo
                         }));
-                    
                     setMessages(sortedMessages);
-                    
-                    setTimeout(() => {
-                        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
                 }
             } catch (error) {
                 console.error('메시지 조회 실패:', error);
@@ -101,9 +97,13 @@ const ChatRoom = () => {
                 navi(-1);
             }
         };
-
         fetchMessages();
     }, [estimateNo, navi, userNo]);
+
+    // messages가 바뀔 때마다 항상 맨 아래로 스크롤
+    useEffect(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    }, [messages]);
 
     // 2. WebSocket 메시지 수신
     useEffect(() => {
