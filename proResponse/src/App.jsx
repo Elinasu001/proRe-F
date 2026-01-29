@@ -7,21 +7,21 @@ import AlertExample from './component/Common/Alert/AlertExample.jsx';
 import Layout from './component/Common/Layout/Layout.jsx';
 import ExpertDetailModalExample from './component/Common/Modal/ExportDetail/ExpertDetailModalExample.jsx';
 import ReviewModalExample from './component/Common/Modal/Review/ReviewModalExample.jsx';
+import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
 import ExportList from './component/ExportList/ExportList.jsx';
 import Favorite from './component/Favorite/Favorite.jsx';
 import Home from './component/Home/Home.jsx';
 import InputTest from './component/InputTest/InputTest.jsx';
+import Login from "./component/Login/Login";
 import MyPage from './component/MyPage/MyPage.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
-import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
-import Login from "./component/Login/Login";
-import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider } from './context/AuthContext';
+
 
 function App() {
   return (
-    <>
     <AuthProvider>
       <CommonGlobalStyles />
       <Routes>
@@ -34,17 +34,16 @@ function App() {
           <Route path="/favorite" element={<Favorite />} />
           <Route path="/inputTest" element={<InputTest />} />
           <Route path="/mypage" element={<MyPage />} />
-          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           <Route path="/AlertExample" element={<AlertExample />} />
           <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
           <Route path="/TestChatRooms" element={<TestChatRooms />} />
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
+          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Route>
       </Routes>
-      </AuthProvider>
-    </>
+    </AuthProvider>
   );
 }
 
