@@ -17,6 +17,7 @@ import MyPage from './component/MyPage/MyPage.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
+import AdminMemberList from './component/Admin/AdminMemberList.jsx';
 import { AuthProvider } from './context/AuthContext';
 
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
+          <Route path="/admin/members" element={<AdminMemberList />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Route>
       </Routes>
