@@ -1,7 +1,7 @@
 
 import * as S from '../styles/Detail.styled';
 
-const Detail = ({ data, onClose }) => {
+const Detail = ({ onClose }) => {
     return (
         <S.Overlay onClick={onClose}>
         <S.Modal onClick={e => e.stopPropagation()}>
