@@ -19,3 +19,23 @@ export const Highlight = styled.span`
   color: var(--primary);
   font-weight: 700;
 `;
+
+export const TitleWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: inherit;
+  margin-bottom: 16px;
+`;
+
+export const SubLine = styled.div`
+  font-size: var(--font16); 
+  color: var(--color-3);
+  margin-top: 8px;
+`;
+
+export const SubHighlight = styled.span`
+  font-size: var(--font18); 
+  color: var(--primary);
+  font-weight: 700;
+`;
