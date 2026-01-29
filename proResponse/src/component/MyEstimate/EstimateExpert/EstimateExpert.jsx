@@ -1,16 +1,17 @@
 import React from 'react';
 import * as S from '../../Common/Layout/EstimateLayout.styled.js';
+import ExpertCards from './ExpertCards.jsx';
 
 const EstimateExpert = () => {
   return (
     <>
       <S.LeftContent>
         <S.Section>
-       
+          <ExpertCards />
         </S.Section>
         {/* 카드리스트 */}
         <S.Section>
-          {/* <UserCards /> */}
+          {/* <ExpertCards /> */}
         </S.Section>
       </S.LeftContent>
       <S.RightContent>
