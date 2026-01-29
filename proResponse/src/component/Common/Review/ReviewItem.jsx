@@ -42,7 +42,7 @@ const ReviewItem = ({ review, handleImageClick, textRef, isExpanded, needsShowMo
         {/* 리뷰 텍스트 */}
         <S.ReviewText
         ref={textRef}
-        $collapsed={!isExpanded && needsShowMore}
+            $collapsed={!isExpanded && needsShowMore}
         >
         {review.content}
         </S.ReviewText>
