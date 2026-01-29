@@ -2,41 +2,15 @@ import axios from 'axios';
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useWebSocket from 'react-use-websocket';
-import { fetchChatRoomDetails } from "../../api/chat/chatApi.js";
-// import { Api } from "../../api/chat";
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
 import reportImg from '../../assets/images/common/report.png';
 import reviewImg from '../../assets/images/common/review_btn.png';
 import sendImg from '../../assets/images/common/send.png';
-import {
-    ActionButton,
-    ActionLightWrapper,
-    ActionRightWrapper,
-    ChatActions,
-    ChatBox,
-    ChatHeader,
-    ChatInput,
-    ChatInputContainer,
-    ChatMessages,
-    ChatPopup,
-    ChatPopupOverlay,
-    ChatSubtitle,
-    ChatTitle,
-    CloseButton,
-    EmojiItem,
-    EmojiPicker,
-    IconButton,
-    Message,
-    MessageBubble,
-    UploadingBox,
-    UploadingText,
-    UploadingBarWrapper,
-    UploadingBar,
-    FailedBox,
-    ChatAttachmentImage
-} from './ChatRoom.styled.js';
+import * as S from './ChatRoom.styled.js';
+import useReportModal from './Report/useReportModal.js';
+
 
 import { useAuth } from '../../context/AuthContext.jsx';
 
@@ -313,66 +287,92 @@ const ChatRoom = () => {
         '😢', '😭', '😅', '🤔', '😎', '🙌', '✨', '💪', '👌', '🤗'
     ];
 
-    return (
-        <ChatPopupOverlay>
-            <ChatPopup>
-                <ChatHeader>
-                    <div>
-                        <ChatTitle>채팅하기</ChatTitle>
-                        <ChatSubtitle>{connectionStatus}</ChatSubtitle>
-                    </div>
-                    <CloseButton onClick={() => navi(-1)}>✕</CloseButton>
-                </ChatHeader>
+    const {
+        openReportModal,
+        closeReportModal,
+    } = useReportModal();
 
-                <ChatActions>
-                    <ActionLightWrapper>
-                        <ActionButton>
+    const tagOptions = [
+        '정말과 느허항가 없어요',
+        '사건을 잘 자세요',
+        '응대가 친절해요',
+        '외시스톤이 합격해요',
+        '상담이 자세해요',
+    ];
+
+    /**
+   * 신고 모달 열기
+   */
+    const handleOpenReportModal = () => {
+        openReportModal(tagOptions, (reportData) => {
+        console.log('제출된 신고:', reportData);
+        alert('신고가 제출되었습니다!');
+        closeReportModal();
+        });
+    };
+
+    return (
+        <S.ChatPopupOverlay>
+            <S.ChatPopup>
+                <S.ChatHeader>
+                    <div>
+                        <S.ChatTitle>채팅하기</S.ChatTitle>
+                        <S.ChatSubtitle>{connectionStatus}</S.ChatSubtitle>
+                    </div>
+                    <S.CloseButton onClick={() => navi(-1)}>✕</S.CloseButton>
+                </S.ChatHeader>
+
+                <S.ChatActions>
+                    <S.ActionLightWrapper>
+                        <S.ActionButton
+                        onClick={handleOpenReportModal}
+                        >
                             <img src={reportImg} alt="report" />
                             신고하기
-                        </ActionButton>
-                    </ActionLightWrapper>
+                        </S.ActionButton>
+                    </S.ActionLightWrapper>
                     
-                    <ActionRightWrapper>
+                    <S.ActionRightWrapper>
                         {userRole === 'ROLE_USER' && (
-                            <ActionLightWrapper>
-                                <ActionButton>
+                            <S.ActionLightWrapper>
+                                <S.ActionButton>
                                     <img src={reviewImg} alt="review" />
                                     후기쓰기
-                                </ActionButton>
-                            </ActionLightWrapper>
+                                </S.ActionButton>
+                            </S.ActionLightWrapper>
                         )}
-                        <ActionButton>
+                        <S.ActionButton>
                             <img src={payImg} alt="pay" />
                             송금하기
-                        </ActionButton>
-                    </ActionRightWrapper>
-                </ChatActions>
+                        </S.ActionButton>
+                    </S.ActionRightWrapper>
+                </S.ChatActions>
 
-                <ChatMessages>
+                <S.ChatMessages>
                     {messages.map((msg, index) => (
-                        <Message 
+                        <S.Message 
                             key={msg.messageNo || msg.tempId || index} 
                             className={msg.mine ? "message-me" : "message-other"}
                         >
-                            <MessageBubble $sender={msg.mine ? 'me' : 'other'}>
+                            <S.MessageBubble $sender={msg.mine ? 'me' : 'other'}>
                                 {msg.type === 'TEXT' && msg.content}
                                 
                                 {msg.type === 'FILE' && (
                                     <div style={{ position: 'relative' }}>
                                         <div>{msg.content}</div>
                                         {msg.status === 'UPLOADING' && (
-                                            <UploadingBox>
-                                                <UploadingText>업로드 중... {msg.progress}%</UploadingText>
-                                                <UploadingBarWrapper>
-                                                <UploadingBar style={{ width: `${msg.progress}%` }} />
-                                                </UploadingBarWrapper>
-                                            </UploadingBox>
+                                            <S.UploadingBox>
+                                                <S.UploadingText>업로드 중... {msg.progress}%</S.UploadingText>
+                                                <S.UploadingBarWrapper>
+                                                <S.UploadingBar style={{ width: `${msg.progress}%` }} />
+                                                </S.UploadingBarWrapper>
+                                            </S.UploadingBox>
                                             )}
                                             {msg.status === 'FAILED' && (
-                                            <FailedBox>전송 실패</FailedBox>
+                                            <S.FailedBox>전송 실패</S.FailedBox>
                                             )}
                                             {msg.attachments?.map((att, i) => (
-                                            <ChatAttachmentImage
+                                            <S.ChatAttachmentImage
                                                 key={i}
                                                 src={att.filePath}
                                                 alt={att.originName}
@@ -385,28 +385,28 @@ const ChatRoom = () => {
                                 {msg.type === 'PAYMENT' && (
                                     <div>{msg.content}</div>
                                 )}
-                            </MessageBubble>
-                        </Message>
+                            </S.MessageBubble>
+                        </S.Message>
                     ))}
                     <div ref={messagesEndRef} />
-                </ChatMessages>
+                </S.ChatMessages>
 
-                <ChatInputContainer>
+                <S.ChatInputContainer>
                     {showEmojiPicker && (
-                        <EmojiPicker>
+                        <S.EmojiPicker>
                             {emojis.map((emoji, index) => (
-                                <EmojiItem
+                                <S.EmojiItem
                                     key={index}
                                     onClick={() => handleEmojiClick(emoji)}
                                 >
                                     {emoji}
-                                </EmojiItem>
+                                </S.EmojiItem>
                             ))}
-                        </EmojiPicker>
+                        </S.EmojiPicker>
                     )}
                     
-                    <ChatBox>
-                        <ChatInput
+                    <S.ChatBox>
+                        <S.ChatInput
                             type="text"
                             placeholder="메시지를 입력하세요"
                             value={message}
@@ -415,13 +415,13 @@ const ChatRoom = () => {
                             disabled={readyState !== WebSocket.OPEN}
                         />
                         
-                        <IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
+                        <S.IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                             <img src={emojiImg} alt="emoji" />
-                        </IconButton>
+                        </S.IconButton>
                         
-                        <IconButton onClick={() => fileInputRef.current?.click()}>
+                        <S.IconButton onClick={() => fileInputRef.current?.click()}>
                             <img src={fileImg} alt="file" />
-                        </IconButton>
+                        </S.IconButton>
                         <input
                             type="file"
                             ref={fileInputRef}
@@ -431,16 +431,16 @@ const ChatRoom = () => {
                             accept="image/*"
                         />
                         
-                        <IconButton 
+                        <S.IconButton 
                             onClick={handleSendMessage}
                             disabled={readyState !== WebSocket.OPEN}
                         >
                             <img src={sendImg} alt="send" />
-                        </IconButton>
-                    </ChatBox>
-                </ChatInputContainer>
-            </ChatPopup>
-        </ChatPopupOverlay>
+                        </S.IconButton>
+                    </S.ChatBox>
+                </S.ChatInputContainer>
+            </S.ChatPopup>
+        </S.ChatPopupOverlay>
     );
 };
 
