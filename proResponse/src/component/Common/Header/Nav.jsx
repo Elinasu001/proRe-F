@@ -44,7 +44,7 @@ const NavMenu = ({
 
     const handleLogout = () => {
         logout();
-        console.log('로그아웃');
+        //console.log('로그아웃');
         setIsProfileOpen(false);
         closeMobileMenu();
     };
@@ -132,7 +132,7 @@ const NavMenu = ({
                 <NavItem style={{ width: '100%', borderTop: '1px solid #f0f0f0', marginTop: '1rem', paddingTop: '1rem' }}>
                     <LoginButton
                         onClick={() => {
-                            console.log('로그인 버튼 클릭');
+                            //console.log('로그인 버튼 클릭');
                             closeMobileMenu();
                             navigate("/auth/loginForm");
                         }}

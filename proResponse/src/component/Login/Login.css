@@ -1,0 +1,153 @@
+/* =========================
+   App Layout
+   (헤더/푸터 사이 main이 꽉 차도록)
+========================= */
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+}
+
+/* =========================
+   Login Page (회색 배경은 main에만)
+========================= */
+.login-main {
+    background: #f4f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;   
+  padding: 120px 16px 64px;  
+  box-sizing: border-box;
+}
+
+/* 타이틀 + 카드의 공통 가로 기준 */
+.login-wrap {
+  width: 100%;
+  max-width: 420px;
+}
+
+/* 카드 밖 타이틀 */
+.login-heading {
+  margin: 0 0 24px 0;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* 카드 */
+.login-card {
+  width: 100%;
+  background: #fff;
+  border-radius: 12px;
+  padding: 48px 40px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
+}
+
+.login-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 34px;
+  margin-bottom: 22px;
+}
+
+/* 폼 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field .label {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.error-msg {
+  margin: 0;
+  font-size: 12px;
+  color: #e11d48;
+}
+
+/* 이메일 로그인 버튼 */
+.btn-primary {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  background: #005eff;
+  color: #ffffff;
+  border: 0;
+  cursor: pointer;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 링크 줄 */
+.link-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 6px;
+}
+
+.link-btn {
+  border: 0;
+  background: transparent;
+  font-size: 14px;
+  color: #666;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+/* 소셜 섹션 */
+.social-section {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social-title {
+  font-size: 13px;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* 네이버 버튼 */
+.btn-naver {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 16px;
+  background: #03c75a;
+  color: #ffffff;
+  box-shadow: 0 10px 22px rgba(3, 199, 90, 0.22);
+  border: 0;
+  cursor: pointer;
+}
