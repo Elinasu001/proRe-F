@@ -60,7 +60,7 @@ const ExportCardItem = ({ data }) => {
             <Top>
                 <Profile>
                     <ProfileImg src={profileImg} alt="프로필" />
-                    <Name><span>{data?.nickName}</span> 전문가</Name>
+                    <Name><span>{data?.nickname || data?.nickName}</span> 전문가</Name>
                 </Profile>
                 <img
                     src={data.userLiked === 0 ? iHeart : heart}

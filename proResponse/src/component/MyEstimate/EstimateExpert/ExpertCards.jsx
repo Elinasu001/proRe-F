@@ -82,12 +82,8 @@ const ExpertCards = () => {
                         key={expert.requestNo}
                         data={{
                             profileImg: expert.profileImg || defaultImg,
-                            nickName: expert.nickname,
-                            starScore: expert.starScore,
-                            reviewCount: expert.reviewCount,
+                            nickName: expert.nickname,       
                             address: expert.address,
-                            startTime: expert.startTime,
-                            endTime: expert.endTime,
                         }}
                     />
                 ))}

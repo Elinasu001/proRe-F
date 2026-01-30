@@ -190,10 +190,18 @@ const EstimateRequest = ({
     form.append("content", formData.content);
     form.append("expertNo", expertInfo.expertNo);
     form.append("categoryDetailNo", detailCategoryNo);
-    // 이미지
-    formData.images.forEach((image) => {
-      form.append("images", image);
-    });
+    // 이미지 
+    if (formData.images && formData.images.length > 0) {
+      console.log("이미지 전송:", formData.images.length + "개");
+      formData.images.forEach((image, index) => {
+        if (image.file) {
+          console.log(`이미지 ${index}:`, image.file.name, image.file.size);
+          form.append("images", image.file); // image.file로 변경
+        } else {
+          console.warn(`이미지 ${index}에 file 속성이 없습니다`);
+        }
+      });
+    }
 
     if (onSubmit) {
       onSubmit(form);
