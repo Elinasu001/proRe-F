@@ -129,7 +129,7 @@ const NavMenu = ({
 
             {/* 모바일에서만 표시되는 UserActions */}
             {!isLoggedIn ? (
-                <NavItem style={{ width: '100%', borderTop: '1px solid #f0f0f0', marginTop: '1rem', paddingTop: '1rem' }}>
+                <NavItem>
                     <LoginButton
                         onClick={() => {
                             console.log('로그인 버튼 클릭');
@@ -144,7 +144,7 @@ const NavMenu = ({
             ) : (
                 <UserActions>
                     {/* 찜 목록 (하트 아이콘) */}
-                    <a href="/favorite" style={{display:'flex',alignItems:'center'}}>
+                    <a href="/favorite">
                         <IconButton
                             onClick={() => {
                                 console.log('찜 목록 클릭');
@@ -178,7 +178,7 @@ const NavMenu = ({
                                 <h4>내 정보</h4>
                             </ProfileDropdownHeader>
 
-                            <a href="/mypage" style={{textDecoration:'none',color:'inherit'}}>
+                            <a href="/mypage">
                                 <ProfileDropdownItem
                                     onClick={() => {
                                         setIsProfileOpen(false);
@@ -202,7 +202,7 @@ const NavMenu = ({
                             </ProfileDropdownItem>
 
                             {/* 견적 요청 */}
-                            <a href="/myquote" style={{textDecoration:'none',color:'inherit'}}>
+                            <a href="/myquote">
                                 <ProfileDropdownItem
                                     onClick={() => {
                                         setIsProfileOpen(false);

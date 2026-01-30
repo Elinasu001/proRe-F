@@ -1,5 +1,5 @@
 
-import {styled, keyframes } from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 
 export const ChatPopupOverlay = styled.div`
     position: fixed;
@@ -297,4 +297,46 @@ export const ChatAttachmentImage = styled.img`
     margin-top: 8px;
     border-radius: 8px;
     opacity: ${({ $uploading }) => $uploading ? 0.6 : 1};
+`;
+
+
+export const FileUploadingBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+`;
+
+export const FileUploadingText = styled.div`
+    font-size: 12px;
+    margin-bottom: 4px;
+`;
+
+export const FileUploadingBarBg = styled.div`
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+`;
+
+export const FileUploadingBar = styled.div`
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s;
+`;
+
+export const FileFailedBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(255,0,0,0.1);
+    border-radius: 4px;
+    color: #f44336;
+    font-size: 12px;
+`;
+
+export const FileAttachmentImg = styled.img`
+    max-width: 200px;
+    margin-top: 8px;
+    border-radius: 8px;
+    opacity: ${({ $uploading }) => ($uploading ? 0.6 : 1)};
 `;

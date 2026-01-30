@@ -7,19 +7,15 @@ const TestChatRooms = () => {
     const [content, setContent] = useState('안녕하세요');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
-    const [enterEstimateNo, setEnterEstimateNo] = useState('');  // ⭐ roomNo → estimateNo
+    const [enterEstimateNo, setEnterEstimateNo] = useState(''); 
     const navi = useNavigate();
 
-    // 채팅방 생성
+    // 채팅방 생성 (estimateNo 입력 없으면 랜덤)
     const handleCreateRoom = async () => {
-        if (!estimateNo) {
-            alert('견적 번호를 입력하세요');
-            return;
-        }
         setLoading(true);
         try {
             const res = await createChatRoomApi({
-                estimateNo: Number(estimateNo),
+                estimateNo: estimateNo ? Number(estimateNo) : undefined,
                 content,
                 type: 'TEXT'
             });
@@ -34,13 +30,13 @@ const TestChatRooms = () => {
         }
     };
 
-    // ⭐ estimateNo로 입장
+    // estimateNo로 입장
     const handleEnterRoom = () => {
         if (!enterEstimateNo) {
             alert('견적 번호를 입력하세요');
             return;
         }
-        navi(`/chatRoom/${enterEstimateNo}`);  // ⭐ estimateNo로 이동
+        navi(`/chatRoom/${enterEstimateNo}`);  //estimateNo로 이동
     };
 
     return (
@@ -51,12 +47,12 @@ const TestChatRooms = () => {
             <div style={{ marginBottom: '30px', padding: '15px', border: '1px solid #ccc' }}>
                 <h3>1. 채팅방 생성</h3>
                 <div style={{ marginBottom: '10px' }}>
-                    <label>견적 번호 (estimateNo): </label>
+                    <label>견적 번호 (estimateNo, 비워두면 랜덤): </label>
                     <input
                         type="number"
                         value={estimateNo}
                         onChange={(e) => setEstimateNo(e.target.value)}
-                        placeholder="예: 81"
+                        placeholder="비우면 랜덤 생성"
                     />
                 </div>
                 <div style={{ marginBottom: '10px' }}>
@@ -78,10 +74,13 @@ const TestChatRooms = () => {
                         <p><b>생성 완료!</b></p>
                         <p>roomNo: {result.roomNo}</p>
                         <p>estimateNo: {result.estimateNo}</p>
-                        {/* ⭐ estimateNo로 이동 */}
                         <button onClick={() => navi(`/chatRoom/${result.estimateNo}`)}>
                             채팅방 입장
                         </button>
+                        <div style={{marginTop:'10px', fontSize:'13px', color:'#555'}}>
+                            <b>WebSocket 예시:</b><br/>
+                            ws://localhost:8080/ws/chat/<b>{result.estimateNo}</b>
+                        </div>
                     </div>
                 )}
             </div>
@@ -90,7 +89,6 @@ const TestChatRooms = () => {
             <div style={{ padding: '15px', border: '1px solid #ccc' }}>
                 <h3>2. 기존 채팅방 입장</h3>
                 <div style={{ marginBottom: '10px' }}>
-                    {/* ⭐ 라벨 수정 */}
                     <label>견적 번호 (estimateNo): </label>
                     <input
                         type="number"
