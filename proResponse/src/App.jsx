@@ -22,7 +22,7 @@ import EstimateUser from './component/MyEstimate/EstimateUser/EstimateUser.jsx';
 import EstimateExpert from './component/MyEstimate/EstimateExpert/EstimateExpert.jsx';
 import MypageUser from './component/MyPage/MypageUser.jsx';
 import MypageExpert from './component/Mypage/MypageExpert.jsx';
-
+import Map from './component/Common/Map/Map.jsx';
 
 function App() {
   return (
@@ -47,11 +47,13 @@ function App() {
           <Route path="/mypageUser" element={<MypageUser />} />
           {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
           <Route path="/mypageExpert" element={<MypageExpert />} />
+           <Route path="/nearby" element= {<Map />} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={<EstimateUser />} />
           <Route path="/estimateExpert" element={<EstimateExpert />} />
         </Route>
+          
       </Routes>
     </AuthProvider>
   );
