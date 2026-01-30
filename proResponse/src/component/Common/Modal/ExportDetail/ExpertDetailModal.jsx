@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
-import * as S from './ExpertDetailModal.styled';
-import ExportCardItem from '../../ExportCards/ExportCardItem.jsx';
-import ExpertDetail from '../../Export/ExportDetail.jsx';
-import dummyExpertBasicInfo from '../../../Common/dummy/dummyExpertBasicInfo.js';
-import ExportBasicInfo from '../../Export/ExportBasicInfo.jsx';
+import { useEffect, useState } from "react";
+import * as S from "./ExpertDetailModal.styled";
+import ExportCardItem from "../../ExportCards/ExportCardItem.jsx";
+import ExpertDetail from "../../Export/ExportDetail.jsx";
+import dummyExpertBasicInfo from "../../../Common/dummy/dummyExpertBasicInfo.js";
+import ExportBasicInfo from "../../Export/ExportBasicInfo.jsx";
+import { axiosPublic } from "../../../../api/reqApi.js";
+import * as SR from "../../Review/Review.styled.js";
+import starImg from '../../../../assets/images/common/m_star.png';
+import { useReviewItemFeatures } from '../../Review/useReviewItemFeatures.js';
 
 /**
  * ExpertDetailModal - 전문가 상세 정보 모달
- * 
+ *
  * @param {Object} props
  * @param {boolean} props.isOpen - 모달 표시 여부
  * @param {Object} props.data - 전문가 데이터
@@ -16,15 +20,14 @@ import ExportBasicInfo from '../../Export/ExportBasicInfo.jsx';
  * @param {function} props.onToggleFavorite - 찜하기 토글 콜백
  */
 
-
-const ExpertDetailModal = ({ 
-  isOpen, 
-  onClose, 
-  expert,
-}) => {
+const ExpertDetailModal = ({ isOpen, onClose, textRef, expert }) => {
   const data = expert || dummyExpertBasicInfo[0];
-  const [activeTab, setActiveTab] = useState('detail'); // 'detail' or 'review'
+  const [activeTab, setActiveTab] = useState("detail"); // 'detail' or 'review'
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [reviews, setReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const features = useReviewItemFeatures(reviews);
+
 
   /**
    * ESC 키로 모달 닫기
@@ -32,12 +35,12 @@ const ExpertDetailModal = ({
   useEffect(() => {
     if (!isOpen) return;
     const handleEscape = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onClose();
       }
     };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
 
   /**
@@ -45,12 +48,12 @@ const ExpertDetailModal = ({
    */
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
     };
   }, [isOpen]);
 
@@ -60,9 +63,28 @@ const ExpertDetailModal = ({
   useEffect(() => {
     if (isOpen) {
       setSelectedImageIndex(0);
-      setActiveTab('detail');
+      setActiveTab("detail");
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (activeTab === "review") return;
+    setLoadingReviews(true);
+    axiosPublic
+      .getList(`/api/reviews/expert/${data.expertNo}`)
+      .then(
+        (res) => {
+          console.log(res.data);
+          setReviews(res.data.list);
+        },
+        [activeTab, data.expertNo],
+      )
+      .catch((err) => {
+        console.error("리뷰 불러오기 실패", err);
+        setReviews([]);
+      })
+      .finally(() => setLoadingReviews(false));
+  }, [activeTab, data.expertNo]);
 
   /**
    * 오버레이 클릭 시 닫기
@@ -74,7 +96,6 @@ const ExpertDetailModal = ({
   };
 
   if (!isOpen || !data) return null;
-
 
   return (
     <S.Overlay onClick={handleOverlayClick}>
@@ -96,30 +117,114 @@ const ExpertDetailModal = ({
 
         {/* 스크롤 가능한 컨텐츠 */}
         <S.ScrollContent>
-
           {/* 전문가 정보 헤더 */}
           <S.ExpertHeader>
-            <ExportBasicInfo data={data} />
+            <ExportBasicInfo data={expert} />
           </S.ExpertHeader>
 
           {/* 탭 버튼 */}
           <S.TabButtons>
-            <S.TabButton 
-              $isActive={activeTab === 'detail'}
-              onClick={() => setActiveTab('detail')}
+            <S.TabButton
+              $isActive={activeTab === "detail"}
+              onClick={() => setActiveTab("detail")}
             >
               상세 설명
             </S.TabButton>
-            <S.TabButton 
-              $isActive={activeTab === 'review'}
-              onClick={() => setActiveTab('review')}
+            <S.TabButton
+              $isActive={activeTab === "review"}
+              onClick={() => setActiveTab("review")}
             >
               리뷰 {data.reviewCount}
             </S.TabButton>
           </S.TabButtons>
 
-          <ExpertDetail data={data} selectedImageIndex={selectedImageIndex} setSelectedImageIndex={setSelectedImageIndex} />
+          {activeTab === "detail" ? (
+            <ExpertDetail
+              data={data}
+              selectedImageIndex={selectedImageIndex}
+              setSelectedImageIndex={setSelectedImageIndex}
+            />
+          ) : (
+            <>
+              {loadingReviews ? (
+                <p>리뷰 로딩 중...</p>
+              ) : reviews.length === 0 ? (
+                <p>리뷰가 없습니다.</p>
+              ) : (
+                reviews.map((r, idx) => (
+                  <div key={idx} style={{ marginBottom: "24px" }}>
+                    {/* 사용자 정보 */}
+                    <SR.UserInfo>
+                      <SR.UserAvatar>
+                        {r.profileImg ? (
+                          <img
+                            src={r.profileImg}
+                            alt={r.nickname}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              borderRadius: "50%",
+                            }}
+                          />
+                        ) : (
+                          r.nickname?.charAt(0) || "U"
+                        )}
+                      </SR.UserAvatar>
 
+                      <SR.UserDetails>
+                        <SR.UserName>{r.nickname}</SR.UserName>
+                        <SR.ReviewDate>{r.categoryName}</SR.ReviewDate>
+                      </SR.UserDetails>
+                      <SR.UserDetails>
+                        <SR.Rating>
+                        <SR.StarImg src={starImg} alt="별점" style={{ width: 16, height: 16, marginRight: 4 }} />
+                        {r.starScore}
+                      </SR.Rating>
+                        <SR.ReviewDate>{r.createDate}</SR.ReviewDate>
+                      </SR.UserDetails>
+                      
+                    </SR.UserInfo>
+
+                    {/* 이미지 */}
+                    {r.filePaths?.length > 0 && (
+                      <SR.ImageGallery>
+                        {r.filePaths.map((img, i) => (
+                          <SR.ReviewImage
+                            key={i}
+                            src={img}
+                            alt={`리뷰 이미지 ${i + 1}`}
+                          />
+                        ))}
+                      </SR.ImageGallery>
+                    )}
+
+                    {/* 리뷰 내용 */}
+                    <SR.ReviewText
+                    ref={textRef}
+                    $collapsed={!features.isExpanded && features.needsShowMore}
+                    > 
+                      {r.content}
+                    </SR.ReviewText>
+                     {/* 더보기 버튼 */}
+                    {features.needsShowMore && (
+                      <S.ShowMoreButton onClick={() => features.setIsExpanded(!features.isExpanded)}>
+                          {features.isExpanded ? '접기' : '더보기'}
+                      </S.ShowMoreButton>
+                    )}
+
+                    {/* 태그 */}
+                    {r.tagNames?.length > 0 && (
+                      <SR.TagList>
+                        {r.tagNames.map((tag, i) => (
+                          <SR.Tag key={i}>#{tag}</SR.Tag>
+                        ))}
+                      </SR.TagList>
+                    )}
+                  </div>
+                ))
+              )}
+            </>
+          )}
         </S.ScrollContent>
       </S.ModalContainer>
     </S.Overlay>
