@@ -1,12 +1,17 @@
 import { API_BASE_URL, createApiInstance } from '../api_.js';
+import { axiosPublic } from '../reqApi';
 
-export const chatApi = createApiInstance(`${API_BASE_URL}/api/rooms`);
+export const chatApi = {
+    getActual: (url) => axiosPublic.getActual(`/api/rooms${url}`),
+    getList: (url) => axiosPublic.getList(`/api/rooms${url}`),
+};
+
 export const websocketApi = createApiInstance(`ws:${API_BASE_URL}/ws/chat/{estimateNo}`);
 
 
 // 1. 채팅방 생성
 export const fetchChatRoomDetails = (roomNo) => {
-    return chatApi.get(`/${roomNo}/messages`);
+    return chatApi.getActual(`/${roomNo}/messages`);
 }
 
 // 2. 채팅방 생성 (POST /api/rooms)

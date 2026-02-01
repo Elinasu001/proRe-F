@@ -1,96 +1,60 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
-
-const useReviewModal = () => {
-  // 리뷰 조회 모달 상태
+/**
+ * 리뷰 모달 상태 관리 훅
+ * - ESC 키, 스크롤 방지는 CommonModal에서 처리
+ * - 이 훅은 모달 열기/닫기 상태만 관리
+ */
+export default function useReviewModal() {
   const [viewModal, setViewModal] = useState({
     isOpen: false,
-    review: null,
+    data: null,
     onDelete: null,
     onConfirm: null,
   });
 
-  // 리뷰 작성 모달 상태
   const [writeModal, setWriteModal] = useState({
     isOpen: false,
     tagOptions: [],
     onSubmit: null,
   });
 
-  /**
-   * 리뷰 조회 모달 열기
-   * @param {Object} review - 리뷰 데이터
-   * @param {function} onDelete - 삭제 콜백
-   * @param {function} onConfirm - 확인 콜백
-   */
-  const openViewModal = useCallback((review, onDelete, onConfirm) => {
-    setViewModal({
-      isOpen: true,
-      review,
-      onDelete,
-      onConfirm,
+  const openViewModal = (data, onDelete, onConfirm) => {
+    setViewModal({ 
+      isOpen: true, 
+      data, 
+      onDelete, 
+      onConfirm 
     });
-  }, []);
+  };
 
-  /**
-   * 리뷰 작성 모달 열기
-   * @param {Array} tagOptions - 선택 가능한 태그 목록
-   * @param {function} onSubmit - 제출 콜백
-   */
-  const openWriteModal = useCallback((tagOptions = [], onSubmit) => {
-    setWriteModal({
-      isOpen: true,
-      tagOptions,
-      onSubmit,
+  const openWriteModal = (tagOptions, onSubmit) => {
+    setWriteModal({ 
+      isOpen: true, 
+      tagOptions, 
+      onSubmit 
     });
-  }, []);
+  };
 
-  /**
-   * 리뷰 조회 모달 닫기
-   */
-  const closeViewModal = useCallback(() => {
-    setViewModal(prev => ({
-      ...prev,
-      isOpen: false,
-    }));
-  }, []);
-
-  /**
-   * 리뷰 작성 모달 닫기
-   */
-  const closeWriteModal = useCallback(() => {
-    setWriteModal(prev => ({
-      ...prev,
-      isOpen: false,
-    }));
-  }, []);
-
-  /**
-   * 모든 모달 닫기
-   */
-  const closeModals = useCallback(() => {
-    closeViewModal();
-    closeWriteModal();
-  }, [closeViewModal, closeWriteModal]);
+  const closeModals = () => {
+    setViewModal({ 
+      isOpen: false, 
+      data: null, 
+      onDelete: null, 
+      onConfirm: null 
+    });
+    setWriteModal({ 
+      isOpen: false, 
+      tagOptions: [], 
+      onSubmit: null 
+    });
+  };
 
   return {
-    // 리뷰 조회 모달
-    viewModal: {
-      ...viewModal,
-      onClose: closeViewModal,
-    },
-    // 리뷰 작성 모달
-    writeModal: {
-      ...writeModal,
-      onClose: closeWriteModal,
-    },
-    // 헬퍼 함수들
+    viewModal,
+    writeModal,
     openViewModal,
     openWriteModal,
-    closeViewModal,
-    closeWriteModal,
     closeModals,
   };
-};
-
-export default useReviewModal;
+}

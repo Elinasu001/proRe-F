@@ -1,14 +1,12 @@
-
 import ReviewViewModal from './ReviewViewModal';
 import ReviewWriteModal from './ReviewWriteModal';
 import useReviewModal from './useReviewModal';
-import dummyChatExportReview from '../../../Common/dummy/dummyChatExportReview.js';
 
 /**
  * 리뷰 모달 사용 예제 컴포넌트
  */
 const ReviewModalExample = () => {
-  // useReviewModal 훅 사용
+  // useReviewModal 훅에서 상태와 함수 모두 구조분해 할당
   const {
     viewModal,
     writeModal,
@@ -18,16 +16,7 @@ const ReviewModalExample = () => {
   } = useReviewModal();
 
   // 실제 더미 리뷰 데이터 적용
-  const sampleReview = dummyChatExportReview.data;
-
-  // 태그 옵션
-  const tagOptions = [
-    '정말과 느허항가 없어요',
-    '사건을 잘 자세요',
-    '응대가 친절해요',
-    '외시스톤이 합격해요',
-    '상담이 자세해요',
-  ];
+  // const sampleReview = dummyChatExportReview.data;
 
   // ============================================
   // 이벤트 핸들러
@@ -38,7 +27,7 @@ const ReviewModalExample = () => {
    */
   const handleOpenViewModal = () => {
     openViewModal(
-      sampleReview,
+      {}, // sampleReview
       // 삭제 콜백
       () => {
         console.log('리뷰 삭제');
@@ -57,7 +46,7 @@ const ReviewModalExample = () => {
    */
   const handleOpenWriteModal = () => {
     openWriteModal(
-      tagOptions,
+      [], // 빈 배열을 넘기면 ReviewWriteModal에서 API로 태그를 불러옴
       // 제출 콜백
       (reviewData) => {
         console.log('제출된 리뷰:', reviewData);
@@ -90,7 +79,7 @@ const ReviewModalExample = () => {
             cursor: 'pointer',
           }}
         >
-           내가 보낸 후기 보기
+          내가 보낸 후기 보기
         </button>
 
         {/* 리뷰 작성 모달 열기 */}
@@ -117,7 +106,7 @@ const ReviewModalExample = () => {
         background: '#f8f9fa',
         borderRadius: '12px'
       }}>
-        <h2> 사용 방법</h2>
+        <h2>📖 사용 방법</h2>
         
         <h3>1. 기본 import</h3>
         <pre style={{ 
@@ -188,7 +177,7 @@ import useReviewModal from './useReviewModal';`}
 
       {/* 리뷰 모달들 */}
       <ReviewViewModal {...viewModal} />
-      <ReviewWriteModal {...writeModal} />
+      <ReviewWriteModal {...writeModal} onClose={closeModals} />
     </div>
   );
 };
