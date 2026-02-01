@@ -41,7 +41,7 @@ const ReviewWriteModal = ({ isOpen, onClose = () => {}, onSubmit, tagOptions }) 
             const res = await getReviewTags();
             console.log(res);
             const options = res.map(c => ({
-                value: c.tagNo, label: c.tagName
+                value: c.tagNo, label: c.tagName6
             }));
             setFetchedTags(options);
         } catch (err) {
