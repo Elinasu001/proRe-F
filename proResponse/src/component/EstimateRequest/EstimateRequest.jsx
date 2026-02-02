@@ -32,6 +32,45 @@ const EstimateRequest = ({
 
   //console.log(`categoryName 체크 : ${categoryName}`)
 
+  // 상세 카테고리 -> 상위 카테고리 매핑
+  const CATEGORY_MAPPING = {
+    // 촬영 및 편집
+    "기업/상업용 시진 촬영": "촬영 및 편집",
+    "기업/상업용 사진 촬영": "촬영 및 편집",
+    "스냅 촬영": "촬영 및 편집",
+    "개인용 시진촬영": "촬영 및 편집",
+    "개인용 사진촬영": "촬영 및 편집",
+    "영상 촬영": "촬영 및 편집",
+    "영상 편집": "촬영 및 편집",
+    // 음향 및 편집
+    "음악 제작": "음향 및 편집",
+    "녹음": "음향 및 편집",
+    "믹싱/마스터링": "음향 및 편집",
+    // 제2외국어
+    "영어": "제2외국어",
+    "일본어": "제2외국어",
+    "중국어": "제2외국어",
+    // 음악
+    "피아노": "음악",
+    "기타": "음악",
+    "보컬": "음악",
+    "드럼": "음악",
+    // 게임 개발
+    "Unity": "게임 개발",
+    "Unreal": "게임 개발",
+    // 백엔드 개발
+    "Java / Spring": "백엔드 개발",
+    "Node.js": "백엔드 개발",
+    "Python / Django": "백엔드 개발",
+    // 프론트엔드 개발
+    "React": "프론트엔드 개발",
+    "Vue.js": "프론트엔드 개발",
+    "HTML/CSS": "프론트엔드 개발",
+  };
+
+  // 매핑된 상위 카테고리명 찾기
+  const mappedCategoryName = CATEGORY_MAPPING[categoryName] || categoryName;
+
   const QUESTION_CONFIG = {
     "촬영 및 편집": {
       typeOptions: [
@@ -134,7 +173,7 @@ const EstimateRequest = ({
     },
   };
 
-  const currentQuestionSet = QUESTION_CONFIG[categoryName] || {
+  const currentQuestionSet = QUESTION_CONFIG[mappedCategoryName] || {
     typeOptions: [],
     serviceOptions: [],
   };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReservationDetail from './ReservationDetail';
 import Button from '../../Common/Button/Button.jsx';
 import * as S from '../styles/CardItem.styled';
@@ -17,11 +17,40 @@ const CardItem = ({
     onEstimateDetail,
     onQuoteAccept,
     onChatStart,
+    onDeleteEstimate,
+    onEditEstimate,
 }) => {
 
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
     const isQuoted = data?.status === 'QUOTED';
     const isMatched = data?.status === 'MATCHED' || data?.status === 'DONE';
+
+    // 외부 클릭 시 메뉴 닫기
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleDelete = () => {
+        if (onDeleteEstimate) {
+            onDeleteEstimate(data.requestNo);
+        }
+        setIsMenuOpen(false);
+    };
+
+    const handleEdit = () => {
+        if (onEditEstimate) {
+            onEditEstimate(data.requestNo);
+        }
+        setIsMenuOpen(false);
+    };
 
     return (
         <>
@@ -40,6 +69,24 @@ const CardItem = ({
                         </S.Row>
                     </S.Col>
                 </C.Profile>
+                {/* 더보기 메뉴 */}
+                <S.MoreMenuWrapper ref={menuRef}>
+                    <S.MoreButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        ⋮
+                    </S.MoreButton>
+                    {isMenuOpen && (
+                        <S.DropdownMenu>
+                            {!isReceived && (
+                                <S.DropdownItem onClick={handleEdit}>
+                                    견적 수정
+                                </S.DropdownItem>
+                            )}
+                            <S.DropdownItem className="danger" onClick={handleDelete}>
+                                견적 삭제
+                            </S.DropdownItem>
+                        </S.DropdownMenu>
+                    )}
+                </S.MoreMenuWrapper>
             </S.ExpertInfo>
 
             <C.InfoBox>

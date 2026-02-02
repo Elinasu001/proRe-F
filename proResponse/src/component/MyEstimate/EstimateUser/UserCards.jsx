@@ -15,6 +15,8 @@ const UserCards = ({
     onEstimateDetail,
     onQuoteAccept,
     onChatStart,
+    onDeleteEstimate,
+    onEditEstimate,
     refreshKey,
 }) => {
 
@@ -128,6 +130,8 @@ const UserCards = ({
                         onEstimateDetail={onEstimateDetail}
                         onQuoteAccept={onQuoteAccept}
                         onChatStart={onChatStart}
+                        onDeleteEstimate={onDeleteEstimate}
+                        onEditEstimate={onEditEstimate}
                     />
                 ))}
             </S.ReservationGrid>
