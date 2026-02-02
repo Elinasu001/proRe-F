@@ -126,13 +126,14 @@ const EstimateUser = () => {
       <S.RightContent>
         {selectedExpert ? (
           <ExpertDetailPanel
-            selectedExpert={selectedExpert}
+            expert={selectedExpert}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
             reviews={reviews}
-            loadingReviews={loadingReviews}
+            loading={loadingReviews}
             selectedImageIndex={selectedImageIndex}
             setSelectedImageIndex={setSelectedImageIndex}
+            onClose={() => setSelectedExpert(null)}
           />
         ) : selectedEstimate ? (
           <EstimateDetailPanel estimateDetail={selectedEstimate} />
