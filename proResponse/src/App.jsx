@@ -16,6 +16,7 @@ import Login from "./component/Login/Login";
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
+import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
 import AdminMemberList from './component/Admin/AdminMemberList.jsx';
 import { AuthProvider } from './context/AuthContext';
 import EstimateLayout from './component/Common/Layout/EstimateLayout.jsx';
@@ -44,15 +45,18 @@ function App() {
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
-          <Route path="/admin/members" element={<AdminMemberList />} />
-          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           <Route path="/mypageUser" element={<MypageUser />} />
           {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
           <Route path="/mypageExpert" element={<MypageExpert />} />
+          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={<EstimateUser />} />
           <Route path="/estimateExpert" element={<EstimateExpert />} />
+        </Route>
+        {/* 관리자 페이지 */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin/members" element={<AdminMemberList />} />
         </Route>
       </Routes>
     </AuthProvider>

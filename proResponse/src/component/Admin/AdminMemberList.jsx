@@ -1,8 +1,7 @@
-// src/component/Admin/AdminMemberList.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
-import { getAdminMembers, updateMemberStatus, updateMemberPenalty } from "../../api/Admin/adminMemberApi";
+import { getAdminMembers, updateMemberStatus, updateMemberPenalty } from "../../api/admin/adminMemberApi";
 
 const AdminMemberList = () => {
   const { currentUser } = useAuth();
@@ -17,15 +16,6 @@ const AdminMemberList = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // 관리자 권한 체크
-  if (!hasAdminAccess(currentUser?.userRole)) {
-    return (
-      <div style={{ padding: 24, textAlign: "center" }}>
-        <h2>접근 권한이 없습니다.</h2>
-      </div>
-    );
-  }
 
   // 회원 목록 조회
   const fetchMembers = async () => {
@@ -45,9 +35,17 @@ const AdminMemberList = () => {
     }
   };
 
-  useEffect(() => {
+  // 검색 실행
+  const handleSearch = () => {
+    setCurrentPage(1);
     fetchMembers();
-  }, [currentPage]);
+  };
+
+  useEffect(() => {
+    if (hasAdminAccess(currentUser?.userRole)) {
+      fetchMembers();
+    }
+  }, [currentPage, currentUser]);
 
   // 상태 변경
   const handleStatusChange = async (userNo, newStatus) => {
@@ -60,16 +58,25 @@ const AdminMemberList = () => {
     }
   };
 
-  // 패널티 변경
+  // 페널티 변경
   const handlePenaltyChange = async (userNo, newPenalty) => {
     try {
       await updateMemberPenalty(userNo, newPenalty);
-      alert("패널티 상태가 변경되었습니다.");
+      alert("페널티 상태가 변경되었습니다.");
       fetchMembers();
     } catch (err) {
-      alert(err.response?.data?.message || "패널티 변경 실패");
+      alert(err.response?.data?.message || "페널티 변경 실패");
     }
   };
+
+  // 관리자 권한 체크
+  if (!hasAdminAccess(currentUser?.userRole)) {
+    return (
+      <div style={{ padding: 24, textAlign: "center" }}>
+        <h2>접근 권한이 없습니다.</h2>
+      </div>
+    );
+  }
 
   if (loading) return <div style={{ padding: 24 }}>로딩 중...</div>;
   if (error) return <div style={{ padding: 24, color: "red" }}>{error}</div>;
@@ -94,9 +101,9 @@ const AdminMemberList = () => {
             value={searchParams.penaltyStatus}
             onChange={(e) => setSearchParams({ ...searchParams, penaltyStatus: e.target.value })}
           >
-            <option value="">전체 패널티</option>
+            <option value="">전체 페널티</option>
             <option value="N">정상</option>
-            <option value="Y">패널티</option>
+            <option value="Y">페널티</option>
           </select>
 
           <select
@@ -117,7 +124,7 @@ const AdminMemberList = () => {
             style={{ padding: 8, flex: 1 }}
           />
 
-          <button onClick={() => { setCurrentPage(1); fetchMembers(); }}>
+          <button onClick={handleSearch}>
             검색
           </button>
         </div>
@@ -132,7 +139,7 @@ const AdminMemberList = () => {
             <th style={{ padding: 12 }}>닉네임</th>
             <th style={{ padding: 12 }}>역할</th>
             <th style={{ padding: 12 }}>상태</th>
-            <th style={{ padding: 12 }}>패널티</th>
+            <th style={{ padding: 12 }}>페널티</th>
             <th style={{ padding: 12 }}>가입일</th>
             <th style={{ padding: 12 }}>관리</th>
           </tr>
@@ -163,7 +170,7 @@ const AdminMemberList = () => {
                   onChange={(e) => handlePenaltyChange(member.userNo, e.target.value)}
                 >
                   <option value="N">정상</option>
-                  <option value="Y">패널티</option>
+                  <option value="Y">페널티</option>
                 </select>
               </td>
               <td style={{ padding: 12, textAlign: "center" }}>
