@@ -6,7 +6,7 @@ export const AuthContext = createContext();
 
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 
-// 스토리지 상수
+/* 스토리지 상수 */
 const STORAGE_KEYS = {
   accessToken: "accessToken",
   refreshToken: "refreshToken",
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: false,
   });
 
-  // 1) 앱 시작 시 로컬 스토리지 복원
+  /* 앱 시작 시 로컬 스토리지 복원 */
   useEffect(() => {
     const storedAccessToken = localStorage.getItem(STORAGE_KEYS.accessToken);
     const storedUserNo = localStorage.getItem(STORAGE_KEYS.userNo);
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  // 2) 로그인 처리
+  /* 로그인 */
   const login = (loginResponse) => {
     const logindata = loginResponse?.data?.data;
     if (!logindata) {
@@ -113,7 +113,7 @@ export const AuthProvider = ({ children }) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   };
 
-  // 3) 로그아웃(클라 초기화)
+  /* 로그아웃 */
   const logout = async () => {
   const accessToken = localStorage.getItem(STORAGE_KEYS.accessToken);
   const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken);
@@ -131,25 +131,24 @@ export const AuthProvider = ({ children }) => {
       }
     );
   } catch (e) {
-    console.error("서버 로그아웃 실패(무시하고 진행)", e);
+    console.error("서버 로그아웃 실패", e);
   } finally {
-    // 
-    setAuth({
-      userNo: null,
-      userRole: null,
-      accessToken: null,
-      refreshToken: null,
-      isAuthenticated: false,
-    });
+  setAuth({
+    userNo: null,
+    userRole: null,
+    accessToken: null,
+    refreshToken: null,
+    isAuthenticated: false,
+  });
 
-    setIsLoggedIn(false);
-    setIsAdmin(false);
-    setCurrentUser(null);
+  setIsLoggedIn(false);
+  setIsAdmin(false);
+  setCurrentUser(null);
 
-    localStorage.clear();
-    delete axios.defaults.headers.common["Authorization"];
+  Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
+  delete axios.defaults.headers.common["Authorization"];
 
-    navigate("/main");
+  navigate("/");  
   }
 };
 
@@ -162,6 +161,6 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  if (!ctx) throw new Error("useAuth는 AuthProvider 내부에서만 사용할 수 있습니다.");
   return ctx;
 };
