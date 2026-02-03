@@ -50,22 +50,44 @@ const EstimateRequest = ({
     "영어": "제2외국어",
     "일본어": "제2외국어",
     "중국어": "제2외국어",
+    "영어 레슨": "제2외국어",
+    "일본어 레슨": "제2외국어",
+    "중국어 레슨": "제2외국어",
     // 음악
     "피아노": "음악",
     "기타": "음악",
     "보컬": "음악",
     "드럼": "음악",
+    "피아노 레슨": "음악",
+    "기타 레슨": "음악",
+    "일렉기타 레슨": "음악",
+    "베이스기타 레슨": "음악",
+    "어쿠스틱기타 레슨": "음악",
+    "보컬 레슨": "음악",
+    "드럼 레슨": "음악",
+    "바이올린 레슨": "음악",
+    "첼로 레슨": "음악",
     // 게임 개발
     "Unity": "게임 개발",
     "Unreal": "게임 개발",
+    "Unity 개발": "게임 개발",
+    "Unreal 개발": "게임 개발",
     // 백엔드 개발
     "Java / Spring": "백엔드 개발",
     "Node.js": "백엔드 개발",
     "Python / Django": "백엔드 개발",
+    "Java/Spring 개발": "백엔드 개발",
+    "Node.js 개발": "백엔드 개발",
+    "Python/Django 개발": "백엔드 개발",
+    "DB 설계 (MySQL / Oracle)": "백엔드 개발",
+    "DB 설계": "백엔드 개발",
     // 프론트엔드 개발
     "React": "프론트엔드 개발",
     "Vue.js": "프론트엔드 개발",
     "HTML/CSS": "프론트엔드 개발",
+    "React 개발": "프론트엔드 개발",
+    "Vue.js 개발": "프론트엔드 개발",
+    "HTML/CSS 개발": "프론트엔드 개발",
   };
 
   // 매핑된 상위 카테고리명 찾기
@@ -173,10 +195,23 @@ const EstimateRequest = ({
     },
   };
 
-  const currentQuestionSet = QUESTION_CONFIG[mappedCategoryName] || {
-    typeOptions: [],
-    serviceOptions: [],
+  // 기본 질문 세트 (매핑되지 않은 카테고리용)
+  const DEFAULT_QUESTION_SET = {
+    typeOptions: [
+      { value: "취미", label: "취미" },
+      { value: "입문", label: "입문" },
+      { value: "실무", label: "실무" },
+      { value: "기타", label: "기타" },
+    ],
+    serviceOptions: [
+      { value: "정기 수업 (주 1-2회)", label: "정기 수업 (주 1-2회)" },
+      { value: "집중 수업 (주 3회 이상)", label: "집중 수업 (주 3회 이상)" },
+      { value: "원데이 클래스", label: "원데이 클래스" },
+      { value: "1:1 컨설팅", label: "1:1 컨설팅" },
+    ],
   };
+
+  const currentQuestionSet = QUESTION_CONFIG[mappedCategoryName] || DEFAULT_QUESTION_SET;
 
   const { typeOptions, serviceOptions } = currentQuestionSet;
 

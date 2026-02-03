@@ -23,6 +23,7 @@ import EstimateExpert from './component/MyEstimate/EstimateExpert/EstimateExpert
 import MypageUser from './component/MyPage/MypageUser.jsx';
 import MypageExpert from './component/Mypage/MypageExpert.jsx';
 import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
+import ProtectedRoute from './component/Common/ProtectedRoute.jsx';
 
 function App() {
   return (
@@ -31,11 +32,24 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/quote" element={<Quote />} />
+          {/* USER 전용 페이지 - EXPERT 접근 불가 */}
+          <Route path="/quote" element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <Quote />
+            </ProtectedRoute>
+          } />
           <Route path="/myquote" element={<MyQuote />} />
-          <Route path="/exportList" element={<ExportList />} />
+          <Route path="/exportList" element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <ExportList />
+            </ProtectedRoute>
+          } />
           <Route path="/chatRoom/:id" element={<ChatRoom />} />
-          <Route path="/favorite" element={<Favorite />} />
+          <Route path="/favorite" element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <Favorite />
+            </ProtectedRoute>
+          } />
           <Route path="/inputTest" element={<InputTest />} />
           <Route path="/AlertExample" element={<AlertExample />} />
           <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
@@ -44,14 +58,35 @@ function App() {
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
-          <Route path="/mypageUser" element={<MypageUser />} />
-          {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
-          <Route path="/mypageExpert" element={<MypageExpert />} />
+          <Route path="/mypageUser" element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <MypageUser />
+            </ProtectedRoute>
+          } />
+          <Route path="/mypageExpert" element={
+            <ProtectedRoute roles={["ROLE_EXPERT"]}>
+              <MypageExpert />
+            </ProtectedRoute>
+          } />
         </Route>
         <Route element={<EstimateLayout />}>
-          <Route path="/estimateUser" element={<EstimateUser />} />
-          <Route path="/estimateExpert" element={<EstimateExpert />} />
-          <Route path="/nearby" element={<NearbyExperts />} />
+          {/* USER 전용 - EXPERT 접근 불가 */}
+          <Route path="/estimateUser" element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <EstimateUser />
+            </ProtectedRoute>
+          } />
+          {/* EXPERT 전용 - USER 접근 불가 */}
+          <Route path="/estimateExpert" element={
+            <ProtectedRoute roles={["ROLE_EXPERT"]}>
+              <EstimateExpert />
+            </ProtectedRoute>
+          } />
+          <Route path="/nearby" element={
+            <ProtectedRoute roles={["ROLE_USER"]}>
+              <NearbyExperts />
+            </ProtectedRoute>
+          } />
         </Route>
           
       </Routes>
