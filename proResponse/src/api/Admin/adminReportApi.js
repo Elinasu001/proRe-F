@@ -1,4 +1,4 @@
-// src/api/Admin/adminReportApi.js
+// src/api/admin/adminReportApi.js
 import { api } from '../api_';
 
 /**
@@ -29,7 +29,7 @@ export const getReportsByTarget = async (targetUserNo, params) => {
  * 신고 상태 변경
  */
 export const updateReportStatus = async (reportNo, status, answer) => {
-  const response = await api.patch(`/api/admin/reports/${reportNo}/status`, null, {
+  const response = await api.put(`/api/admin/reports/${reportNo}/status`, null, {
     params: { status, answer }
   });
   return response.data;
@@ -39,7 +39,7 @@ export const updateReportStatus = async (reportNo, status, answer) => {
  * 신고 답변 수정
  */
 export const updateReportAnswer = async (reportNo, answer) => {
-  const response = await api.patch(`/api/admin/reports/${reportNo}/answer`, null, {
+  const response = await api.put(`/api/admin/reports/${reportNo}/answer`, null, {
     params: { answer }
   });
   return response.data;
