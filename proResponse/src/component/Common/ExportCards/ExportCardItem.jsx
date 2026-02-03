@@ -22,13 +22,13 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
   const navigate = useNavigate();
   const handleDetailClick = async () => {
     try {
-      const response = await axiosPublic.getList(
-        `/api/experts/${data.expertNo}`,
-      );
-      //console.log('API 응답:', response.data);
+      // accessToken이 있으면 인증 API, 없으면 공개 API 사용
+      const hasToken = !!auth?.accessToken;
+      const response = hasToken
+        ? await axiosAuth.getList(`/api/experts/${data.expertNo}`)
+        : await axiosPublic.getList(`/api/experts/${data.expertNo}`);
 
       const expertDetail = response.data;
-
       const mappedExpert = {
         expertNo: expertDetail.expertNo,
         nickName: expertDetail.nickname,
@@ -42,11 +42,9 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
         address: expertDetail.address,
         userLiked: expertDetail.userLiked === 1, // 0/1 → boolean
         images: expertDetail.images || [],
-        // 리스트 데이터 우선 사용 (상세 API와 불일치 방지)
         completedJobs: data.completedJobs ?? expertDetail.completedJobs,
         totalLikes: data.totalLikes ?? expertDetail.totalLike ?? 0,
       };
-
       console.log("매핑된 데이터:", mappedExpert);
       openModal(mappedExpert);
     } catch (error) {
