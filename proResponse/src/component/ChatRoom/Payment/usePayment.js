@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react';
 import paymentApi from '../../../api/payment/paymentApi';
 
+
 /**
  * 포트원 결제 커스텀 훅
  */
@@ -16,18 +17,18 @@ const usePayment = () => {
         setIsProcessing(true);
 
         try {
-                // 1. 결제 사전 등록
-                const prepareParams = {
-                    amount: paymentData.amount,
-                    itemName: paymentData.itemName,
-                };
-                const prepareResult = await paymentApi.prepare(prepareParams);
-                if (!prepareResult.success) {
-                    onFail && onFail({ message: prepareResult.message });
-                    setIsProcessing(false);
-                    return;
-                }
-                const { merchantUid } = prepareResult;
+            // 1. 결제 사전 등록
+            const prepareParams = {
+                amount: paymentData.amount,
+                itemName: paymentData.itemName,
+            };
+            const prepareResult = await paymentApi.prepare(prepareParams);
+            if (!prepareResult.success) {
+                onFail && onFail({ message: prepareResult.message });
+                setIsProcessing(false);
+                return;
+            }
+            const { merchantUid } = prepareResult;
 
         // 2. 포트원 결제 요청
         const IMP = window.IMP;
@@ -47,18 +48,18 @@ const usePayment = () => {
             buyer_postcode: paymentData.buyerPostcode || '',
             },
             async (response) => {
-            if (response.success) {
+        if (response.success) {
                 // 3. 결제 검증
-                                const verifyParams = {
-                                    impUid: response.imp_uid,
-                                    merchantUid: response.merchant_uid,
-                                };
-                                const verifyResult = await paymentApi.verify(verifyParams);
-                                if (verifyResult.success) {
-                                    onSuccess && onSuccess(verifyResult);
-                                } else {
-                                    onFail && onFail(verifyResult);
-                                }
+                const verifyParams = {
+                    impUid: response.imp_uid,
+                    merchantUid: response.merchant_uid,
+                };
+                const verifyResult = await paymentApi.verify(verifyParams);
+                if (verifyResult.success) {
+                    onSuccess && onSuccess(verifyResult);
+                } else {
+                    onFail && onFail(verifyResult);
+                }
             } else {
                 onFail && onFail({
                 message: response.error_msg || '결제에 실패했습니다.',
@@ -80,16 +81,16 @@ const usePayment = () => {
      */
     const cancelPayment = useCallback(async (impUid, reason, onSuccess, onFail) => {
         try {
-                const params = {
-                    impUid,
-                    reason,
-                };
-                const result = await paymentApi.cancel(params);
-                if (result.success) {
-                    onSuccess && onSuccess(result);
-                } else {
-                    onFail && onFail(result);
-                }
+            const params = {
+                impUid,
+                reason,
+            };
+            const result = await paymentApi.cancel(params);
+            if (result.success) {
+                onSuccess && onSuccess(result);
+            } else {
+                onFail && onFail(result);
+            }
         } catch (error) {
         console.error('결제 취소 실패:', error);
         onFail && onFail({ message: '결제 취소 중 오류가 발생했습니다.' });

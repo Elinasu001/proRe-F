@@ -1,24 +1,27 @@
+import { useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
 import reportImg from '../../assets/images/common/report.png';
 import reviewImg from '../../assets/images/common/review_btn.png';
-import ReviewWriteModal from './Review/ReviewWriteModal.jsx';
-import ReviewViewModal from './Review/ReviewViewModal.jsx';
-import useReviewModal from '../Common/Modal/Review/useReviewModal';
-import Alert from '../Common/Alert/Alert';
 import sendImg from '../../assets/images/common/send.png';
-import * as S from './ChatRoom.styled.js';
-import useChatRoom from './useChatRoom';
-import ReportModal from './Report/ReportModal.jsx';
-import { useReportTags, useReportModal } from './Report/useReportModal.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-
+import Alert from '../Common/Alert/Alert';
+import useReviewModal from '../Common/Modal/Review/useReviewModal';
+import Toast from '../Common/Toast/Toast.jsx';
+import * as S from './ChatRoom.styled.js';
+import PaymentModal from './Payment/PaymentModal.jsx';
+import ReportModal from './Report/ReportModal.jsx';
+import { useReportModal, useReportTags } from './Report/useReportModal.js';
+import ReviewViewModal from './Review/ReviewViewModal.jsx';
+import ReviewWriteModal from './Review/ReviewWriteModal.jsx';
+import useChatRoom from './useChatRoom';
 const ChatRoom = () => {
     const { id:estimateNo } = useParams();
     const navi = useNavigate();
     const userNo = Number(localStorage.getItem('userNo'));
+    const [showPayment, setShowPayment] = useState(false);
 
     const {
         message,
@@ -31,6 +34,11 @@ const ChatRoom = () => {
         handleSendMessage,
         handleFileChange,
         readyState,
+        // 토스트 관련 추가
+        showToast,
+        toastMessage,
+        toastVariant,
+        closeToast,
     } = useChatRoom(estimateNo, userNo, navi);
     const { currentUser } = useAuth();
     const userRole = currentUser?.userRole || '';
@@ -147,7 +155,7 @@ const ChatRoom = () => {
                                 </S.ActionButton>
                             </S.ActionLightWrapper>
                         )}
-                        <S.ActionButton>
+                        <S.ActionButton onClick={() => setShowPayment(true)}>
                             <img src={payImg} alt="pay" />
                             송금하기
                         </S.ActionButton>
@@ -248,6 +256,17 @@ const ChatRoom = () => {
                 </S.ChatInputContainer>
                 </S.ChatPopup>
             </S.ChatPopupOverlay>
+            <Toast
+                isVisible={showToast}
+                message={toastMessage}
+                variant={toastVariant}
+                onClose={closeToast}
+            />
+            {/* 송금하기 모달 */}
+            {showPayment && (
+                <PaymentModal onClose={() => setShowPayment(false)} />
+            )}
+
         </>
     );
 };
