@@ -16,7 +16,7 @@ const EstimateExpert = () => {
   const handleRequestDetail = async (requestNo) => {
     try {
       const response = await axiosAuth.getList(`/api/estimate/request/${requestNo}`);
-      console.log("받은 요청 상세 데이터:", response);
+      //console.log("받은 요청 상세 데이터:", response);
       setSelectedMatched(null);
       setSelectedRequest(response.data || response);
     } catch (error) {
@@ -32,7 +32,7 @@ const EstimateExpert = () => {
       // 1. 회원의 요청 정보 조회
       try {
         const requestResponse = await axiosAuth.getList(`/api/estimate/request/${requestNo}`);
-        console.log("매칭 완료 - 요청 상세 데이터:", requestResponse);
+        //console.log("매칭 완료 - 요청 상세 데이터:", requestResponse);
         requestData = requestResponse.data || requestResponse;
       } catch (e) {
         console.error("요청 정보 조회 실패:", e);
@@ -41,7 +41,7 @@ const EstimateExpert = () => {
       // 2. 내가 보낸 견적 정보 조회
       try {
         const estimateResponse = await axiosAuth.getList(`/api/estimate/response/${requestNo}`);
-        console.log("매칭 완료 - 견적 상세 데이터:", estimateResponse);
+        //console.log("매칭 완료 - 견적 상세 데이터:", estimateResponse);
         estimateData = estimateResponse.data || estimateResponse;
       } catch (e) {
         console.error("견적 정보 조회 실패:", e);

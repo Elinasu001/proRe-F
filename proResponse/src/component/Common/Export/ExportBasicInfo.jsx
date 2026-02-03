@@ -64,7 +64,7 @@ const ExportCardItem = ({ data }) => {
         
         try {
             const response = await axiosAuth.post(`/api/likes/${data.expertNo}`);
-            console.log("좋아요 토글 응답:", response);
+            //console.log("좋아요 토글 응답:", response);
             
             const newIsLiked = response.data?.isLiked;
             setIsLiked(newIsLiked);

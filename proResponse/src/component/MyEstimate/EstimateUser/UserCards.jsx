@@ -49,7 +49,7 @@ const UserCards = ({
         
         axiosAuth.getList(endpoint).then(res =>{
             setReservations(res.data.list);
-            console.log(res.data);
+            //console.log(res.data);
             setPageInfo(res.data.pageInfo);
         }).catch(err => {
             console.error(err);
@@ -59,7 +59,7 @@ const UserCards = ({
     const handleExpertDetail = async (expertNo) => {
         try {
             const response = await axiosAuth.getList(`/api/experts/${expertNo}`);
-            console.log('전문가 상세 데이터:', response);
+            //console.log('전문가 상세 데이터:', response);
             // 부모 컴포넌트에 데이터 전달
             if (onExpertDetail) {
                 onExpertDetail(response.data);

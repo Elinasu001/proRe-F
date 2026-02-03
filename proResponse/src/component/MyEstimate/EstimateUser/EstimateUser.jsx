@@ -60,7 +60,7 @@ const EstimateUser = () => {
       const response = await axiosAuth.getList(
         `/api/estimate/request/${requestNo}`,
       );
-      console.log("요청 상세 데이터:", response);
+      // console.log("요청 상세 데이터:", response);
       setSelectedRequest(response.data);
       setSelectedExpert(null); // 전문가 상세와 요청 상세를 동시에 표시하지 않음
       setSelectedEstimate(null);
@@ -76,7 +76,7 @@ const EstimateUser = () => {
       const response = await axiosAuth.getList(
         `/api/estimate/response/${requestNo}`,
       );
-      console.log("받은 견적 상세 데이터:", response);
+      // console.log("받은 견적 상세 데이터:", response);
       setSelectedEstimate(response.data || response);
       setSelectedExpert(null);
       setSelectedRequest(null);

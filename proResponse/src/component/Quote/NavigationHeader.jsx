@@ -74,7 +74,7 @@ const NavigationHeader = () => {
     axiosPublic
       .getList(`/api/categories/${categoryNo}`)
       .then((res) => {
-              console.log(res)
+              //console.log(res)
         setCategory((prevCategory) =>
           prevCategory.map((cat) =>
             cat.categoryNo === categoryNo

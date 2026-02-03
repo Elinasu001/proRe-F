@@ -74,7 +74,7 @@ const ExpertDetailModal = ({ isOpen, onClose, textRef, expert }) => {
       .getList(`/api/reviews/expert/${data.expertNo}`)
       .then(
         (res) => {
-          console.log(res.data);
+          //console.log(res.data);
           setReviews(res.data.list);
         },
         [activeTab, data.expertNo],

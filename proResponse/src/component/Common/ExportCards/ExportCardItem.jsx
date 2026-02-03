@@ -17,7 +17,7 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
   const [loadingCategories, setLoadingCategories] = useState(false);
   //console.log(`categoryName : ${categoryName}`);
   //console.log(`detailCategoryNo : ${detailCategoryNo}`);
-  console.log("견적 목록에서 받은 data:", data);
+  //console.log("견적 목록에서 받은 data:", data);
   const { auth } = useAuth();
   const navigate = useNavigate();
   const handleDetailClick = async () => {
@@ -46,7 +46,7 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
         totalLikes: expertDetail.totalLike || 0,
       };
 
-      console.log("매핑된 데이터:", mappedExpert);
+      //console.log("매핑된 데이터:", mappedExpert);
       openModal(mappedExpert);
     } catch (error) {
       console.error("전문가 상세 정보 조회 실패", error);
@@ -72,7 +72,7 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
       setLoadingCategories(true);
       try {
         const response = await axiosPublic.getList(`/api/experts/${data.expertNo}/categories`);
-        console.log("전문가 카테고리 조회:", response);
+        //console.log("전문가 카테고리 조회:", response);
         const categoryData = response.data || response || [];
         setCategories(Array.isArray(categoryData) ? categoryData : []);
         setShowCategoryModal(true);
@@ -91,10 +91,10 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
 
   // 카테고리 선택 시 견적 요청 모달 표시
   const handleCategorySelect = (category) => {
-    console.log("선택된 카테고리 전체:", category);
-    console.log("parentCategoryName:", category.parentCategoryName);
-    console.log("categoryName:", category.categoryName);
-    console.log("detailCategoryName:", category.detailCategoryName);
+    //console.log("선택된 카테고리 전체:", category);
+    //console.log("parentCategoryName:", category.parentCategoryName);
+    //console.log("categoryName:", category.categoryName);
+    //console.log("detailCategoryName:", category.detailCategoryName);
     setShowCategoryModal(false);
     setSelectedCategory(category);
     setIsEstimateOpen(true);
