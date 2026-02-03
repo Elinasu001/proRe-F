@@ -26,13 +26,13 @@ const CommonModal = ({ isOpen, onClose, ariaLabelledby, children }) => {
 
     return (
         <S.Overlay onClick={handleOverlayClick}>
-        <S.ModalContainer
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={ariaLabelledby}
-        >
-            {children}
-        </S.ModalContainer>
+            <S.ModalContainer
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={ariaLabelledby}
+            >
+                {children}
+            </S.ModalContainer>
         </S.Overlay>
     );
 };

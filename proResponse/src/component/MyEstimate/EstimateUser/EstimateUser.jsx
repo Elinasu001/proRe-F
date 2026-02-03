@@ -6,7 +6,7 @@ import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
 import ExpertDetailPanel from "./ExpertDetailPanel.jsx";
 import RequestDetailPanel from "./RequestDetailPanel.jsx";
 import EstimateDetailPanel from "./EstimateDetailPanel.jsx";
-import { createChatRoomApi } from "../../../api/chat/chatApi.js";
+import { createRoomApi } from "../../../api/chat/chatApi.js";
 import { ImageUpload, TextArea } from "../../Common/Input/Input.jsx";
 
 const EstimateUser = () => {
@@ -112,11 +112,11 @@ const EstimateUser = () => {
   const handleChatStart = async (estimateData) => {
     try {
       const estimateNo = estimateData?.estimateNo ?? estimateData?.requestNo;
-      const response = await createChatRoomApi({
-        estimateNo: Number(estimateNo),
-        content: "안녕하세요",
-        type: "TEXT",
-      });
+        const chatMessageDto = {
+          content: "안녕하세요",
+          type: "TEXT",
+        };
+        const response = await createRoomApi(estimateNo, chatMessageDto);
       const created = response?.data?.data;
       const enterEstimateNo = created?.estimateNo ?? estimateNo;
       navigate(`/chatRoom/${enterEstimateNo}`);

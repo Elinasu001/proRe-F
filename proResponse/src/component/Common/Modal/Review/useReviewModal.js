@@ -1,96 +1,157 @@
-import { useCallback, useState } from 'react';
+import { useState, useCallback } from 'react';
+import { getReviewTags, createReview, deleteReview, getReview } from '../../../../api/review/reviewApi';
 
-
-const useReviewModal = () => {
-  // 리뷰 조회 모달 상태
+/**
+ * 리뷰 모달 상태 관리 훅
+ * - ESC 키, 스크롤 방지는 CommonModal에서 처리
+ * - 리뷰 조회/작성 모달 + Alert 삭제 확인 관리
+ */
+export default function useReviewModal(estimateNo) {
   const [viewModal, setViewModal] = useState({
     isOpen: false,
-    review: null,
-    onDelete: null,
-    onConfirm: null,
+    data: null,
   });
 
-  // 리뷰 작성 모달 상태
   const [writeModal, setWriteModal] = useState({
     isOpen: false,
     tagOptions: [],
-    onSubmit: null,
   });
 
-  /**
-   * 리뷰 조회 모달 열기
-   * @param {Object} review - 리뷰 데이터
-   * @param {function} onDelete - 삭제 콜백
-   * @param {function} onConfirm - 확인 콜백
-   */
-  const openViewModal = useCallback((review, onDelete, onConfirm) => {
-    setViewModal({
+  // 삭제 확인 Alert 상태
+  const [alertState, setAlertState] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+    confirmText: '확인',
+    cancelText: '취소',
+    variant: 'default',
+    onConfirm: null,
+    onCancel: null,
+  });
+
+  const closeAlert = useCallback(() => {
+    setAlertState(prev => ({ ...prev, isOpen: false }));
+  }, []);
+
+  const openAlert = useCallback((config) => {
+    setAlertState({
       isOpen: true,
-      review,
-      onDelete,
-      onConfirm,
+      title: config.title || '',
+      message: config.message || '',
+      confirmText: config.confirmText || '확인',
+      cancelText: config.cancelText || '취소',
+      variant: config.variant || 'default',
+      onConfirm: config.onConfirm || null,
+      onCancel: config.onCancel || null,
     });
   }, []);
 
-  /**
-   * 리뷰 작성 모달 열기
-   * @param {Array} tagOptions - 선택 가능한 태그 목록
-   * @param {function} onSubmit - 제출 콜백
-   */
-  const openWriteModal = useCallback((tagOptions = [], onSubmit) => {
-    setWriteModal({
-      isOpen: true,
-      tagOptions,
-      onSubmit,
-    });
-  }, []);
+  // 리뷰 조회 모달 열기 (기존 리뷰 확인 후)
+  const openReviewModal = useCallback(async () => {
+    try {
+      // 기존 리뷰가 있는지 확인
+      const existingReview = await getReview(estimateNo);
+      if (existingReview) {
+        setViewModal({ isOpen: true, data: existingReview });
+        return;
+      }
+    } catch {
+      // 리뷰가 없으면 작성 모달 열기
+    }
 
-  /**
-   * 리뷰 조회 모달 닫기
-   */
+    // 태그 불러오기
+    try {
+      const res = await getReviewTags();
+      const options = Array.isArray(res) ? res.map(c => ({ value: c.tagNo, label: c.tagName })) : [];
+      setWriteModal({ isOpen: true, tagOptions: options });
+    } catch {
+      setWriteModal({ isOpen: true, tagOptions: [] });
+    }
+  }, [estimateNo]);
+
+  // 리뷰 작성 제출
+  const submitReview = useCallback(async (data) => {
+    try {
+      const formData = new FormData();
+      formData.append('estimateNo', estimateNo);
+      formData.append('starScore', data.starScore);
+      formData.append('content', data.text);
+
+      if (data.tags && data.tags.length > 0) {
+        data.tags.forEach(tag => formData.append('tags', tag));
+      }
+
+      if (data.images && data.images.length > 0) {
+        data.images.forEach(img => {
+          if (img.file) formData.append('files', img.file);
+        });
+      }
+
+      await createReview(formData);
+
+      // 등록 후 조회 모달 열기
+      const review = await getReview(estimateNo);
+      setWriteModal({ isOpen: false, tagOptions: [] });
+      setViewModal({ isOpen: true, data: review });
+    } catch (error) {
+      console.error('리뷰 등록 실패:', error);
+      openAlert({
+        title: '오류',
+        message: '리뷰 등록에 실패했습니다.',
+        onConfirm: closeAlert
+      });
+    }
+  }, [estimateNo, openAlert, closeAlert]);
+
+  // 리뷰 삭제 확인 Alert 열기
+  const confirmDeleteReview = useCallback(() => {
+    openAlert({
+      title: '리뷰 삭제',
+      message: '내가 작성한 리뷰를 삭제하시겠습니까?',
+      confirmText: '삭제',
+      cancelText: '취소',
+      variant: 'danger',
+      onConfirm: async () => {
+        try {
+          await deleteReview(estimateNo);
+          closeAlert();
+          setViewModal({ isOpen: false, data: null });
+          openAlert({
+            title: '알림',
+            message: '리뷰가 삭제되었습니다.',
+            onConfirm: closeAlert
+          });
+        } catch (error) {
+          console.error('리뷰 삭제 실패:', error);
+          closeAlert();
+          openAlert({
+            title: '오류',
+            message: '리뷰 삭제에 실패했습니다.',
+            onConfirm: closeAlert
+          });
+        }
+      },
+      onCancel: closeAlert
+    });
+  }, [estimateNo, openAlert, closeAlert]);
+
+  // 모달 닫기
   const closeViewModal = useCallback(() => {
-    setViewModal(prev => ({
-      ...prev,
-      isOpen: false,
-    }));
+    setViewModal({ isOpen: false, data: null });
   }, []);
 
-  /**
-   * 리뷰 작성 모달 닫기
-   */
   const closeWriteModal = useCallback(() => {
-    setWriteModal(prev => ({
-      ...prev,
-      isOpen: false,
-    }));
+    setWriteModal({ isOpen: false, tagOptions: [] });
   }, []);
-
-  /**
-   * 모든 모달 닫기
-   */
-  const closeModals = useCallback(() => {
-    closeViewModal();
-    closeWriteModal();
-  }, [closeViewModal, closeWriteModal]);
 
   return {
-    // 리뷰 조회 모달
-    viewModal: {
-      ...viewModal,
-      onClose: closeViewModal,
-    },
-    // 리뷰 작성 모달
-    writeModal: {
-      ...writeModal,
-      onClose: closeWriteModal,
-    },
-    // 헬퍼 함수들
-    openViewModal,
-    openWriteModal,
+    viewModal,
+    writeModal,
+    alertState,
+    openReviewModal,
+    submitReview,
+    confirmDeleteReview,
     closeViewModal,
     closeWriteModal,
-    closeModals,
   };
-};
-
-export default useReviewModal;
+}

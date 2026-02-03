@@ -5,7 +5,7 @@ import ExpertCards from './ExpertCards.jsx';
 import RequestDetailPanel from './RequestDetailPanel.jsx';
 import MatchedDetailPanel from './MatchedDetailPanel.jsx';
 import { axiosAuth } from '../../../api/reqApi.js';
-import { createChatRoomApi } from '../../../api/chat/chatApi.js';
+import { createRoomApi } from '../../../api/chat/chatApi.js';
 
 const EstimateExpert = () => {
   const navigate = useNavigate();
@@ -60,8 +60,7 @@ const EstimateExpert = () => {
   const handleChatStart = async (data) => {
     try {
       const estimateNo = data?.estimateNo ?? data?.requestNo;
-      const response = await createChatRoomApi({
-        estimateNo: Number(estimateNo),
+      const response = await createRoomApi(Number(estimateNo), {
         content: "안녕하세요",
         type: "TEXT",
       });

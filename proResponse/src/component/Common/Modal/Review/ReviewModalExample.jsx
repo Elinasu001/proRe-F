@@ -1,14 +1,13 @@
-
 import ReviewViewModal from './ReviewViewModal';
 import ReviewWriteModal from './ReviewWriteModal';
 import useReviewModal from './useReviewModal';
-import dummyChatExportReview from '../../../Common/dummy/dummyChatExportReview.js';
+
 
 /**
  * 리뷰 모달 사용 예제 컴포넌트
  */
 const ReviewModalExample = () => {
-  // useReviewModal 훅 사용
+  // useReviewModal 훅에서 상태와 함수 모두 구조분해 할당
   const {
     viewModal,
     writeModal,
@@ -17,17 +16,24 @@ const ReviewModalExample = () => {
     closeModals,
   } = useReviewModal();
 
-  // 실제 더미 리뷰 데이터 적용
-  const sampleReview = dummyChatExportReview.data;
 
-  // 태그 옵션
-  const tagOptions = [
-    '정말과 느허항가 없어요',
-    '사건을 잘 자세요',
-    '응대가 친절해요',
-    '외시스톤이 합격해요',
-    '상담이 자세해요',
-  ];
+
+  // 실제 더미 리뷰 데이터 적용
+  const sampleReview = {
+    profileImg: '',
+    nickname: '홍길동',
+    createdAgo: '1시간 전',
+    starScore: 5,
+    attachments: [
+      { filePath: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb', originName: '샘플1.jpg' },
+      { filePath: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308', originName: '샘플2.jpg' }
+    ],
+    content: '이 전문가 정말 친절하고 실력도 좋아요!',
+    selectedTags: [
+      { tagName: '친절함' },
+      { tagName: '전문성' }
+    ]
+  };
 
   // ============================================
   // 이벤트 핸들러
@@ -38,7 +44,7 @@ const ReviewModalExample = () => {
    */
   const handleOpenViewModal = () => {
     openViewModal(
-      sampleReview,
+      sampleReview, // sampleReview
       // 삭제 콜백
       () => {
         console.log('리뷰 삭제');
@@ -57,15 +63,40 @@ const ReviewModalExample = () => {
    */
   const handleOpenWriteModal = () => {
     openWriteModal(
-      tagOptions,
-      // 제출 콜백
+      [], // 빈 배열을 넘기면 ReviewWriteModal에서 API로 태그를 불러옴
+      // 제출 콜백 - 작성 완료 후 조회 모달로 전환
       (reviewData) => {
         console.log('제출된 리뷰:', reviewData);
-        alert('리뷰가 제출되었습니다!');
-        closeModals();
+        // 작성된 리뷰 데이터를 조회 모달로 표시
+        const submittedReview = {
+          profileImg: '',
+          nickname: '나',
+          createdAgo: '방금 전',
+          starScore: reviewData.starScore,
+          attachments: reviewData.images?.map((img, idx) => ({
+            filePath: img.preview || img,
+            originName: `이미지${idx + 1}.jpg`
+          })) || [],
+          content: reviewData.text,
+          selectedTags: reviewData.tags?.map(tagValue => ({ tagName: tagValue })) || []
+        };
+        // 조회 모달 열기
+        openViewModal(
+          submittedReview,
+          () => {
+            console.log('리뷰 삭제');
+            closeModals();
+          },
+          () => {
+            console.log('확인 클릭');
+            closeModals();
+          }
+        );
       }
     );
   };
+
+
 
   return (
     <div style={{ padding: '40px', maxWidth: '800px', margin: '0 auto' }}>
@@ -90,7 +121,7 @@ const ReviewModalExample = () => {
             cursor: 'pointer',
           }}
         >
-           내가 보낸 후기 보기
+          내가 보낸 후기 보기
         </button>
 
         {/* 리뷰 작성 모달 열기 */}
@@ -117,7 +148,7 @@ const ReviewModalExample = () => {
         background: '#f8f9fa',
         borderRadius: '12px'
       }}>
-        <h2> 사용 방법</h2>
+        <h2>📖 사용 방법</h2>
         
         <h3>1. 기본 import</h3>
         <pre style={{ 
@@ -128,7 +159,8 @@ const ReviewModalExample = () => {
         }}>
 {`import ReviewViewModal from './ReviewViewModal';
 import ReviewWriteModal from './ReviewWriteModal';
-import useReviewModal from './useReviewModal';`}
+import useReviewModal from './useReviewModal';
+import useReportModal from '../../../ChatRoom/Report/useReportModal.js';`}
         </pre>
 
         <h3>2. useReviewModal 훅 사용</h3>
@@ -187,8 +219,14 @@ import useReviewModal from './useReviewModal';`}
       </div>
 
       {/* 리뷰 모달들 */}
-      <ReviewViewModal {...viewModal} />
-      <ReviewWriteModal {...writeModal} />
+      <ReviewViewModal
+        isOpen={viewModal.isOpen}
+        review={viewModal.data}
+        onClose={closeModals}
+        onConfirm={viewModal.onConfirm || closeModals}
+        onDelete={viewModal.onDelete || closeModals}
+      />
+      <ReviewWriteModal {...writeModal} onClose={closeModals} />
     </div>
   );
 };

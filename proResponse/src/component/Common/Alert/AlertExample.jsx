@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import Toast from '../Toast/Toast';
+import useToast from '../Toast/useToast';
 import Alert from './Alert';
 import useAlert from './useAlert';
 
@@ -12,11 +14,13 @@ const AlertExample = () => {
     const [simpleAlert, setSimpleAlert] = useState(false);
     const [confirmAlert, setConfirmAlert] = useState(false);
     const [dangerAlert, setDangerAlert] = useState(false);
-
+    const [isAlertOpen, setIsAlertOpen] = useState(false);
+   
     // ========================================
     // 방법 2: useAlert 훅 사용 (권장)
     // ========================================
     const { alertState, openAlert, closeAlert } = useAlert();
+    const { showToast, toastMessage, toastVariant, showToastMessage, closeToast } = useToast();
 
     // 간단한 알림 (확인만)
     const handleSimpleAlert = () => {
@@ -90,6 +94,11 @@ const AlertExample = () => {
         });
     };
 
+    // Toast 띄우기
+    const handleToastOpen = () => {
+        showToastMessage('토스트 메시지 예시입니다.', 'success');
+    };
+
     return (
         <div style={{ padding: '40px', maxWidth: '600px', margin: '0 auto' }}>
         <h1>Alert 컴포넌트 사용 예제</h1>
@@ -124,6 +133,10 @@ const AlertExample = () => {
             <button onClick={() => setDangerAlert(true)}>
             위험 알림 열기
             </button>
+
+            {/* Toast 예시 */}
+            <h2>Toast 예시</h2>
+            <button onClick={handleToastOpen}>Toast 띄우기</button>
         </div>
 
         {/* useAlert 훅으로 관리되는 Alert */}
@@ -162,6 +175,13 @@ const AlertExample = () => {
             setDangerAlert(false);
             }}
             onCancel={() => setDangerAlert(false)}
+        />
+
+        <Toast
+            isVisible={showToast}
+            message={toastMessage}
+            variant={toastVariant}
+            onClose={closeToast}
         />
         </div>
     );
