@@ -52,13 +52,6 @@ export const CategoryButton = styled.button`
         color: var(--primary);
     }
   }
-${'' /*   
-  [aria-pressed="true"]:focus {
-    span{
-        color: var(--primary);
-    }
-  }
-   */}
 
   &:focus-visible {
     outline: 2px solid #4a9eff;
@@ -70,6 +63,13 @@ ${'' /*
   ${props => props.$active && `
     color: #4a9eff;
   `}
+
+  ${props => props.$active && `
+    border-color: #4a9eff;
+    background: rgba(74, 158, 255, 0.1);
+    border-radius: 8px;
+  `}
+
 
   @media (max-width: 768px) {
     min-width: 60px;
@@ -93,11 +93,6 @@ export const IconWrapper = styled.div`
     border-color: #4a9eff;
     transform: translateY(-2px);
   }
-
-  ${props => props.$active && `
-    border-color: #4a9eff;
-    background: rgba(74, 158, 255, 0.1);
-  `}
 
   @media (max-width: 768px) {
     width: 48px;
@@ -157,6 +152,7 @@ export const LeftMenu = styled.nav`
   }
 
   @media (max-width: 968px) {
+    display:none;
     width: 100%;
     border-right: none;
     border-bottom: 1px solid var(--secondary);
@@ -187,10 +183,8 @@ export const LeftMenuItem = styled.li`
     font-weight: 500;
     transition: all 0.3s ease;
 
-    &:hover {
-      background: var(--gray-primary);
-      color: var(--color-3);
-    }
+    background: var(--gray-primary);
+    color: var(--color-3);
 
     &:focus-visible {
       outline: 2px solid #4a9eff;

@@ -23,7 +23,7 @@ export const Overlay = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 9999;
+    z-index: 10000;
     animation: ${fadeIn} 0.2s ease-out;
 `;
 
@@ -37,7 +37,6 @@ export const AlertContainer = styled.div`
     width: ${props => props.$width || '320px'};
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     animation: ${fadeIn} 0.3s ease-out;
-
     @media (max-width: 768px) {
         width: 90%;
         min-width: unset;
