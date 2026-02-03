@@ -8,7 +8,7 @@ import ExpertDetailModal from "../Modal/ExportDetail/ExpertDetailModal.jsx";
 import useExpertDetailModal from "../Modal/ExportDetail/useExpertDetailModal.js";
 import { Button, ButtonBox, Card } from "./ExportCards.styled.js";
 
-const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
+const ExportCardItem = ({ data, categoryName, detailCategoryNo, onLike }) => {
   const { modalState, openModal, closeModal } = useExpertDetailModal();
   const [isEstimateOpen, setIsEstimateOpen] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -119,7 +119,7 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo }) => {
   return (
     <>
       <Card>
-        <ExportBasicInfo data={data} />
+        <ExportBasicInfo data={data} onLike={onLike} />
         <ButtonBox>
           <Button onClick={handleDetailClick}>자세히 보기</Button>
           <Button primary onClick={handleRequest} disabled={loadingCategories}>

@@ -62,6 +62,11 @@ const ExportList = () => {
   const startIdx = (currentPage - 1) * itemsPerPage;
   const currentData = expertInfo.slice(startIdx, startIdx + itemsPerPage);
 
+  // 좋아요 클릭 시 리스트를 새로고침하는 핸들러
+  const handleLike = () => {
+    fetchExperts(detailCategoryNo, currentPage);
+  };
+
   return (
     <>
       <LogoTitleWrapper>
@@ -79,6 +84,7 @@ const ExportList = () => {
           itemsPerPage={itemsPerPage}
           categoryName={categoryName}
           detailCategoryNo={detailCategoryNo}
+          onLike={handleLike}
         />
       )}
       <Pagination

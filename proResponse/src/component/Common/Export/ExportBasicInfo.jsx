@@ -41,7 +41,7 @@ function getRandomImage() {
     return profileImages[Math.floor(Math.random() * profileImages.length)];
 }
 
-const ExportCardItem = ({ data }) => {
+const ExportCardItem = ({ data, onLike }) => {
     const [isLiked, setIsLiked] = useState(() => {
         return data?.userLiked === true || data?.userLiked === 1 || data?.userLiked === "1";
     });
@@ -65,6 +65,7 @@ const ExportCardItem = ({ data }) => {
             const newIsLiked = response.data?.isLiked;
             setIsLiked(newIsLiked);
             setLikeCount(prev => newIsLiked ? prev + 1 : prev - 1);
+            if (onLike) onLike();
         } catch (error) {
             console.error("좋아요 요청 실패:", error);
             alert("좋아요 요청에 실패했습니다.");
