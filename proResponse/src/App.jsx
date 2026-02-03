@@ -32,7 +32,6 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          {/* USER 전용 페이지 - EXPERT 접근 불가 */}
           <Route path="/quote" element={
             <ProtectedRoute roles={["ROLE_USER"]}>
               <Quote />
@@ -70,13 +69,11 @@ function App() {
           } />
         </Route>
         <Route element={<EstimateLayout />}>
-          {/* USER 전용 - EXPERT 접근 불가 */}
           <Route path="/estimateUser" element={
             <ProtectedRoute roles={["ROLE_USER"]}>
               <EstimateUser />
             </ProtectedRoute>
           } />
-          {/* EXPERT 전용 - USER 접근 불가 */}
           <Route path="/estimateExpert" element={
             <ProtectedRoute roles={["ROLE_EXPERT"]}>
               <EstimateExpert />
