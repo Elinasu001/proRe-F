@@ -43,7 +43,7 @@ const NearbyExperts = () => {
     setLoadingCategories(true);
     try {
       const response = await axiosPublic.getList(`/api/experts/${expertDetail.expertNo}/categories`);
-      //console.log("카테고리 조회:", response);
+      console.log("카테고리 조회:", response);
       const categoryData = response.data || response || [];
       setCategories(Array.isArray(categoryData) ? categoryData : []);
       setShowCategoryModal(true);
@@ -57,10 +57,10 @@ const NearbyExperts = () => {
 
   // 카테고리 선택 시 견적 요청 모달 표시
   const handleCategorySelect = (category) => {
-    //console.log("선택된 카테고리:", category);
-    //console.log("parentCategoryName:", category.parentCategoryName);
-    //console.log("categoryName:", category.categoryName);
-    //console.log("detailCategoryName:", category.detailCategoryName);
+    console.log("선택된 카테고리:", category);
+    console.log("parentCategoryName:", category.parentCategoryName);
+    console.log("categoryName:", category.categoryName);
+    console.log("detailCategoryName:", category.detailCategoryName);
     setShowCategoryModal(false);
     setSelectedCategory(category);
     setShowEstimateRequest(true);
@@ -70,7 +70,7 @@ const NearbyExperts = () => {
   const handleEstimateSubmit = async (formData) => {
     try {
       const response = await axiosAuth.post('/api/estimate', formData);
-      //console.log("견적 요청 응답:", response);
+      console.log("견적 요청 응답:", response);
       alert('견적 요청이 완료되었습니다.');
       setShowEstimateRequest(false);
       setSelectedCategory(null);
@@ -82,7 +82,7 @@ const NearbyExperts = () => {
 
   // 마커 클릭 시 전문가 상세 조회
   const handleExpertClick = async (expert) => {
-    //console.log("선택된 전문가:", expert);
+    console.log("선택된 전문가:", expert);
     setSelectedExpert(expert);
     setSelectedImageIndex(0);
     setActiveTab('detail');
@@ -92,7 +92,7 @@ const NearbyExperts = () => {
       setLoading(true);
       try {
         const response = await axiosPublic.getList(`/api/experts/${expert.expertNo}`);
-        //console.log("전문가 상세:", response.data);
+        console.log("전문가 상세:", response.data);
         setExpertDetail(response.data || response);
       } catch (error) {
         console.error("전문가 상세 조회 실패:", error);
@@ -110,7 +110,7 @@ const NearbyExperts = () => {
       setLoadingReviews(true);
       try {
         const response = await axiosPublic.getList(`/api/reviews/expert/${expertDetail.expertNo}`);
-        //console.log("리뷰 응답:", response);
+        console.log("리뷰 응답:", response);
         // PageResponse 형태: { list: [...], totalCount, pageNo, ... }
         const reviewData = response.data?.list || response.list || response.data || [];
         setReviews(Array.isArray(reviewData) ? reviewData : []);

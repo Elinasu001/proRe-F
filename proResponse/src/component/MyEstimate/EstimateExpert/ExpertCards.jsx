@@ -36,11 +36,11 @@ const ExpertCards = ({ onRequestDetail, onEstimateSuccess, onMatchedDetail, onCh
             endpoint = `/api/experts/matches?pageNo=${currentPage}`;
         }
         
-        //console.log("호출 API:", endpoint);
+        console.log("호출 API:", endpoint);
         
         axiosAuth.getList(endpoint).then(res =>{
-            //console.log("받은 데이터:", res.data);
-            //console.log("리스트:", res.data.list);
+            console.log("받은 데이터:", res.data);
+            console.log("리스트:", res.data.list);
             setExperts(res.data.list || []);
             setPageInfo(res.data.pageInfo);
         }).catch(err => {

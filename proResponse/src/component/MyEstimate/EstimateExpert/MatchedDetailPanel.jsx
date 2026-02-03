@@ -13,7 +13,7 @@ const MatchedDetailPanel = ({ matchedDetail, onClose }) => {
 
   if (!matchedDetail) return null;
 
-  //console.log("MatchedDetailPanel - matchedDetail:", matchedDetail);
+  console.log("MatchedDetailPanel - matchedDetail:", matchedDetail);
 
   // matchedDetail은 {request: {...}, estimate: {...}} 구조
   const request = matchedDetail.request || {};

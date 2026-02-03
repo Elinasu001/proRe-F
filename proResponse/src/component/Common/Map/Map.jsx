@@ -46,9 +46,9 @@ const Map = ({ onExpertClick }) => {
     const fetchExperts = async () => {
       try {
         const url = `/api/experts/map?latitude=${location.latitude}&longitude=${location.longitude}&radius=${radius}`;
-        // console.log("API 호출:", url);
+        console.log("API 호출:", url);
         const response = await axiosPublic.getList(url);
-        // console.log("주변 전문가:", response.data);
+        console.log("주변 전문가:", response.data);
         setExperts(response.data || []);
       } catch (error) {
         console.error("전문가 조회 실패:", error);
@@ -65,8 +65,8 @@ const Map = ({ onExpertClick }) => {
 
     const container = document.getElementById("map");
 
-    // console.log(location.latitude);
-    // console.log(location.longitude);
+    console.log(location.latitude);
+    console.log(location.longitude);
 
     const center = new window.kakao.maps.LatLng(
       location.latitude,

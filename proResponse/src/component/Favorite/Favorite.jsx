@@ -47,7 +47,7 @@ const Favorite = () => {
         setLoading(true);
         try {
             const response = await axiosAuth.getList(`/api/experts/likes?pageNo=${pageNo}`);
-            //console.log('찜한 전문가 목록:', response.data);
+            console.log('찜한 전문가 목록:', response.data);
             
             const expertList = response.data?.list || [];
             const pagination = response.data?.pageInfo || {};

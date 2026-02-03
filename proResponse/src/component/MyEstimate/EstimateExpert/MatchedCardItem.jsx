@@ -21,7 +21,7 @@ const MatchedCardItem = ({ data, onRequestDetail, onChatStart, onDeleteEstimate 
 
     // 자세히 보기 - 회원 요청 정보 + 내가 보낸 견적 (탭으로 전환)
     const handleDetailClick = () => {
-        //console.log("자세히 보기 클릭 - requestNo:", data.requestNo);
+        console.log("자세히 보기 클릭 - requestNo:", data.requestNo);
         if (onRequestDetail && data.requestNo) {
             onRequestDetail(data.requestNo);
         }

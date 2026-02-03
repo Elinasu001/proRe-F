@@ -12,7 +12,7 @@ const EstimateRequestExample = () => {
   };
 
   const handleSubmit = (formData) => {
-    //console.log('견적 요청 제출:', formData);
+    console.log('견적 요청 제출:', formData);
     alert('견적 요청이 전송되었습니다!');
   };
 
