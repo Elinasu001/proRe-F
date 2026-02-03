@@ -16,8 +16,10 @@ import Login from "./component/Login/Login";
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
+import AdminDashboard from './component/Admin/AdminDashboard.jsx';
 import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
 import AdminMemberList from './component/Admin/AdminMemberList.jsx';
+import AdminReportList from './component/Admin/AdminReportList.jsx';
 import { AuthProvider } from './context/AuthContext';
 import EstimateLayout from './component/Common/Layout/EstimateLayout.jsx';
 import EstimateUser from './component/MyEstimate/EstimateUser/EstimateUser.jsx';
@@ -56,7 +58,10 @@ function App() {
         </Route>
         {/* 관리자 페이지 */}
         <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/members" element={<AdminMemberList />} />
+          <Route path="/admin/reports" element={<AdminReportList />} />
+
         </Route>
       </Routes>
     </AuthProvider>

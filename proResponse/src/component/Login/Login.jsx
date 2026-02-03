@@ -27,7 +27,15 @@ export default function Login() {
       // AuthContext.login은 axios 응답(res)을 그대로 받도록 만들어둠
       login(res);
 
-      navigate("/main");
+      // userRole 가져오기
+      const userRole = res.data.data?.userRole;
+
+      // 역할에 따라 리다이렉트
+      if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_ROOT') {
+      navigate('/admin');  // 관리자 대시보드
+      } else {
+      navigate('/main');   // 일반 메인
+      }
     } catch (err) {
       // 백엔드 표준 응답 { message, data, success, timestamp } 고려
       const msg =
