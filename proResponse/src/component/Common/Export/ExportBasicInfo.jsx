@@ -41,7 +41,7 @@ function getRandomImage() {
     return profileImages[Math.floor(Math.random() * profileImages.length)];
 }
 
-const ExportCardItem = ({ data }) => {
+const ExportCardItem = ({ data, onLike }) => {
     const [isLiked, setIsLiked] = useState(() => {
         return data?.userLiked === true || data?.userLiked === 1 || data?.userLiked === "1";
     });
