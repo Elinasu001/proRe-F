@@ -11,8 +11,8 @@ import Alert from '../Common/Alert/Alert';
 import useReviewModal from '../Common/Modal/Review/useReviewModal';
 import Toast from '../Common/Toast/Toast.jsx';
 import * as S from './ChatRoom.styled.js';
-import PaymentModal from './Payment/PaymentModal.jsx';
 import PaymentMessageCard from './Payment/PaymentMessageCard.jsx';
+import PaymentModal from './Payment/PaymentModal.jsx';
 import ReportModal from './Report/ReportModal.jsx';
 import { useReportModal, useReportTags } from './Report/useReportModal.js';
 import ReviewViewModal from './Review/ReviewViewModal.jsx';
@@ -180,7 +180,7 @@ const ChatRoom = () => {
                             key={msg.messageNo || msg.tempId || index}
                             className={msg.mine ? "message-me" : "message-other"}
                         >
-                            <S.MessageBubble $sender={msg.mine ? 'me' : 'other'}>
+                            <S.MessageBubble $sender={msg.mine ? 'me' : 'other'} $type={msg.type}>
                                 {msg.type === 'TEXT' && msg.content}
 
                                 {msg.type === 'FILE' && (
@@ -279,9 +279,13 @@ const ChatRoom = () => {
             />
             {/* 송금하기 모달 */}
             {showPayment && (
-                <PaymentModal 
+                <PaymentModal
                     onClose={() => setShowPayment(false)}
                     onSuccess={handlePaymentSuccess}
+                    // open={showPayment}
+                    // roomNo={roomNo}
+                    estimateNo={estimateNo}
+                    // estiamteNo={estimateNo}
                 />
             )}
 

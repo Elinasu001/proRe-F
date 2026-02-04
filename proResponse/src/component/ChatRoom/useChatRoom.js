@@ -22,6 +22,7 @@ export default function useChatRoom(estimateNo, userNo, navi) {
     const closeToast = () => setShowToast(false);
 
     const WS_URL = getChatWsUrl(estimateNo);
+
     const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket(
         WS_URL,
         {
@@ -67,9 +68,9 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         if (lastJsonMessage !== null) {
             const isMine = Number(lastJsonMessage.userNo) === userNo;
             if (lastJsonMessage.type === 'FILE' && isMine) {
-                setMessages(prev => 
-                    prev.map(msg => 
-                        msg.tempId === `temp_${lastJsonMessage.messageNo}` 
+                setMessages(prev =>
+                    prev.map(msg =>
+                        msg.tempId === `temp_${lastJsonMessage.messageNo}`
                             ? { ...lastJsonMessage, mine: true }
                             : msg
                     )
