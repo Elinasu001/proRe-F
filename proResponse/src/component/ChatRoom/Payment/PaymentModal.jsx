@@ -1,6 +1,6 @@
 import PortOne from '@portone/browser-sdk/v2';
 import { useState } from 'react';
-import { PORTONE_CHANNEL_KEY, PORTONE_STORE_ID } from '../../../../config.js';
+import { PORTONE_STORE_ID, PORTONE_CHANNEL_KEY } from '../../../api/reqApi.js';
 import Alert from '../../Common/Alert/Alert';
 import useAlert from '../../Common/Alert/useAlert';
 import Input from '../../Common/Input/Input.jsx';
@@ -9,7 +9,7 @@ import * as S from '../../Common/Input/Input.styled.js';
 /**
  * 결제 + 리뷰 통합 모달
  */
-const PaymentModal = ({ open = true, onClose }) => {
+const PaymentModal = ({ open = true, onClose, onSuccess }) => {
     // 공통 Alert
     const { alertState, openAlert, closeAlert } = useAlert();
     // 결제 금액 입력 (문자열로 관리)
@@ -50,11 +50,8 @@ const PaymentModal = ({ open = true, onClose }) => {
                 setIsPaying(false);
                 return;
             }
-            openAlert({
-                title: '결제 성공',
-                message: '결제에 성공했습니다.',
-                onConfirm: closeAlert
-            });
+            closeAlert();
+            if (onSuccess) onSuccess(numAmount);
         } catch (error) {
             openAlert({
                 title: '결제 오류',

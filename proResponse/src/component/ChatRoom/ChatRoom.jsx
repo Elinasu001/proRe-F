@@ -12,6 +12,7 @@ import useReviewModal from '../Common/Modal/Review/useReviewModal';
 import Toast from '../Common/Toast/Toast.jsx';
 import * as S from './ChatRoom.styled.js';
 import PaymentModal from './Payment/PaymentModal.jsx';
+import PaymentMessageCard from './Payment/PaymentMessageCard.jsx';
 import ReportModal from './Report/ReportModal.jsx';
 import { useReportModal, useReportTags } from './Report/useReportModal.js';
 import ReviewViewModal from './Review/ReviewViewModal.jsx';
@@ -22,6 +23,7 @@ const ChatRoom = () => {
     const navi = useNavigate();
     const userNo = Number(localStorage.getItem('userNo'));
     const [showPayment, setShowPayment] = useState(false);
+    const [paidAmount, setPaidAmount] = useState(null);
 
     const {
         message,
@@ -96,6 +98,16 @@ const ChatRoom = () => {
         [WebSocket.CLOSING]: '종료 중...',
         [WebSocket.CLOSED]: '연결 끊김',
     }[readyState];
+
+    // 결제 성공 시 채팅 메시지에 결제 금액 표시
+    const handlePaymentSuccess = (amount) => {
+        setPaidAmount(amount);
+        // 채팅 메시지에 결제 메시지 추가
+        handleSendMessage({
+            type: 'PAYMENT',
+            content: `${amount.toLocaleString()}원 결제 완료`
+        });
+    };
 
     return (
         <>
@@ -198,7 +210,10 @@ const ChatRoom = () => {
                                 )}
 
                                 {msg.type === 'PAYMENT' && (
-                                    <div>{msg.content}</div>
+                                    <PaymentMessageCard 
+                                        amount={parseInt(msg.content.replace(/[^0-9]/g, '')) || 0}
+                                        date={msg.sentDate ? new Date(msg.sentDate).toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                                    />
                                 )}
                             </S.MessageBubble>
                         </S.Message>
@@ -264,7 +279,10 @@ const ChatRoom = () => {
             />
             {/* 송금하기 모달 */}
             {showPayment && (
-                <PaymentModal onClose={() => setShowPayment(false)} />
+                <PaymentModal 
+                    onClose={() => setShowPayment(false)}
+                    onSuccess={handlePaymentSuccess}
+                />
             )}
 
         </>

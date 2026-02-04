@@ -526,5 +526,6 @@ export const MountText = styled.div`
   width: 100%;
   text-align: right;
   font-size: var(--font14);
-  color: var(--color-7);
+  color: var(--color-2);
+  padding-bottom:1rem;
 `;

@@ -87,20 +87,31 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         }
     }, [lastJsonMessage, userNo]);
 
-    // 메시지 전송
-    const handleSendMessage = () => {
-        if (!message.trim()) return;
+    // 메시지 전송 (TEXT, PAYMENT 등 타입 지원)
+    const handleSendMessage = (payload) => {
+        let sendPayload;
+        if (typeof payload === 'string' || payload === undefined) {
+            // 기존 텍스트 메시지 전송 방식
+            if (!message.trim()) return;
+            sendPayload = {
+                content: message,
+                type: 'TEXT',
+                userNo: userNo
+            };
+        } else {
+            // 객체로 받은 경우 (PAYMENT 등)
+            if (!payload.content?.toString().trim()) return;
+            sendPayload = {
+                ...payload,
+                userNo: userNo
+            };
+        }
         if (readyState !== WebSocket.OPEN) {
             showToastMessage('WebSocket 연결이 끊어졌습니다. 새로고침해주세요.', 'error');
             return;
         }
-        const payload = {
-            content: message,
-            type: 'TEXT',
-            userNo: userNo
-        };
-        sendJsonMessage(payload);
-        setMessage('');
+        sendJsonMessage(sendPayload);
+        if (sendPayload.type === 'TEXT') setMessage('');
     };
 
     // 파일 업로드
