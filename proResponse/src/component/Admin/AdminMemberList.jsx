@@ -167,7 +167,7 @@ const AdminMemberList = () => {
               <S.Th>상태</S.Th>
               <S.Th>페널티</S.Th>
               <S.Th>가입일</S.Th>
-              <S.Th>관리</S.Th>
+              <S.Th>신고 내역</S.Th>
             </tr>
           </thead>
           <tbody>
