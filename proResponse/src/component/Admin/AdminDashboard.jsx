@@ -1,30 +1,31 @@
 import { useNavigate } from "react-router-dom";
+import * as S from './AdminDashboard.styled';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>관리자 대시보드</h2>
-      
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+    <S.Container>
+      <S.Title>관리자 메뉴</S.Title>
+
+      <S.CardGrid>
         {/* 회원 관리 */}
-        <div style={{ border: '1px solid #ddd', padding: 20 }}>
-          <h3>회원 관리</h3>
-          <button onClick={() => navigate('/admin/members')}>
-            회원 관리 바로가기
-          </button>
-        </div>
+        <S.Card onClick={() => navigate('/admin/members')}>
+          <S.CardTitle>👥 회원 관리</S.CardTitle>
+          <S.CardDescription>
+            회원 조회, 상태 관리, 페널티 부여
+          </S.CardDescription>
+        </S.Card>
         
         {/* 신고 관리 */}
-        <div style={{ border: '1px solid #ddd', padding: 20 }}>
-          <h3>신고 관리</h3>
-          <button onClick={() => navigate('/admin/reports')}>
-            신고 관리 바로가기
-          </button>
-        </div>
-      </div>
-    </div>
+        <S.Card onClick={() => navigate('/admin/reports')}>
+          <S.CardTitle>🚨 신고 관리</S.CardTitle>
+          <S.CardDescription>
+            신고 접수 확인, 승인 및 반려 처리
+          </S.CardDescription>
+        </S.Card>
+      </S.CardGrid>
+    </S.Container>
   );
 };
 

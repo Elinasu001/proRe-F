@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
 import { getAdminReports, updateReportStatus } from "../../api/admin/adminReportApi";
+import * as S from './AdminReportList.styled';
 
 const AdminReportList = () => {
   const { currentUser } = useAuth();
@@ -65,23 +66,23 @@ const AdminReportList = () => {
   // 관리자 권한 체크
   if (!hasAdminAccess(currentUser?.userRole)) {
     return (
-      <div style={{ padding: 24, textAlign: "center" }}>
-        <h2>접근 권한이 없습니다.</h2>
-      </div>
+      <S.Container>
+        <S.Title>접근 권한이 없습니다.</S.Title>
+      </S.Container>
     );
   }
 
-  if (loading) return <div style={{ padding: 24 }}>로딩 중...</div>;
-  if (error) return <div style={{ padding: 24, color: "red" }}>{error}</div>;
+  if (loading) return <S.Container>로딩 중...</S.Container>;
+  if (error) return <S.Container style={{ color: "red" }}>{error}</S.Container>;
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>신고 관리</h2>
+    <S.Container>
+      <S.Title>신고 관리</S.Title>
 
       {/* 검색 필터 */}
-      <div style={{ marginBottom: 20, padding: 16, border: "1px solid #ddd" }}>
-        <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-          <select
+      <S.SearchSection>
+        <S.SearchRow>
+          <S.Select
             value={searchParams.status}
             onChange={(e) => setSearchParams({ ...searchParams, status: e.target.value })}
           >
@@ -89,87 +90,86 @@ const AdminReportList = () => {
             <option value="WAITING">대기중</option>
             <option value="RESOLVED">해결됨</option>
             <option value="REJECTED">반려됨</option>
-          </select>
+          </S.Select>
 
-          <button onClick={handleSearch}>
+          <S.Button onClick={handleSearch}>
             검색
-          </button>
-        </div>
-      </div>
+          </S.Button>
+        </S.SearchRow>
+      </S.SearchSection>
 
       {/* 신고 목록 테이블 */}
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <S.Table>
         <thead>
-          <tr style={{ borderBottom: "2px solid #333" }}>
-            <th style={{ padding: 12 }}>번호</th>
-            <th style={{ padding: 12 }}>신고자</th>
-            <th style={{ padding: 12 }}>대상자</th>
-            <th style={{ padding: 12 }}>사유</th>
-            <th style={{ padding: 12 }}>내용</th>
-            <th style={{ padding: 12 }}>상태</th>
-            <th style={{ padding: 12 }}>신고일</th>
-            <th style={{ padding: 12 }}>관리</th>
+          <tr>
+            <S.Th>번호</S.Th>
+            <S.Th>신고자</S.Th>
+            <S.Th>대상자</S.Th>
+            <S.Th>사유</S.Th>
+            <S.Th>내용</S.Th>
+            <S.Th>상태</S.Th>
+            <S.Th>신고일</S.Th>
+            <S.Th>관리</S.Th>
           </tr>
         </thead>
         <tbody>
           {reports.map((report) => (
-            <tr key={report.reportNo} style={{ borderBottom: "1px solid #ddd" }}>
-              <td style={{ padding: 12, textAlign: "center" }}>{report.reportNo}</td>
-              <td style={{ padding: 12 }}>{report.reporterNickname}</td>
-              <td style={{ padding: 12 }}>{report.targetNickname}</td>
-              <td style={{ padding: 12 }}>{report.reasonName}</td>
-              <td style={{ padding: 12 }}>{report.content}</td>
-              <td style={{ padding: 12, textAlign: "center" }}>
+            <tr key={report.reportNo}>
+              <S.Td>{report.reportNo}</S.Td>
+              <S.Td>{report.reporterNickname}</S.Td>
+              <S.Td>{report.targetNickname}</S.Td>
+              <S.Td>{report.reasonName}</S.Td>
+              <S.Td>{report.content}</S.Td>
+              <S.Td>
                 {report.status === "WAITING" && "대기중"}
                 {report.status === "RESOLVED" && "해결됨"}
                 {report.status === "REJECTED" && "반려됨"}
-              </td>
-              <td style={{ padding: 12, textAlign: "center" }}>
-                {report.createDate}
-              </td>
-              <td style={{ padding: 12, textAlign: "center" }}>
+              </S.Td>
+              <S.Td>{report.createDate}</S.Td>
+              <S.Td>
                 {report.status === "WAITING" && (
                   <>
-                    <button 
+                    <S.ActionButton 
+                      variant="success"
                       onClick={() => handleStatusChange(report.reportNo, "RESOLVED")}
-                      style={{ marginRight: 8 }}
                     >
                       승인
-                    </button>
-                    <button 
+                    </S.ActionButton>
+                    <S.ActionButton 
+                      variant="danger"
                       onClick={() => handleStatusChange(report.reportNo, "REJECTED")}
                     >
                       반려
-                    </button>
+                    </S.ActionButton>
                   </>
                 )}
-              </td>
+              </S.Td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </S.Table>
 
       {/* 페이징 */}
       {pageInfo && (
-        <div style={{ marginTop: 20, textAlign: "center" }}>
-          <button
+        <S.Pagination>
+          <S.PageButton
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
           >
             이전
-          </button>
-          <span style={{ margin: "0 12px" }}>
+          </S.PageButton>
+          <S.PageInfo>
             {currentPage} / {pageInfo.maxPage}
-          </span>
-          <button
+          </S.PageInfo>
+          <S.PageButton
             disabled={currentPage === pageInfo.maxPage}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
             다음
-          </button>
-        </div>
+          </S.PageButton>
+        </S.Pagination>
       )}
-    </div>
+    </S.Container>
   );
 };
 

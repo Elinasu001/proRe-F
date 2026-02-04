@@ -79,3 +79,30 @@ export const Main = styled.main`
   min-height: calc(100vh - 64px);
   background: #f5f5f5;
 `;
+
+export const Footer = styled.footer`
+  background: #f8f9fa;
+  padding: 24px;
+  text-align: center;
+  border-top: 2px solid #0d6efd;
+`;
+
+export const FooterLogo = styled.img`
+  height: 40px;
+  width: auto;
+  margin-bottom: 12px;
+  opacity: 0.9;
+`;
+
+export const Copyright = styled.p`
+  color: #6c757d;
+  font-size: 14px;
+  margin: 8px 0 0 0;
+`;
+
+export const HeaderLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  gap: 12px;
+`;

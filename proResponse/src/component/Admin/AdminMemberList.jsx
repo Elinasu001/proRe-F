@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
 import { getAdminMembers, updateMemberStatus, updateMemberPenalty } from "../../api/admin/adminMemberApi";
+import * as S from './AdminMemberList.styled';
 
 const AdminMemberList = () => {
   const { currentUser } = useAuth();
@@ -72,41 +73,41 @@ const AdminMemberList = () => {
   // 관리자 권한 체크
   if (!hasAdminAccess(currentUser?.userRole)) {
     return (
-      <div style={{ padding: 24, textAlign: "center" }}>
-        <h2>접근 권한이 없습니다.</h2>
-      </div>
+      <S.Container>
+        <S.Title>접근 권한이 없습니다.</S.Title>
+      </S.Container>
     );
   }
 
-  if (loading) return <div style={{ padding: 24 }}>로딩 중...</div>;
-  if (error) return <div style={{ padding: 24, color: "red" }}>{error}</div>;
+  if (loading) return <S.Container>로딩 중...</S.Container>;
+  if (error) return <S.Container style={{ color: "red" }}>{error}</S.Container>;
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>회원 관리</h2>
+    <S.Container>
+      <S.Title>회원 관리</S.Title>
 
       {/* 검색 필터 */}
-      <div style={{ marginBottom: 20, padding: 16, border: "1px solid #ddd" }}>
-        <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-          <select
+      <S.SearchSection>
+        <S.SearchRow>
+          <S.Select
             value={searchParams.status}
             onChange={(e) => setSearchParams({ ...searchParams, status: e.target.value })}
           >
             <option value="">전체 상태</option>
             <option value="Y">활성</option>
             <option value="N">비활성</option>
-          </select>
+          </S.Select>
 
-          <select
+          <S.Select
             value={searchParams.penaltyStatus}
             onChange={(e) => setSearchParams({ ...searchParams, penaltyStatus: e.target.value })}
           >
             <option value="">전체 페널티</option>
             <option value="N">정상</option>
             <option value="Y">페널티</option>
-          </select>
+          </S.Select>
 
-          <select
+          <S.Select
             value={searchParams.userRole}
             onChange={(e) => setSearchParams({ ...searchParams, userRole: e.target.value })}
           >
@@ -114,99 +115,96 @@ const AdminMemberList = () => {
             <option value="ROLE_USER">일반회원</option>
             <option value="ROLE_EXPERT">전문가</option>
             <option value="ROLE_ADMIN">관리자</option>
-          </select>
+          </S.Select>
 
-          <input
+          <S.Input
             type="text"
             placeholder="이메일 또는 닉네임 검색"
             value={searchParams.searchKeyword}
             onChange={(e) => setSearchParams({ ...searchParams, searchKeyword: e.target.value })}
-            style={{ padding: 8, flex: 1 }}
           />
 
-          <button onClick={handleSearch}>
+          <S.Button onClick={handleSearch}>
             검색
-          </button>
-        </div>
-      </div>
+          </S.Button>
+        </S.SearchRow>
+      </S.SearchSection>
 
       {/* 회원 목록 테이블 */}
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <S.Table>
         <thead>
-          <tr style={{ borderBottom: "2px solid #333" }}>
-            <th style={{ padding: 12 }}>번호</th>
-            <th style={{ padding: 12 }}>이메일</th>
-            <th style={{ padding: 12 }}>닉네임</th>
-            <th style={{ padding: 12 }}>역할</th>
-            <th style={{ padding: 12 }}>상태</th>
-            <th style={{ padding: 12 }}>페널티</th>
-            <th style={{ padding: 12 }}>가입일</th>
-            <th style={{ padding: 12 }}>관리</th>
+          <tr>
+            <S.Th>번호</S.Th>
+            <S.Th>이메일</S.Th>
+            <S.Th>닉네임</S.Th>
+            <S.Th>역할</S.Th>
+            <S.Th>상태</S.Th>
+            <S.Th>페널티</S.Th>
+            <S.Th>가입일</S.Th>
+            <S.Th>관리</S.Th>
           </tr>
         </thead>
         <tbody>
           {members.map((member) => (
-            <tr key={member.userNo} style={{ borderBottom: "1px solid #ddd" }}>
-              <td style={{ padding: 12, textAlign: "center" }}>{member.userNo}</td>
-              <td style={{ padding: 12 }}>{member.email}</td>
-              <td style={{ padding: 12 }}>{member.nickname}</td>
-              <td style={{ padding: 12, textAlign: "center" }}>
+            <tr key={member.userNo}>
+              <S.Td>{member.userNo}</S.Td>
+              <S.Td>{member.email}</S.Td>
+              <S.Td>{member.nickname}</S.Td>
+              <S.Td>
                 {member.userRole === "ROLE_USER" && "일반"}
                 {member.userRole === "ROLE_EXPERT" && "전문가"}
                 {member.userRole === "ROLE_ADMIN" && "관리자"}
-              </td>
-              <td style={{ padding: 12, textAlign: "center" }}>
-                <select
+              </S.Td>
+              <S.Td>
+                <S.Select
                   value={member.status}
                   onChange={(e) => handleStatusChange(member.userNo, e.target.value)}
                 >
                   <option value="Y">활성</option>
                   <option value="N">비활성</option>
-                </select>
-              </td>
-              <td style={{ padding: 12, textAlign: "center" }}>
-                <select
+                </S.Select>
+              </S.Td>
+              <S.Td>
+                <S.Select
                   value={member.penaltyStatus}
                   onChange={(e) => handlePenaltyChange(member.userNo, e.target.value)}
                 >
                   <option value="N">정상</option>
                   <option value="Y">페널티</option>
-                </select>
-              </td>
-              <td style={{ padding: 12, textAlign: "center" }}>
-                {member.createDate}
-              </td>
-              <td style={{ padding: 12, textAlign: "center" }}>
-                <button onClick={() => alert(`상세: ${member.userNo}`)}>
+                </S.Select>
+              </S.Td>
+              <S.Td>{member.createDate}</S.Td>
+              <S.Td>
+                <S.ActionButton onClick={() => alert(`상세: ${member.userNo}`)}>
                   상세
-                </button>
-              </td>
+                </S.ActionButton>
+              </S.Td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </S.Table>
 
       {/* 페이징 */}
       {pageInfo && (
-        <div style={{ marginTop: 20, textAlign: "center" }}>
-          <button
+        <S.Pagination>
+          <S.PageButton
             disabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
           >
             이전
-          </button>
-          <span style={{ margin: "0 12px" }}>
+          </S.PageButton>
+          <S.PageInfo>
             {currentPage} / {pageInfo.maxPage}
-          </span>
-          <button
+          </S.PageInfo>
+          <S.PageButton
             disabled={currentPage === pageInfo.maxPage}
             onClick={() => setCurrentPage(currentPage + 1)}
           >
             다음
-          </button>
-        </div>
+          </S.PageButton>
+        </S.Pagination>
       )}
-    </div>
+    </S.Container>
   );
 };
 
