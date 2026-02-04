@@ -129,3 +129,60 @@ export const PageInfo = styled.span`
   font-weight: 500;
   color: #495057;
 `;
+
+// 모달 스타일
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 900px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+`;
+
+export const ModalHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 2px solid #dee2e6;
+  position: sticky;
+  top: 0;
+  background: white;
+  z-index: 1;
+`;
+
+export const ModalTitle = styled.h3`
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a1a;
+`;
+
+export const CloseButton = styled.button`
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #6c757d;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #dc3545;
+  }
+`;
