@@ -59,12 +59,16 @@ const ExportCardItem = ({ data }) => {
         }
 
         setAnimating(true);
-        
         try {
             const response = await axiosAuth.post(`/api/likes/${data.expertNo}`);
             const newIsLiked = response.data?.isLiked;
+            const newTotalLikes = response.data?.totalLikes;
             setIsLiked(newIsLiked);
-            setLikeCount(prev => newIsLiked ? prev + 1 : prev - 1);
+            if (typeof newTotalLikes === 'number') {
+                setLikeCount(newTotalLikes);
+            } else {
+                setLikeCount(prev => newIsLiked ? prev + 1 : prev - 1);
+            }
         } catch (error) {
             console.error("좋아요 요청 실패:", error);
             alert("좋아요 요청에 실패했습니다.");
