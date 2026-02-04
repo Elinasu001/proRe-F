@@ -1,14 +1,27 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+export const Logo = styled.img`
+  height: 40px;
+  width: auto;
+  margin-right: 12px;
+  vertical-align: middle;
+`;
+
 export const Header = styled.header`
-  background: #005eff;
+  background: #0d6efd;
   color: white;
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+export const HeaderLeft = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
 `;
 
 export const Title = styled.h1`

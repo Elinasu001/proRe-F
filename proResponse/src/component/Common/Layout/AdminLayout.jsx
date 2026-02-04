@@ -1,6 +1,8 @@
 import { Outlet, Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import * as S from './AdminLayout.styled';
+import makerLogo from '../../../assets/images/common/maker.png';
+
 
 const AdminLayout = () => {
   const { currentUser, logout } = useAuth();
@@ -8,7 +10,10 @@ const AdminLayout = () => {
   return (
     <>
       <S.Header>
-        <S.Title>관리자 페이지</S.Title>
+        <S.HeaderLeft>
+          <S.Logo src={makerLogo} alt="로고" />
+          <S.Title>관리자 페이지</S.Title>
+        </S.HeaderLeft>
         
         <S.Nav>
           <S.NavLink to="/admin">대시보드</S.NavLink>
