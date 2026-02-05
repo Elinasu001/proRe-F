@@ -68,7 +68,7 @@ const ChatRoom = () => {
         reportModal,
         openReportModal,
         closeReportModal,
-    } = useReportModal(estimateNo);
+    } = useReportModal(estimateNo, messages, userNo);
 
     /**
      * 신고 모달 열기
@@ -119,6 +119,7 @@ const ChatRoom = () => {
                     {...reportModal}
                     estimateNo={estimateNo}
                     onClose={closeReportModal}
+                    existingReport={reportModal.existingReport}
                 />
             )}
             {reviewWriteModal.isOpen && (

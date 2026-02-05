@@ -6,6 +6,8 @@ export default function useChatRoom(estimateNo, userNo, navi) {
 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    // 상대방 userNo (메시지 없어도 항상 계산)
+    const [otherUserNo, setOtherUserNo] = useState(null);
     const [nextCursor, setNextCursor] = useState(null);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
@@ -47,6 +49,20 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         fetchMessages(null, true);
         // eslint-disable-next-line
     }, [estimateNo, userNo]);
+
+    // 상대방 userNo 계산: messages에 내 userNo와 다른 userNo가 있으면 그 값, 없으면 null
+    useEffect(() => {
+        // 메시지에 상대방 userNo가 있으면 사용
+        const found = messages.find(m => m.userNo !== userNo)?.userNo;
+        if (found) {
+            setOtherUserNo(found);
+        } else {
+            // 메시지가 없을 때: 1:1 채팅방이므로 내 userNo와 다른 참여자 userNo를 추론해야 함
+            // (추후 참여자 정보를 props나 API로 받아올 수 있으면 여기서 세팅)
+            // 현재 구조에서는 null로 둠
+            setOtherUserNo(null);
+        }
+    }, [messages, userNo]);
 
     // 커서 기반 메시지 불러오기
     const fetchMessages = useCallback(async (cursor = null, isInit = false) => {
@@ -264,5 +280,6 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         hasMore,
         loading,
         nextCursor,
+        otherUserNo, // 상대방 userNo 반환
     };
 }
