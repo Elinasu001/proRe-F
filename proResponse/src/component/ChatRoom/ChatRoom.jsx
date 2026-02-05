@@ -262,7 +262,9 @@ const ChatRoom = () => {
                         />
 
                         <S.IconButton
-                            onClick={handleSendMessage}
+                            onClick={() => {
+                                handleSendMessage();
+                            }}
                             disabled={readyState !== WebSocket.OPEN}
                         >
                             <img src={sendImg} alt="send" />

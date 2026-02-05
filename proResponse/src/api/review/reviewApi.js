@@ -7,8 +7,8 @@ export const getReviewTags = () =>
   axiosAuth.getActual(`${baseApi}/tags`);
 
 // 리뷰 조회
-export const getReview = (estimateNo) =>
-  axiosAuth.getActual(`${baseApi}/${estimateNo}`);
+export const getReview = (params) =>
+  axiosAuth.getActual(`${baseApi}/${params}`);
 
 // 리뷰 등록 (FormData 전송)
 export const createReview = (formData) =>
@@ -19,5 +19,5 @@ export const createReview = (formData) =>
   });
 
 // 리뷰 삭제
-export const deleteReview = (estimateNo) =>
-  axiosAuth.put(`${baseApi}/${estimateNo}`);
+export const deleteReview = (params) =>
+  axiosAuth.delete(`${baseApi}/${params}`);
