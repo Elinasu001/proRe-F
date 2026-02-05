@@ -11,12 +11,17 @@ export const baseApi = '/api/rooms';
 
 
 
-// 채팅방 생성
-export const createRoomApi = (estimateNo, chatMessageDto) =>
-axiosAuth.post(baseApi, chatMessageDto, {
-    params: { estimateNo },
-    headers: { 'Content-Type': 'multipart/form-data' },
-});
+// 채팅방 생성 (FormData로 estimateNo, content, type 전달)
+export const createRoomApi = (estimateNo, chatMessageDto) => {
+    const formData = new FormData();
+    if (estimateNo !== undefined) formData.append('estimateNo', estimateNo);
+    if (chatMessageDto) {
+        Object.keys(chatMessageDto).forEach(key => formData.append(key, chatMessageDto[key]));
+    }
+    return axiosAuth.post(baseApi, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+};
 
 
 /**

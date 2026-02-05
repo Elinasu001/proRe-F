@@ -12,7 +12,11 @@ export const getReview = (estimateNo) =>
 
 // 리뷰 등록 (FormData 전송)
 export const createReview = (formData) =>
-  axiosAuth.post(baseApi, formData);
+  axiosAuth.post(baseApi, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
 // 리뷰 삭제
 export const deleteReview = (estimateNo) =>

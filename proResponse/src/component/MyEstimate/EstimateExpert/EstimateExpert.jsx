@@ -1,17 +1,31 @@
 import React, { useState } from 'react';
+import Toast from '../../Common/Toast/Toast.jsx';
 import { useNavigate } from 'react-router-dom';
 import * as S from '../../Common/Layout/EstimateLayout.styled.js';
 import ExpertCards from './ExpertCards.jsx';
 import RequestDetailPanel from './RequestDetailPanel.jsx';
 import MatchedDetailPanel from './MatchedDetailPanel.jsx';
 import { axiosAuth } from '../../../api/reqApi.js';
-import { createRoomApi } from '../../../api/chat/chatApi.js';
+// import { createRoomApi } from '../../../api/chat/chatApi.js';
+import { createRoomApi } from "../../../api/chat/chatApi.js";
 
 const EstimateExpert = () => {
   const navigate = useNavigate();
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [selectedMatched, setSelectedMatched] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [loading, setLoading] = useState(false);
+  // 토스트 상태 및 함수 (useChatRoom과 동일)
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('success');
+  const showToastMessage = (message, variant = 'success') => {
+    setToastMessage(message);
+    setToastVariant(variant);
+    setShowToast(true);
+  };
+  const closeToast = () => setShowToast(false);
+  
 
   const handleRequestDetail = async (requestNo) => {
     try {
@@ -58,19 +72,41 @@ const EstimateExpert = () => {
   };
 
   const handleChatStart = async (data) => {
+    setLoading(true);
     try {
-      const estimateNo = data?.estimateNo ?? data?.requestNo;
-      const response = await createRoomApi(Number(estimateNo), {
+      
+      const estimateNo = data?.estimateNo;
+      const chatMessageDto = {
         content: "안녕하세요",
-        type: "TEXT",
-      });
+        type: "TEXT"
+      };
+
+      const response = await createRoomApi(
+        estimateNo ? Number(estimateNo) : undefined,
+        chatMessageDto
+      );
+
       const created = response?.data?.data;
       const enterEstimateNo = created?.estimateNo ?? estimateNo;
+      showToastMessage('채팅방이 생성되었습니다!', 'success');
       navigate(`/chatRoom/${enterEstimateNo}`);
+
     } catch (error) {
-      console.error("채팅방 생성 실패:", error);
+      
+      const msg = error?.response?.data?.message;
+      if (msg && msg.includes("이미 채팅방이 존재합니다")) {
+        showToastMessage('이미 채팅방이 존재합니다. 바로 입장합니다.', 'info');
+        navigate(`/chatRoom/${data?.estimateNo}`);
+        return;
+      }
+
+      showToastMessage(msg || "채팅방 생성 실패", 'error');
+
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const handleEstimateSuccess = () => {
     setRefreshKey(prev => prev + 1);
@@ -98,6 +134,13 @@ const EstimateExpert = () => {
 
   return (
     <>
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          variant={toastVariant}
+          onClose={closeToast}
+        />
+      )}
       <S.LeftContent>
         <ExpertCards 
           onRequestDetail={handleRequestDetail}

@@ -77,13 +77,24 @@ export default function useReviewModal(estimateNo) {
       formData.append('starScore', data.starScore);
       formData.append('content', data.text);
 
+      console.log('리뷰 제출 데이터:', data);
+
+      console.log('리뷰사진', typeof data.images, data.images);
+
       if (data.tags && data.tags.length > 0) {
-        data.tags.forEach(tag => formData.append('tags', tag));
+        data.tags.forEach(tag => formData.append('tagNos', tag));
       }
 
       if (data.images && data.images.length > 0) {
-        data.images.forEach(img => {
-          if (img.file) formData.append('files', img.file);
+        data.images.forEach((image, index) => {
+          // image가 File 객체이거나 { file: File } 구조라면
+          if (image instanceof File) {
+            formData.append("files", image);
+          } else if (image.file instanceof File) {
+            formData.append("files", image.file);
+          } else {
+            console.warn(`이미지 ${index}에 file 속성이 없습니다`);
+          }
         });
       }
 

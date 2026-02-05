@@ -101,7 +101,7 @@ export function useReportModal(estimateNo) {
                 } catch (error) {
                     showToastMessage('신고 등록에 실패했습니다.', error.message);
                 }
-                setReportModal(m => ({ ...m, isOpen: false }));
+                // 모달 닫지 않음 - ReportModal에서 refetch() 후 조회 모드로 전환됨
             },
         });
     };

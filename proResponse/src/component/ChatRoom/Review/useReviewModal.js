@@ -59,21 +59,29 @@ export default function useReviewWriteModal(isOpen) {
 
 	// 폼 검증
 	const validateForm = () => {
+		
 		if (starScore === 0) {
 			showToastMessage('별점을 선택해주세요.');
 			return false;
 		}
+
 		if (reviewText.trim().length === 0) {
 			showToastMessage('후기를 작성해주세요.');
 			return false;
 		}
+
+		if(selectedTags.length === 0){
+			showToastMessage('태그를 선택해주세요.');
+			return false;
+		}
+
 		return true;
 	};
 
 	// 제출 데이터 생성
 	const getSubmitData = () => ({
 		starScore,
-		images: images.map(img => img.preview),
+		images: images.map(img => img.file), // File 객체 전달
 		text: reviewText,
 		tags: selectedTags.map(t => t.value),
 	});
