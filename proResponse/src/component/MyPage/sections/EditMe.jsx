@@ -23,10 +23,7 @@ const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/;
 export default function EditMe() {
   const navigate = useNavigate();
 
-  /* =========================
-     AuthContext
-     - 기존 구조 최대 유지
-  ========================= */
+  /* AuthContext */
   const authCtx = useAuth();
   const { currentUser, updateCurrentUser } = authCtx;
 
@@ -56,30 +53,28 @@ export default function EditMe() {
   setPwErr({ currentPw: "", newPw: "", newPw2: "" });
 };  
 
-  /* =========================
-     (추가) 강제 로그아웃(안전장치)
+  /* 
+     - 강제 로그아웃
      - 서버 로그아웃은 "시도"만
-     - 클라 정리 + navigate는 무조건
-  ========================= */
+     - 클라 정리 + navigate는 무조건 
+  */
   const forceLogout = async () => {
-  // 1) 클라 정리 먼저 (여기서 이미 다음 요청은 막힘)
+  // 클라 정리 먼저 (여기서 이미 다음 요청은 막힘)
   localStorage.clear();
   delete axios.defaults.headers.common.Authorization;
 
-  // 2) 화면 이동 먼저
+  // 화면 이동 먼저
   navigate("/auth/loginForm", { replace: true });
 
-  // 3) 서버 로그아웃은 “시도만”
+  // 서버 로그아웃은 “시도만”
   try {
     await axios.post(`${apiUrl}/api/auth/logout`);
   } catch (e) {
-    // 403/401 나도 무시
+    // 403/401 무시하기
   }
 };
 
-  /* =========================
-     (추가) 이메일 변경/인증 상태
-  ========================= */
+  /* 이메일 변경/인증 상태 */
   const [emailEditOpen, setEmailEditOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [emailCode, setEmailCode] = useState("");
@@ -89,9 +84,7 @@ export default function EditMe() {
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  /* =========================
-     (추가) 이메일 인증/변경 핸들러
-  ========================= */
+  /* 이메일 인증/변경 핸들러 */
   const handleSendEmailCode = async () => {
     const email = (newEmail || "").trim();
 
@@ -165,10 +158,10 @@ export default function EditMe() {
     }
   };
 
-  /* =========================
-     (수정 핵심) 이메일 변경 성공 시
-     - 컨펌 → 확인 누르면 forceLogout()
-  ========================= */
+  /* 
+     이메일 변경 성공 시
+     컨펌 → 확인 누르면 forceLogout()
+   */
   const handleChangeEmail = async () => {
     const email = (newEmail || "").trim();
 
@@ -230,9 +223,7 @@ export default function EditMe() {
     }
   };
 
-  /* =========================
-     0) 이 화면에서 내 정보 GET
-  ========================= */
+  /* 이 화면에서 내 정보 GET */
   useEffect(() => {
     let mounted = true;
 
@@ -269,11 +260,8 @@ export default function EditMe() {
     return () => {
       mounted = false;
     };
-  }, []); // 기존 유지
+  }, []); 
 
-  /* =========================
-     1) 초기 값
-  ========================= */
   const [phone, setPhone] = useState("");
   const [postcode, setPostcode] = useState("");
   const [address, setAddress] = useState("");
@@ -292,9 +280,7 @@ export default function EditMe() {
   const PHONE_REGEX = /^010\d{8}$/;
   const [phoneError, setPhoneError] = useState("");
 
-  /* =========================
-     2) 최초 유저 정보 세팅
-  ========================= */
+  /* 유저 정보 세팅 */
   useEffect(() => {
     if (!currentUser) return;
 
@@ -313,9 +299,7 @@ export default function EditMe() {
     setEmailCodeError("");
   }, [currentUser]);
 
-  /* =========================
-     3) 변경 감지
-  ========================= */
+
   const changed = useMemo(() => {
     if (!currentUser) return false;
 
@@ -327,9 +311,7 @@ export default function EditMe() {
     );
   }, [phone, postcode, address, addressDetail, currentUser]);
 
-  /* =========================
-     4) 주소 선택 → 지오코딩 API
-  ========================= */
+  /* 주소 선택 + 지오코딩 API */
   const handleSelectAddress = async (data) => {
     const zipCode = data?.zipCode ?? data?.zonecode ?? "";
     const addr = (data?.address ?? data?.roadAddress ?? data?.jibunAddress ?? "").trim();
@@ -384,9 +366,7 @@ export default function EditMe() {
     setAddrOpen(true);
   };
 
-  /* =========================
-     5) 저장 (PATCH: 연락처 + 주소)
-  ========================= */
+  /* 저장 (PATCH: 연락처 + 주소) */
   const handleSave = () => {
     if (editing.phone && phone && !PHONE_REGEX.test(phone)) {
       openAlert({
@@ -509,9 +489,7 @@ export default function EditMe() {
   }
 };
 
-  /* =========================
-     6) UI
-  ========================= */
+  /* UI */
   return (
     <>
       <Alert {...alertState} />
@@ -574,7 +552,7 @@ export default function EditMe() {
                   />
                 </div>
 
-                {emailVerified && <div style={{ marginTop: 6, fontSize: 12 }}>인증 완료 ✅</div>}
+                {emailVerified && <div style={{ marginTop: 6, fontSize: 12 }}>인증 완료</div>}
               </div>
             )}
 
@@ -621,14 +599,14 @@ export default function EditMe() {
             variant="outline"
             onClick={() => {
                 setPwOpen((v) => !v);
-                resetPwForm(); // 열 때/닫을 때 폼 초기화(원하면 열 때만)
+                resetPwForm(); // 열 때/닫을 때 폼 초기화
             }}
             >
             변경
             </Button>
           </div>
 
-          {/* 비밀번호 변경 폼 (펼쳐짐) */}
+          {/* 비밀번호 변경 폼 */}
         {pwOpen && (
         <div className={styles.pwPanel}>
             <div className={styles.pwGrid}>
@@ -661,7 +639,7 @@ export default function EditMe() {
                     next.newPw = "";
                 }
 
-                // 확인값과 불일치 체크
+                // 확인값과 일치여부 체크
                 if (newPw2 && v !== newPw2) {
                     next.newPw2 = "비밀번호가 일치하지 않습니다.";
                 } else if (newPw2) {

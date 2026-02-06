@@ -16,9 +16,7 @@ export const AuthContext = createContext();
 /* API Base URL */
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 
-/* =========================
-   로컬스토리지 키 상수
-========================= */
+/* 로컬스토리지 키 상수 */
 const STORAGE_KEYS = {
   accessToken: "accessToken",
   refreshToken: "refreshToken",
@@ -32,9 +30,7 @@ const STORAGE_KEYS = {
   penaltyStatus: "penaltyStatus",
 };
 
-/* =========================
-   앱 부팅 시 토큰이 있으면 axios 기본 헤더에 세팅
-========================= */
+/* 앱 부팅 시 토큰이 있으면 axios 기본 헤더에 세팅 */
 const bootToken = localStorage.getItem(STORAGE_KEYS.accessToken);
 if (bootToken) {
   axios.defaults.headers.common["Authorization"] = `Bearer ${bootToken}`;
@@ -44,20 +40,14 @@ export const AuthProvider = ({ children }) => {
   /* 라우팅 */
   const navigate = useNavigate();
 
-  /* =========================
-     로그인 상태 플래그
-  ========================= */
+  /* 로그인 상태 플래그 */
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
-  /* =========================
-     현재 유저(프론트에서 쓰는 최소/확장 정보)
-  ========================= */
+  /* 현재 유저(프론트에서 쓰는 최소/확장 정보) */
   const [currentUser, setCurrentUser] = useState(null);
 
-  /* =========================
-     인증 토큰/권한 최소 상태
-  ========================= */
+  /* 인증 토큰/권한 최소 상태 */
   const [auth, setAuth] = useState({
     userNo: null,
     userRole: null,
@@ -66,9 +56,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: false,
   });
 
-  /* =========================
-     앱 시작 시 로컬 스토리지 복원
-  ========================= */
+  /* 앱 시작 시 로컬 스토리지 복원 */
   useEffect(() => {
     const storedAccessToken = localStorage.getItem(STORAGE_KEYS.accessToken);
     const storedUserNo = localStorage.getItem(STORAGE_KEYS.userNo);
@@ -104,10 +92,9 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  /* =========================
-     currentUser 부분 업데이트 (PATCH 성공 후 사용)
-     - patch: { nickname, profileImgPath, ... }
-  ========================= */
+  /* currentUser 부분 업데이트 (PATCH 성공 후 사용)
+   - patch: { nickname, profileImgPath, ... }
+   */
   const updateCurrentUser = (patch = {}) => {
     setCurrentUser((prev) => {
       const next = { ...(prev || {}), ...(patch || {}) };
@@ -148,7 +135,7 @@ export const AuthProvider = ({ children }) => {
      - auth/currentUser 세팅
      - 로컬스토리지 저장
      - axios Authorization 세팅
-  ========================= */
+   */
   const login = (loginResponse) => {
     const logindata = loginResponse?.data?.data;
     if (!logindata) {
@@ -199,12 +186,12 @@ export const AuthProvider = ({ children }) => {
     axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
   };
 
-  /* =========================
+  /* 
      로그아웃
      - 서버 로그아웃 시도
      - 클라 상태/스토리지/헤더 정리
      - 홈 이동
-  ========================= */
+  */
   const logout = async () => {
     const accessToken = localStorage.getItem(STORAGE_KEYS.accessToken);
     const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken);
@@ -245,11 +232,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  /* =========================
+  /*
      응답 인터셉터
      - 인증 만료/권한 문제로 판단되면 강제 로그아웃 처리
      - 특정 요청은 skipAuthErrorHandler로 스킵 가능
-  ========================= */
+  */
   useEffect(() => {
     const id = axios.interceptors.response.use(
       (res) => res,
@@ -267,11 +254,11 @@ export const AuthProvider = ({ children }) => {
         const isLoginRequest = url.includes("/api/auth/login");
         if (isLoginRequest) return Promise.reject(err);
 
-        /* 2) 401/403이어도 “비번 불일치/업무 에러”면 튕기지 말기 */
+        /* 2) 401/403일 때 "비번 불일치" 때 페이지를 벗어나지 않도록 */
         const looksLikePasswordMismatch = msg.includes("비밀번호");
         if (looksLikePasswordMismatch) return Promise.reject(err);
 
-        /* 3) 여기부터 “진짜 인증 만료”로 간주하고 처리 */
+        /* 3) "인증 만료"로 간주하고 처리 */
         if (status === 401 || status === 403) {
           /* localStorage.clear() 대신 인증키만 제거 */
           Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
@@ -288,9 +275,7 @@ export const AuthProvider = ({ children }) => {
     return () => axios.interceptors.response.eject(id);
   }, []);
 
-  /* =========================
-     Provider 주입
-  ========================= */
+  /* Provider 주입 */
   return (
     <AuthContext.Provider
       value={{
@@ -308,9 +293,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-/* =========================
-   AuthContext Hook
-========================= */
+/* AuthContext Hook */
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error("useAuth는 AuthProvider 내부에서만 사용할 수 있습니다.");

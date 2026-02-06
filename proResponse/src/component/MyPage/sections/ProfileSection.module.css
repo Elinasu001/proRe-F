@@ -112,7 +112,7 @@
 }
 
 .pageTitle {
-  margin-bottom: 24px;   /* ✅ 여기서 거리 조절 */
+  margin-bottom: 24px;  
   font-size: 26px;
   font-weight: 800;
   line-height: 1.2;

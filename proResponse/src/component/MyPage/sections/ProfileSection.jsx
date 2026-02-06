@@ -77,9 +77,7 @@ export default function ProfileSection() {
     return true;
   }, [nicknameChanged, imageChanged, editNickname]);
 
-  /* =========================
-     6) 저장 (PATCH 응답 DTO로 반영)
-  ========================= */
+  /* 저장 (PATCH 응답 DTO로 반영) */
   const handleSaveEdit = () => {
     setEditError("");
 
@@ -104,12 +102,12 @@ export default function ProfileSection() {
           if (nicknameChanged) formData.append("nickname", editNickname.trim());
           if (imageChanged) formData.append("profileImg", editImages[0]); // 백엔드와 일치
 
-          /* PATCH 호출 (이제 data로 DTO 내려옴) */
+          /* PATCH 호출 */
           const res = await axios.patch(`${apiUrl}/api/members/me`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
 
-          /* PATCH 응답 DTO로 전역 currentUser 즉시 반영 */
+          /* PATCH 응답 DTO로 currentUser에 반영 */
           const updated = res?.data?.data;
 
           if (updated) {
@@ -139,12 +137,9 @@ export default function ProfileSection() {
     });
   };
 
-  /* =========================
-     7) UI
-  ========================= */
+  /* UI */
   return (
     <>
-      {/* 알럿이 모달 뒤로 깔리는 문제 해결: 최상단 레이어로 올림 */}
       <div
         style={{
           position: "fixed",

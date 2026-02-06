@@ -7,10 +7,7 @@ import axios from "axios";
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 
 /*
- * Step2ProfileBase
  * - 생년월일 / 성별(토글) / 주소찾기 / 주소 / 상세주소
- * - 실제 주소찾기(카카오/다음)는 onSearchAddress에서 처리하고
- *   결과를 onChange("address", "도로명...")로 올려준다.
  */
 export default function Step2({ form, onChange }) {
   const [open, setOpen] = useState(false);
@@ -31,7 +28,7 @@ export default function Step2({ form, onChange }) {
   };
 
 const handleSelectAddress = async (data) => {
-  // PostcodeModal이 넘겨주는 형태가 무엇이든 최대한 흡수
+ 
   const zipCode = data?.zipCode ?? data?.zonecode ?? "";
   const address  = data?.address ?? data?.roadAddress ?? data?.jibunAddress ?? "";
 

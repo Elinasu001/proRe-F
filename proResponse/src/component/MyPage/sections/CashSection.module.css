@@ -28,7 +28,7 @@
 
 .title {
   margin: 0 0 16px 0;
-  font-size: 24px;      /* 크게 */
-  font-weight: 800;     /* 제목 느낌 */
+  font-size: 24px;     
+  font-weight: 800;  
   line-height: 1.2;
 }

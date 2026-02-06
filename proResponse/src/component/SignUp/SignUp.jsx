@@ -10,7 +10,7 @@ import "./signUp.css";
 import { ErrorMessage } from "../Common/Input/Input.styled";
 
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
-// TODO: 백엔드 회원가입 엔드포인트에 맞게 필요하면 경로만 바꾸세요.
+
 const SIGNUP_URL = `${apiUrl}/api/members`;
 
 export default function SignUp() {
@@ -48,7 +48,7 @@ export default function SignUp() {
   const [passwordError, setPasswordError] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState("");
 
-  /* ✅ 비밀번호 일치(성공) 메시지 */
+  /* 비밀번호 일치(성공) 메시지 */
   const [passwordConfirmOk, setPasswordConfirmOk] = useState("");
 
   // @Pattern: 영문/숫자/특수문자 포함 + 공백 X
@@ -101,7 +101,6 @@ export default function SignUp() {
 
   const handleSearchAddress = () => {
     /*
-     * TODO:
      * - 다음/카카오 주소검색 모달 열기
      * - 선택된 주소를 updateForm("address", selectedAddress)로 저장
      */
@@ -192,9 +191,6 @@ export default function SignUp() {
         fd.append("profileImg", form.profileImageFile);
       }
 
-      // const res = await axios.post(SIGNUP_URL, fd, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
       const res = await axios.post(SIGNUP_URL, fd);
 
       console.log("회원가입 응답:", res?.data);
@@ -251,7 +247,7 @@ export default function SignUp() {
             />
             {/* 비밀번호 불일치 메시지 (빨간 글씨) */}
             {passwordConfirmError && <ErrorMessage>{passwordConfirmError}</ErrorMessage>}
-            {/* ✅ 비밀번호 일치 메시지 (파란 글씨) */}
+            {/* 비밀번호 일치 메시지 (파란 글씨) */}
             {passwordConfirmOk && (
               <ErrorMessage style={{ color: "#2f6bff" }}>{passwordConfirmOk}</ErrorMessage>
             )}

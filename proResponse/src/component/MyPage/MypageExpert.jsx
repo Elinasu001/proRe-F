@@ -16,21 +16,15 @@ import styles from "./MypageExpert.module.css";
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 
 export default function MypageExpert() {
-  /* =========================
-     1) Auth
-  ========================= */
+  /* Auth */
   const { auth, logout } = useAuth();
 
-  /* =========================
-     2) 캐시 상태
-  ========================= */
+  /* 캐시 상태 */
   const [myCash, setMyCash] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  /* =========================
-     3) 리뷰 상태
-  ========================= */
+  /* 리뷰 상태 */
   const [reviewLoading, setReviewLoading] = useState(false);
   const [reviewError, setReviewError] = useState("");
   const [reviews, setReviews] = useState([]);
@@ -38,9 +32,7 @@ export default function MypageExpert() {
   
   const navigate = useNavigate();
 
-  /* =========================
-   USER 계정이면 User 마이페이지로 이동
-========================= */
+  /* USER 계정이면 User 마이페이지로 이동 */
 useEffect(() => {
   const role =
     auth?.currentUser?.userRole ||
@@ -57,9 +49,7 @@ useEffect(() => {
 
 
 
-  /* =========================
-     4) 캐시 조회 (1회)
-  ========================= */
+  /* 캐시 조회 */
   useEffect(() => {
     if (!auth?.accessToken) return;
 
@@ -87,10 +77,8 @@ useEffect(() => {
     getCash();
   }, [auth?.accessToken, logout]);
 
-  /* =========================
-     5) 리뷰 조회 (1회)
-  ========================= */
-  useEffect(() => {
+  /* 리뷰 조회 */
+useEffect(() => {
   if (!auth?.accessToken) return;
 
   const expertNo =
@@ -101,6 +89,8 @@ useEffect(() => {
 
   if (!expertNo) return;
 
+  let ignore = false; 
+
   const getReviews = async () => {
     setReviewLoading(true);
     setReviewError("");
@@ -110,35 +100,54 @@ useEffect(() => {
         params: { pageNo: 1 },
       });
 
-      const payload = res?.data?.data;
-      const list = payload?.list ?? payload?.content ?? [];
+      const payload = res?.data?.data ?? res?.data;
+      const list = payload?.list ?? payload?.content ?? payload?.data ?? [];
       const pi = payload?.pageInfo ?? payload?.pi ?? null;
 
+      if (ignore) return;
       setReviews(Array.isArray(list) ? list : []);
       setReviewPageInfo(pi);
     } catch (err) {
       const status = err?.response?.status;
+
       if (status === 401) {
         logout();
         return;
       }
+
+      if (status === 404) {
+        if (ignore) return;
+        setReviews([]);
+        setReviewPageInfo(null);
+        setReviewError("");
+        return;
+      }
+
+      if (ignore) return;
       setReviewError(err?.response?.data?.message || "리뷰를 불러오지 못했습니다.");
     } finally {
-      setReviewLoading(false);
+      if (!ignore) setReviewLoading(false);
     }
   };
 
   getReviews();
-}, [auth?.accessToken, auth, logout]);
 
-  /* =========================
-     6) 잔액 가공
-  ========================= */
+  return () => {
+    ignore = true;
+  };
+}, [
+  auth?.accessToken,
+  auth?.currentUser?.userNo,
+  auth?.user?.userNo,
+  auth?.userNo,
+  logout,
+]);
+
+
+  /* 잔액 가공 */
   const cashBalance = Number(myCash ?? 0);
 
-  /* =========================
-     7) UI
-  ========================= */
+  /* UI */
   return (
     <div className={styles.page}>
       <div className={styles.pageHeader}>

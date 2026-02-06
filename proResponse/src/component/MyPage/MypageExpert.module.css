@@ -13,18 +13,18 @@
 }
 
 .block {
-   border-top: 2px solid #eee;   /* 옅은 회색 */
-   padding-top: 24px;            /* 선과 콘텐츠 간 거리 */
-   margin-top: 24px;             /* 이전 섹션과 거리 */
+   border-top: 2px solid #eee;   
+   padding-top: 24px;           
+   margin-top: 24px;            
    
 }
 
 .pageHeader {
-  margin-bottom: 24px;   /* 🔥 여기서 확실하게 띄움 */
+  margin-bottom: 24px;   
 }
 
 .pageTitle {
-  margin: 0;             /* 타이틀 자체는 깔끔하게 */
+  margin: 0;           
   font-size: 24px;
   font-weight: 800;
   line-height: 1.2;

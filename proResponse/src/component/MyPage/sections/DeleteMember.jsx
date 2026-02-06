@@ -12,7 +12,7 @@ import useAlert from "../../Common/Alert/useAlert";
 /* 스타일 */
 import styles from "./DeleteMember.module.css";
 
-/* API 요청 URL (비워두기) */
+/* API 요청 URL */
 const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 const DELETE_MEMBER_URL = `${apiUrl}/api/members`;
 

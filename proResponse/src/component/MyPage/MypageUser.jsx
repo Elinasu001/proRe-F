@@ -13,10 +13,9 @@ import Alert from "../Common/Alert/Alert";
 import useAlert from "../Common/Alert/useAlert";
 import CommonModal from "../Common/Modal/CommonModal";
 
-/* 주소 검색 모달(회원가입 Step2에서 쓰는 것 그대로 재사용) */
+/* 주소 검색 모달 */
 import PostcodeModal from "../Address/PostcodeModal";
 
-/* 기존 스타일 재사용(필요 시 교체 가능) */
 import styles from "./sections/EditMe.module.css";
 import profileStyles from "./sections/ProfileSection.module.css";
 
@@ -24,36 +23,26 @@ const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
 const PHONE_REGEX = /^010\d{8}$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/;
 
-/* =========================
-   ✅ (추가) 공백-only 방지 유틸
-   - "   " 같은 값은 빈 값으로 취급
-   - 앞뒤 공백은 trim 해서 저장/전송
-========================= */
+/* 공백-only 방지 */
 const isBlankOnly = (v) => (v ?? "").trim().length === 0;
 const trimSafe = (v) => (v ?? "").trim();
 
 export default function MypageUser() {
   const navigate = useNavigate();
 
-  /* =========================
-     1) AuthContext
-     - auth.user X
-     - currentUser O
-  ========================= */
+  /* AuthContext */
   const authCtx = useAuth();
   const { currentUser, updateCurrentUser } = authCtx;
   const authLogout = authCtx?.logout;
 
-  /* =========================
-     2) Alert
-  ========================= */
+  /* Alert */
   const { alertState, openAlert, closeAlert } = useAlert();
 
-  /* =========================
-     3) 강제 로그아웃(안전장치)
+  /* 
+     강제 로그아웃
      - 서버 로그아웃은 "시도"만
      - 클라 정리 + navigate는 무조건
-  ========================= */
+   */
   const forceLogout = async () => {
     localStorage.clear();
     delete axios.defaults.headers.common.Authorization;
@@ -76,9 +65,7 @@ export default function MypageUser() {
 }, [currentUser, navigate]);
 
 
-  /* =========================
-     4) 화면 진입 시 내정보 GET
-  ========================= */
+  /* 화면 진입 시 내정보 GET */
   useEffect(() => {
     let mounted = true;
 
@@ -118,9 +105,7 @@ export default function MypageUser() {
     };
   }, []);
 
-  /* =========================
-     5) 표시용 값
-  ========================= */
+  /* 표시용 값 */
   const nickname = currentUser?.nickname || currentUser?.userName || "사용자";
   const userName = currentUser?.userName || "";
   const email = currentUser?.email || "";
@@ -132,17 +117,14 @@ export default function MypageUser() {
     : "";
 
 
-    /* =========================
-   (추가) 이메일 변경 상태
-========================= */
+  /* 이메일 변경 상태 */
 const [emailEditOpen, setEmailEditOpen] = useState(false);
 const [newEmail, setNewEmail] = useState("");
 const [emailVerified, setEmailVerified] = useState(false);
 
-/* =========================
-   (추가) 이메일 변경(인증 완료 후)
-   - EditMe.jsx에서 하던 것과 동일하게: 성공 후 forceLogout 컨펌
-========================= */
+/* 이메일 변경(인증 완료 후)
+   - 성공 후 forceLogout 
+ */
 const handleChangeEmail = async () => {
   const email = (newEmail || "").trim();
 
@@ -191,9 +173,7 @@ const handleChangeEmail = async () => {
   }
 };
 
-  /* =========================
-     6) 프로필(닉네임/이미지) 수정 모달
-  ========================= */
+  /* 프로필(닉네임/이미지) 수정 모달 */
   const fileInputRef = useRef(null);
   const [editOpen, setEditOpen] = useState(false);
   const [editNickname, setEditNickname] = useState("");
@@ -273,9 +253,7 @@ const handleChangeEmail = async () => {
     });
   };
 
-  /* =========================
-     7) 연락처/주소 상태 + 인라인 편집
-  ========================= */
+  /* 연락처/주소 상태 + 인라인 편집 */
   const [phone, setPhone] = useState("");
   const [postcode, setPostcode] = useState("");
   const [address, setAddress] = useState("");
@@ -288,16 +266,16 @@ const handleChangeEmail = async () => {
 
   const [phoneError, setPhoneError] = useState("");
 
-  /* ✅ (추가) 주소 공백-only 에러 메시지 */
+  /* 주소 공백-only 에러 메시지 */
   const [addrError, setAddrError] = useState("");
   const [addrDetailError, setAddrDetailError] = useState("");
 
   useEffect(() => {
     if (!currentUser) return;
 
-    setNewEmail(currentUser.email || "");   // 추가
-    setEmailVerified(false);               // 추가(안전)
-    setEmailEditOpen(false);               // 추가(원하면 유지/제거)
+    setNewEmail(currentUser.email || "");   
+    setEmailVerified(false);              
+    setEmailEditOpen(false);              
 
     setPhone(currentUser.phone || "");
     setPostcode(currentUser.postcode || "");
@@ -306,7 +284,7 @@ const handleChangeEmail = async () => {
     setLatitude(currentUser.latitude ?? null);
     setLongitude(currentUser.longitude ?? null);
 
-    /* ✅ (추가) 로딩 시 에러 초기화 */
+    /* 로딩 시 에러 초기화 */
     setAddrError("");
     setAddrDetailError("");
   }, [currentUser]);
@@ -335,7 +313,7 @@ const handleChangeEmail = async () => {
     setLatitude(null);
     setLongitude(null);
 
-    /* ✅ (추가) 주소 선택 시 에러 초기화 */
+    /* 주소 선택 시 에러 초기화 */
     setAddrError("");
     setAddrDetailError("");
 
@@ -389,7 +367,7 @@ const handleChangeEmail = async () => {
       return;
     }
 
-    /* ✅ (추가) 주소 편집 중일 때 공백-only 방지 */
+    /* 주소 편집 중일 때 공백-only 방지 */
     if (editing.address) {
       const a = trimSafe(address);
       const d = trimSafe(addressDetail);
@@ -416,7 +394,7 @@ const handleChangeEmail = async () => {
         return;
       }
 
-      /* 저장 시 trim 강제(내부 상태도 정리) */
+      /* 저장 시 trim 강제 */
       if (address) setAddress(a);
       if (addressDetail) setAddressDetail(d);
     }
@@ -441,7 +419,7 @@ const handleChangeEmail = async () => {
             addressDetail !== (currentUser?.addressDetail || "");
 
           if (addressChanged) {
-            /* ✅ (추가) 전송 직전에 trim 적용 */
+            /* 전송 직전에 trim 적용 */
             payload.postcode = postcode;
             payload.address = trimSafe(address);
             payload.addressDetail = trimSafe(addressDetail);
@@ -486,9 +464,7 @@ const handleChangeEmail = async () => {
     });
   };
 
-  /* =========================
-     8) 비밀번호 변경 패널
-  ========================= */
+  /* 비밀번호 변경 */
   const [pwOpen, setPwOpen] = useState(false);
   const [currentPw, setCurrentPw] = useState("");
   const [newPw, setNewPw] = useState("");
@@ -546,12 +522,9 @@ const handleChangeEmail = async () => {
     }
   };
 
-  /* =========================
-     9) UI
-  ========================= */
+  /* UI */
   return (
     <>
-      {/* 알럿이 모달 뒤로 깔릴 수 있어서 최상단 레이어 */}
       <div
         style={{
           position: "fixed",
@@ -816,7 +789,7 @@ const handleChangeEmail = async () => {
                 <AddressInput
                   mainAddress={address}
                   detailAddress={addressDetail}
-                  /* ✅ (추가) 공백-only 방지 + 에러 초기화 */
+                  /* 공백-only 방지 + 에러 초기화 */
                   onMainChange={(v) => {
                     setAddress(v);
                     if (!v) setAddrError("");
@@ -835,7 +808,7 @@ const handleChangeEmail = async () => {
                   onSearchClick={handleSearchAddress}
                 />
 
-                {/* ✅ (추가) 상세주소 공백-only 에러 표시(공용 Input 에러 스타일 그대로) */}
+                {/* 상세주소 공백-only 에러 표시(공용 Input 에러 스타일 그대로) */}
                 {addrError ? (
                   <div style={{ marginTop: 6 }}>
                     <div style={{ fontSize: 12, color: "#d32f2f" }}>{addrError}</div>

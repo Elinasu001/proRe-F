@@ -27,7 +27,7 @@ export default function CashSection({ loading, error }) {
       <Alert {...alertState} />
 
       <section className={styles.card}>
-        {/* ✅ 타이틀 유지 */}
+        {/* 타이틀 유지 */}
         <h3 className={styles.title}>내 캐시</h3>
 
         {/* 메뉴 리스트 */}

@@ -1,9 +1,4 @@
-/* component/ExpertRegister/expertWizard.css */
-/* Expert 등록 위저드 레이아웃/선택 UI 스타일 (rev) */
 
-/* =========================
-   Tokens
-========================= */
 :root {
   --ew-bg: #f4f5f7;
   --ew-card: #ffffff;
@@ -404,12 +399,6 @@
    STEP2 / STEP3 Checkbox Tone (SAFE SCOPE)
    - Input/에러메시지 영향 X
 ========================= */
-
-/*
-  ✅ 너가 해야 할 단 1가지:
-  체크박스 그룹을 감싸는 div에 className="checkbox-scope"만 붙여줘.
-  (이렇게 안 하면 아래 스타일은 적용 안 됨)
-*/
 
 .checkbox-scope {
   --ew-checkbox-text: #6b7280;

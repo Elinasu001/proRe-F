@@ -26,7 +26,7 @@ export default function Login() {
   const [emailError, setEmailError] = useState("");
   const [pwdError, setPwdError] = useState("");
 
-  /* ✅ 공통(서버) 에러 */
+  /* 공통(서버) 에러 */
   const [commonError, setCommonError] = useState("");
 
   const validate = () => {
@@ -34,7 +34,7 @@ export default function Login() {
 
     setEmailError("");
     setPwdError("");
-    setCommonError(""); // ✅ 추가: 입력 바꾸고 재시도할 때 공통 에러 초기화
+    setCommonError(""); // 입력 바꾸고 재시도할 때 공통 에러 초기화
 
     const e = email.trim();
     const p = userPwd;
@@ -68,7 +68,7 @@ export default function Login() {
 
     try {
       setLoading(true);
-      setCommonError(""); // ✅ 추가: 요청 전 초기화
+      setCommonError(""); // 요청 전 초기화
 
       const res = await axios.post(`${apiUrl}/api/auth/login`, {
         email,
@@ -78,7 +78,7 @@ export default function Login() {
       login(res);
       navigate("/");
     } catch (err) {
-      // ✅ 공통 에러로 처리 (입력 검증 에러 상태와 분리)
+      // 공통 에러로 처리 (입력 검증 에러 상태와 분리)
       setCommonError("이메일 또는 비밀번호가 올바르지 않습니다.");
     } finally {
       setLoading(false);
@@ -119,14 +119,14 @@ export default function Login() {
                 onChange={(e) => {
                   setUserPwd(e.target.value);
                   if (pwdError) setPwdError("");
-                  if (commonError) setCommonError(""); // ✅ 추가
+                  if (commonError) setCommonError("");
                 }}
                 $error={!!pwdError}
                 errorMessage={pwdError}
               />
             </div>
 
-            {/* ✅ 공통 에러 메시지 (카드 안에, 폼 아래) */}
+            {/* 공통 에러 메시지 (카드 안에, 폼 아래) */}
             {commonError && (
               <ErrorMessage style={{ marginTop: "2px" }}>
                 {commonError}
