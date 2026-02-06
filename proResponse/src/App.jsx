@@ -22,7 +22,11 @@ import EstimateUser from './component/MyEstimate/EstimateUser/EstimateUser.jsx';
 import EstimateExpert from './component/MyEstimate/EstimateExpert/EstimateExpert.jsx';
 import MypageUser from './component/MyPage/MypageUser.jsx';
 import MypageExpert from './component/Mypage/MypageExpert.jsx';
-
+import SignUp from './component/Signup/Signup.jsx';
+import ExpertRegister from './component/ExpertRegister/ExpertRegister.jsx';
+import ExpertEdit from './component/ExpertEdit/ExpertEdit.jsx';
+import EditMe from "./component/MyPage/sections/EditMe.jsx";
+import DeleteMember from './component/MyPage/sections/DeleteMember.jsx';
 
 function App() {
   return (
@@ -47,6 +51,11 @@ function App() {
           <Route path="/mypageUser" element={<MypageUser />} />
           {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
           <Route path="/mypageExpert" element={<MypageExpert />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/expert/register" element={<ExpertRegister />} />
+          <Route path="/expert/edit" element={<ExpertEdit />} />
+          <Route path="/mypage/me/edit" element={<EditMe />} />
+          <Route path="/mypage/me/delete" element={<DeleteMember />} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={<EstimateUser />} />
