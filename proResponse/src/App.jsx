@@ -23,6 +23,10 @@ import MyQuote from './component/MyQuote/MyQuote.jsx';
 import MypageExpert from './component/Mypage/MypageExpert.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
+import AdminDashboard from './component/Admin/AdminDashboard.jsx';
+import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
+import AdminMemberList from './component/Admin/AdminMemberList.jsx';
+import AdminReportList from './component/Admin/AdminReportList.jsx';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -44,16 +48,23 @@ function App() {
           <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
-          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           <Route path="/mypageUser" element={<MypageUser />} />
           {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
           <Route path="/mypageExpert" element={<MypageExpert />} />
           <Route path="/nearby" element= {<Map />} />
           <Route path="/Testpayment" element={<PaymentExample />} />
+          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={<EstimateUser />} />
           <Route path="/estimateExpert" element={<EstimateExpert />} />
+        </Route>
+        {/* 관리자 페이지 */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/members" element={<AdminMemberList />} />
+          <Route path="/admin/reports" element={<AdminReportList />} />
+
         </Route>
           
       </Routes>
@@ -61,4 +72,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
