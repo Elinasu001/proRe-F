@@ -350,7 +350,7 @@ const handleDetailMax3 = (vals) => {
 
       /* new attachments */
       (form.newImages || []).forEach((img) => {
-        if (img?.file) fd.append("newFiles", img.file);
+        if (img?.file) fd.append("attachment", img.file);
       });
 
       const res = await onSubmit(fd);

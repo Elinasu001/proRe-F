@@ -190,8 +190,49 @@ export const ConfirmButton = styled(BaseButton)`
 
 
 // 삭제 아이콘 이미지
+
 export const DelImg = styled.img`
   width: 16px;
   height: 16px;
   margin-right: 4px;
+`;
+
+// =============================
+// 이미지 확대(라이트박스) 스타일
+// =============================
+export const ImageLightbox = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 12000;
+`;
+
+export const LightboxImage = styled.img`
+  max-width: 90vw;
+  max-height: 80vh;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+`;
+
+export const LightboxCloseButton = styled.button`
+  position: absolute;
+  top: 32px;
+  right: 48px;
+  font-size: 2.5rem;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 12001;
+  @media (max-width: 768px) {
+    top: 16px;
+    right: 16px;
+    font-size: 2rem;
+  }
 `;

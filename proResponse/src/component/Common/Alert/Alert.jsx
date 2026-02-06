@@ -57,8 +57,8 @@ const Alert = ({
     message,
     onConfirm,
     onCancel,
-    confirmText = '확인',
     cancelText = '취소',
+    confirmText = '확인',
     variant = 'default',
     width,
     closeOnOverlay = true,
@@ -136,9 +136,11 @@ const Alert = ({
 
             {/* 메시지 */}
             {message && (
-            <S.AlertMessage id="alert-message">
-                {message}
-            </S.AlertMessage>
+                typeof message === 'string' ? (
+                    <S.AlertMessage id="alert-message">{message}</S.AlertMessage>
+                ) : (
+                    <div id="alert-message">{message}</div>
+                )
             )}
 
             {/* 버튼 그룹 */}

@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useNavigate } from "react-router-dom";
+
 
 /* sections */
 import ProfileSection from "./sections/ProfileSection.jsx";
@@ -33,6 +35,27 @@ export default function MypageExpert() {
   const [reviewError, setReviewError] = useState("");
   const [reviews, setReviews] = useState([]);
   const [reviewPageInfo, setReviewPageInfo] = useState(null);
+  
+  const navigate = useNavigate();
+
+  /* =========================
+   USER 계정이면 User 마이페이지로 이동
+========================= */
+useEffect(() => {
+  const role =
+    auth?.currentUser?.userRole ||
+    auth?.user?.userRole ||
+    auth?.userRole ||
+    localStorage.getItem("userRole");
+
+  if (!role) return;
+
+  if (role === "ROLE_USER") {
+    navigate("/mypageUser", { replace: true });
+  }
+}, [auth, navigate]);
+
+
 
   /* =========================
      4) 캐시 조회 (1회)

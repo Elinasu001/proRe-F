@@ -1,103 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import CardItem from './CardItem.jsx';
-import * as S from '../styles/Cards.styled.js';
+import { useEffect, useState } from 'react';
+import { axiosAuth } from "../../../api/reqApi.js";
+import defaultImg from '../../../assets/images/common/default_profile.png';
+import { useAuth } from '../../../context/AuthContext.jsx';
 import * as TB from '../../Common/Button/Tab.styled.js';
-import * as T from '../../Common/Title/Title.styled.js';
 import * as L from '../../Common/Layout/EstimateLayout.styled.js';
 import Pagination from '../../Common/Pagination/Pagination.jsx';
-import defaultImg from '../../../assets/images/common/default_profile.png';
+import * as T from '../../Common/Title/Title.styled.js';
+import * as S from '../styles/Cards.styled.js';
+import CardItem from './CardItem.jsx';
 
-const UserCards = () => {
+const UserCards = ({
+    onExpertDetail,
+    onRequestDetail,
+    onEstimateDetail,
+    onQuoteAccept,
+    onChatStart,
+    onDeleteEstimate,
+    onEditEstimate,
+    refreshKey,
+}) => {
+
+    const { currentUser } = useAuth();
+    const nickname = currentUser?.nickname;
+
     const [reservations, setReservations] = useState([]);
     const [pageInfo, setPageInfo] = useState({
         startPage: 1,
         endPage: 1,
         totalPage: 1
     });
-    const [activeTab, setActiveTab] = useState('관심 받는 중');
+    const [activeTab, setActiveTab] = useState('보낸 견적 요청');
     const [currentPage, setCurrentPage] = useState(1);
+
+    const tabs = ['보낸 견적 요청', '받은 견적'];
 
     useEffect(() => {
         fetchReservations();
-    }, [activeTab, currentPage]);
+    }, [activeTab, currentPage, refreshKey]);
 
     const fetchReservations = async () => {
-        // 전체 데이터 (실제 API에서는 서버에서 페이징된 데이터만 받아오면 됨)
-        const result = {
-        message: "조회에 성공 했습니다.",
-            data: {
-                list: [ 
-                    {
-                        requestNo: 82,
-                        expertNo: 62,
-                        profileImg: null,
-                        nickName: "지은쓰",
-                        starScore: 5.0,
-                        reviewCount: 1,
-                        address: "서울특별시 강동구 천호대로 456",
-                        startTime: "09:00",
-                        endTime: "22:00",
-                        requestStatus: "REQUESTED"
-                    },
-                    {
-                        requestNo: 82,
-                        expertNo: 62,
-                        profileImg: null,
-                        nickName: "지은쓰",
-                        starScore: 5.0,
-                        reviewCount: 1,
-                        address: "서울특별시 강동구 천호대로 456",
-                        startTime: "09:00",
-                        endTime: "22:00",
-                        requestStatus: "REQUESTED"
-                    },
-                    {
-                        requestNo: 82,
-                        expertNo: 62,
-                        profileImg: null,
-                        nickName: "지은쓰",
-                        starScore: 5.0,
-                        reviewCount: 1,
-                        address: "서울특별시 강동구 천호대로 456",
-                        startTime: "09:00",
-                        endTime: "22:00",
-                        requestStatus: "REQUESTED"
-                    },
-                    {
-                        requestNo: 82,
-                        expertNo: 62,
-                        profileImg: null,
-                        nickName: "지은쓰",
-                        starScore: 5.0,
-                        reviewCount: 1,
-                        address: "서울특별시 강동구 천호대로 456",
-                        startTime: "09:00",
-                        endTime: "22:00",
-                        requestStatus: "REQUESTED"
-                    }
-                ],
-                pageInfo: {
-                    listCount: 2,
-                    currentPage: 1,
-                    boardLimit: 4,
-                    pageLimit: 5,
-                    maxPage: 1,
-                    startPage: 1,
-                    endPage: 1
-                }
-            },
-            success: true,
-            timestamp: "2026-01-29T12:03:57.3007798"
-        };
-        setReservations(result.data.list);
-        setPageInfo({
-            startPage: 1,
-            endPage: 1,
-            totalPage: 1
-        });
+        let endpoint = '';
+        
+        if (activeTab === '보낸 견적 요청') {
+            endpoint = `/api/estimate?pageNo=${currentPage}`;
+        } else if (activeTab === '받은 견적') {
+            endpoint = `/api/estimate/receive?pageNo=${currentPage}`;
+        }
+        
+        axiosAuth.getList(endpoint).then(res =>{
+            setReservations(res.data.list);
+            console.log(res.data);
+            setPageInfo(res.data.pageInfo);
+        }).catch(err => {
+            console.error(err);
+        })
     };
 
-    const tabs = ['관심 받는 중', '받은 견적'];
+    const handleExpertDetail = async (expertNo) => {
+        try {
+            const response = await axiosAuth.getList(`/api/experts/${expertNo}`);
+            console.log('전문가 상세 데이터:', response);
+            // 부모 컴포넌트에 데이터 전달
+            if (onExpertDetail) {
+                onExpertDetail(response.data);
+            }
+        } catch (error) {
+            console.error('전문가 상세 조회 실패:', error);
+        }
+    };
 
     return (
         <>
@@ -106,7 +76,7 @@ const UserCards = () => {
             <L.Section>
                 <T.TitleWrapper>
                     <T.SubLine>
-                        <T.SubHighlight>홍길동</T.SubHighlight> 회원님의
+                        <T.SubHighlight>{nickname}</T.SubHighlight> 회원님의
                     </T.SubLine>
                     <T.SubLine>거래하기</T.SubLine>
                 </T.TitleWrapper>
@@ -133,7 +103,10 @@ const UserCards = () => {
                 {reservations.map(reservation => (
                     <CardItem
                         key={reservation.requestNo}
-                        data={{
+                        isReceived={activeTab === '받은 견적'}
+                        data={activeTab === '보낸 견적 요청' ? {
+                            requestNo: reservation.requestNo,
+                            expertNo: reservation.expertNo,
                             profileImg: reservation.profileImg || defaultImg,
                             nickName: reservation.nickName,
                             starScore: reservation.starScore,
@@ -141,7 +114,24 @@ const UserCards = () => {
                             address: reservation.address,
                             startTime: reservation.startTime,
                             endTime: reservation.endTime,
+                        } : {
+                            requestNo: reservation.requestNo,
+                            expertNo: reservation.expertNo,
+                            estimateNo: reservation.estimateNo,
+                            profileImg: reservation.profileImg || defaultImg,
+                            nickName: reservation.nickName,
+                            starScore: reservation.starScore,
+                            reviewCount: reservation.reviewCount,
+                            price: reservation.price,
+                            status: reservation.status,
                         }}
+                        onExpertDetail={handleExpertDetail}
+                        onRequestDetail={onRequestDetail}
+                        onEstimateDetail={onEstimateDetail}
+                        onQuoteAccept={onQuoteAccept}
+                        onChatStart={onChatStart}
+                        onDeleteEstimate={onDeleteEstimate}
+                        onEditEstimate={onEditEstimate}
                     />
                 ))}
             </S.ReservationGrid>

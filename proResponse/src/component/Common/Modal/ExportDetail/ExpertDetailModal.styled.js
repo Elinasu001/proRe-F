@@ -338,6 +338,8 @@ export const NoImagePlaceholder = styled.div`
   align-items: center;
   justify-content: center;
   background: #f5f5f5;
+  font-size: 14px;
+  color: #999;
 
   span {
     font-size: 14px;

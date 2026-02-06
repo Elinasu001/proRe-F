@@ -18,7 +18,7 @@ export default function ExpertRegister() {
     <ExpertWizard
       mode="create"
       onSubmit={onSubmit}
-      successRedirect="/mypage"
+      successRedirect="/"
     />
   );
 }

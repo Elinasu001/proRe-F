@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReservationDetail from './ReservationDetail';
 import Button from '../../Common/Button/Button.jsx';
 import * as S from '../styles/CardItem.styled';
@@ -8,9 +8,40 @@ import * as C from '../../Common/ExportCards/ExportCards.styled.js';
 // import mTimeImg from '../../../assets/images/common/m_time.png';
 import mLocationImg from '../../../assets/images/common/m_location.png';
 
-const CardItem = ({ data }) => {
+const CardItem = ({ data, onRequestDetail, onEstimateSuccess, onDeleteEstimate }) => {
 
     const [isDetailOpen, setIsDetailOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    // 외부 클릭 시 메뉴 닫기
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleDetailClick = () => {
+        if (onRequestDetail && data.requestNo) {
+            onRequestDetail(data.requestNo);
+        }
+    };
+
+    const handleEstimateSuccess = () => {
+        setIsDetailOpen(false);
+        onEstimateSuccess && onEstimateSuccess();
+    };
+
+    const handleDelete = () => {
+        if (onDeleteEstimate) {
+            onDeleteEstimate(data.requestNo);
+        }
+        setIsMenuOpen(false);
+    };
 
     return (
         <>
@@ -29,6 +60,19 @@ const CardItem = ({ data }) => {
                         </S.Row> */}
                     </S.Col>
                 </C.Profile>
+                {/* 더보기 메뉴 */}
+                <S.MoreMenuWrapper ref={menuRef}>
+                    <S.MoreButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                        ⋮
+                    </S.MoreButton>
+                    {isMenuOpen && (
+                        <S.DropdownMenu>
+                            <S.DropdownItem className="danger" onClick={handleDelete}>
+                                견적 삭제
+                            </S.DropdownItem>
+                        </S.DropdownMenu>
+                    )}
+                </S.MoreMenuWrapper>
             </S.ExpertInfo>
 
             <C.InfoBox>
@@ -47,7 +91,8 @@ const CardItem = ({ data }) => {
             <S.ActionContainer>
                 <S.ButtonGroup>
                     <Button
-                    variant="outline"
+                        variant="outline"
+                        onClick={handleDetailClick}
                     >
                     자세히 보기
                     </Button>
@@ -65,6 +110,7 @@ const CardItem = ({ data }) => {
             <ReservationDetail
                 data={data}
                 onClose={() => setIsDetailOpen(false)}
+                onSuccess={handleEstimateSuccess}
             />
         )}
         </>

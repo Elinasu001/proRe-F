@@ -67,6 +67,15 @@ export default function MypageUser() {
     }
   };
 
+  useEffect(() => {
+  if (!currentUser) return;
+
+  if (currentUser.userRole === "ROLE_EXPERT") {
+    navigate("/mypageExpert", { replace: true });
+  }
+}, [currentUser, navigate]);
+
+
   /* =========================
      4) 화면 진입 시 내정보 GET
   ========================= */

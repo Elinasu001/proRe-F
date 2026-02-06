@@ -33,6 +33,7 @@ import mLocationImg from "../../../assets/images/common/m_location.png";
 
 import iHeart from '../../../assets/images/common/i_heart.svg';
 import heart from '../../../assets/images/common/heart.svg';
+import { axiosAuth } from "../../../api/reqApi.js";
 
 const profileImages = [user1, user2, user3, user4, user5];
 
@@ -40,19 +41,42 @@ function getRandomImage() {
     return profileImages[Math.floor(Math.random() * profileImages.length)];
 }
 
-const ExportCardItem = ({ data }) => {
-    const [liked, setLiked] = useState(false);
+const ExportCardItem = ({ data, onLike }) => {
+    const [isLiked, setIsLiked] = useState(() => {
+        return data?.userLiked === true || data?.userLiked === 1 || data?.userLiked === "1";
+    });
     const [animating, setAnimating] = useState(false);
+    const [likeCount, setLikeCount] = useState(data?.totalLikes || 0);
     
     // 최초 렌더링 시 한 번만 이미지 선택
     const [profileImg] = useState(() => data?.profileImg ? data.profileImg : getRandomImage());
 
-    const handleLikeClick = () => {
+    const handleLikeClick = async () => {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+            alert("로그인이 필요합니다.");
+            return;
+        }
+
         setAnimating(true);
-        setTimeout(() => {
-            setAnimating(false);
-            setLiked((prev) => !prev);
-        }, 200);
+        try {
+            const response = await axiosAuth.post(`/api/likes/${data.expertNo}`);
+            const newIsLiked = response.data?.isLiked;
+            const newTotalLikes = response.data?.totalLikes;
+            setIsLiked(newIsLiked);
+            if (typeof newTotalLikes === 'number') {
+                setLikeCount(newTotalLikes);
+            } else {
+                setLikeCount(prev => newIsLiked ? prev + 1 : prev - 1);
+            }
+        } catch (error) {
+            console.error("좋아요 요청 실패:", error);
+            alert("좋아요 요청에 실패했습니다.");
+        } finally {
+            setTimeout(() => {
+                setAnimating(false);
+            }, 200);
+        }
     };
 
     return (
@@ -60,10 +84,10 @@ const ExportCardItem = ({ data }) => {
             <Top>
                 <Profile>
                     <ProfileImg src={profileImg} alt="프로필" />
-                    <Name><span>{data?.nickName}</span> 전문가</Name>
+                    <Name><span>{data?.nickname || data?.nickName}</span> 전문가</Name>
                 </Profile>
                 <img
-                    src={data.userLiked === 0 ? iHeart : heart}
+                    src={isLiked ? heart : iHeart}
                     alt="좋아요"
                     style={{
                         width: 28,
@@ -86,7 +110,7 @@ const ExportCardItem = ({ data }) => {
                 <Row>
                     <Icon src={mLikeImg} alt="좋아요" />
                     <TextWrapper>
-                        <Data>{data?.totalLikes}</Data>
+                        <Data>{likeCount}</Data>
                     </TextWrapper>
                 </Row>
             </Col>

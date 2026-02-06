@@ -1,6 +1,11 @@
+
 import axios from "axios";
 
 const API = window.ENV?.API_URL || "http://localhost:8080";
+
+// PortOne 결제 관련 환경 변수
+export const PORTONE_STORE_ID = window.Env?.PORTONE_STORE_ID;
+export const PORTONE_CHANNEL_KEY = window.Env?.PORTONE_CHANNEL_KEY;
 
 // 1. 공통 인스턴스 설정
 const axiosAuthInstance = axios.create({

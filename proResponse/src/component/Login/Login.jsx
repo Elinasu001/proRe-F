@@ -102,7 +102,7 @@ export default function Login() {
                 onChange={(e) => {
                   setEmail(e.target.value);
                   if (emailError) setEmailError("");
-                  if (commonError) setCommonError(""); // ✅ 추가
+                  if (commonError) setCommonError(""); // 추가
                 }}
                 $error={!!emailError}
                 errorMessage={emailError}
