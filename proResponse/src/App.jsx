@@ -63,7 +63,6 @@ function App() {
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           <Route path="/Testpayment" element={<PaymentModal />} />
-            <Route path="/nearby" element= {<Map />} />
           <Route path="/mypageUser" element={
             <ProtectedRoute roles={["ROLE_USER"]}>
               <MypageUser />

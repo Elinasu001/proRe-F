@@ -17,7 +17,7 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo, onLike }) => {
   const [loadingCategories, setLoadingCategories] = useState(false);
   //console.log(`categoryName : ${categoryName}`);
   //console.log(`detailCategoryNo : ${detailCategoryNo}`);
-  console.log("견적 목록에서 받은 data:", data);
+  //console.log("견적 목록에서 받은 data:", data);
   const { auth } = useAuth();
   const navigate = useNavigate();
   const handleDetailClick = async () => {
@@ -104,8 +104,10 @@ const ExportCardItem = ({ data, categoryName, detailCategoryNo, onLike }) => {
       await axiosAuth.post("/api/estimate", formData, {});
 
       alert("견적 요청이 전송되었습니다!");
+
       setIsEstimateOpen(false);
       setSelectedCategory(null);
+      navigate(`/estimateUser`);      
     } catch (e) {
       console.error("견적 요청 실패", e);
       alert("견적 요청에 실패했습니다.");
