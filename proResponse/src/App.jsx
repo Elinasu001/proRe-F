@@ -24,6 +24,10 @@ import MypageExpert from './component/Mypage/MypageExpert.jsx';
 import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
+import AdminDashboard from './component/Admin/AdminDashboard.jsx';
+import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
+import AdminMemberList from './component/Admin/AdminMemberList.jsx';
+import AdminReportList from './component/Admin/AdminReportList.jsx';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -59,6 +63,7 @@ function App() {
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
           <Route path="/Testpayment" element={<PaymentModal />} />
+            <Route path="/nearby" element= {<Map />} />
           <Route path="/mypageUser" element={
             <ProtectedRoute roles={["ROLE_USER"]}>
               <MypageUser />
@@ -87,10 +92,17 @@ function App() {
             </ProtectedRoute>
           } />
         </Route>
+        {/* 관리자 페이지 */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/members" element={<AdminMemberList />} />
+          <Route path="/admin/reports" element={<AdminReportList />} />
+
+        </Route>
           
       </Routes>
     </AuthProvider>
   );
 }
 
-export default App
+export default App;

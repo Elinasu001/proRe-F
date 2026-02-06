@@ -75,7 +75,17 @@ const validate = () => {
       // AuthContext에서 토큰/유저정보/스토리지/헤더 처리
       login(res);
 
-      navigate("/");
+
+      // userRole 가져오기
+      const userRole = res.data.data?.userRole;
+
+      // 역할에 따라 리다이렉트
+      if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_ROOT') {
+      navigate('/admin');  // 관리자 대시보드
+      } else {
+      navigate('/main');   // 일반 메인
+      }
+
     } catch (err) {
   setPwdError("이메일 또는 비밀번호가 올바르지 않습니다.");
 } finally {
