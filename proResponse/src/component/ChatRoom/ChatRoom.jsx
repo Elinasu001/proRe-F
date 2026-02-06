@@ -41,6 +41,7 @@ const ChatRoom = () => {
         toastMessage,
         toastVariant,
         closeToast,
+        roomNo,
     } = useChatRoom(estimateNo, userNo, navi);
     const { currentUser } = useAuth();
     const userRole = currentUser?.userRole || '';
@@ -100,12 +101,14 @@ const ChatRoom = () => {
     }[readyState];
 
     // 결제 성공 시 채팅 메시지에 결제 금액 표시
-    const handlePaymentSuccess = (amount) => {
+    const handlePaymentSuccess = (amount, result) => {
         setPaidAmount(amount);
-        // 채팅 메시지에 결제 메시지 추가
+        setShowPayment(false);  // 결제 모달 닫기
+        //  채팅 메시지에 결제 완료 표시
         handleSendMessage({
             type: 'PAYMENT',
-            content: `${amount.toLocaleString()}원 결제 완료`
+            content: `${amount.toLocaleString()}원 결제 완료`,
+            merchantUid: result.merchantUid,  // 결제 ID 포함
         });
     };
 
@@ -283,12 +286,14 @@ const ChatRoom = () => {
             {/* 송금하기 모달 */}
             {showPayment && (
                 <PaymentModal
+                    open={showPayment}
                     onClose={() => setShowPayment(false)}
                     onSuccess={handlePaymentSuccess}
-                    // open={showPayment}
-                    // roomNo={roomNo}
                     estimateNo={estimateNo}
-                    // estiamteNo={estimateNo}
+                    roomNo={roomNo}  // 필수 추가
+                    buyerName={currentUser?.userName || "고객"}  // 사용자 정보
+                    buyerTel={currentUser?.userPhone || "010-0000-0000"}
+                    buyerEmail={currentUser?.userEmail || "customer@example.com"}
                 />
             )}
 

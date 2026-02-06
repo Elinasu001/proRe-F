@@ -5,21 +5,25 @@ import Input from '../../Common/Input/Input.jsx';
 import * as S from '../../Common/Input/Input.styled.js';
 import usePayment from './usePayment';
 
-/**
- * 결제 + 리뷰 통합 모달
- */
-const PaymentModal = ({ open = true, onClose, onSuccess, estimateNo }) => {
-    // 공통 Alert
+const PaymentModal = ({ 
+    open = true, 
+    onClose, 
+    onSuccess, 
+    estimateNo,
+    // buyerName = "고객명",
+    // buyerTel = "010-0000-0000",
+    // buyerEmail = "customer@example.com"
+}) => {
     const { alertState, openAlert, closeAlert } = useAlert();
-    // 결제 금액 입력 (문자열로 관리)
     const [amount, setAmount] = useState("");
-    const [showPayModal, setShowPayModal] = useState(open); // 외부에서 제어 가능
+    const [showPayModal, setShowPayModal] = useState(open);
     const { isProcessing, requestPayment } = usePayment();
 
-    // 결제창 띄우기
     const handlePortOnePayment = async () => {
         const numAmount = Number(amount);
         const numEstimateNo = Number(estimateNo);
+
+        // 유효성 검사
         if (!numAmount || numAmount <= 0) {
             openAlert({
                 title: '결제 금액 오류',
@@ -28,17 +32,39 @@ const PaymentModal = ({ open = true, onClose, onSuccess, estimateNo }) => {
             });
             return;
         }
+
+        if (!numEstimateNo) {
+            openAlert({
+                title: '견적 정보 오류',
+                message: '견적 번호가 올바르지 않습니다.',
+                onConfirm: closeAlert
+            });
+            return;
+        }
+
+        // V2 결제 요청
         requestPayment(
             {
                 amount: numAmount,
-                itemName: numAmount + '원 송금',
-                estimateNo: numEstimateNo, // 숫자로 변환해서 전달
+                itemName: `${numAmount.toLocaleString()}원 견적 결제`,
+                estimateNo: numEstimateNo,
+                payMethod: "card",
             },
             (result) => {
-                closeAlert();
-                if (onSuccess) onSuccess(numAmount);
+                console.log('[결제 성공]', result);
+                openAlert({
+                    title: '결제 완료',
+                    message: `${numAmount.toLocaleString()}원 결제가 완료되었습니다.`,
+                    onConfirm: () => {
+                        closeAlert();
+                        if (onSuccess) onSuccess(numAmount, result);
+                        setShowPayModal(false);
+                        if (onClose) onClose();
+                    }
+                });
             },
             (error) => {
+                console.error('[결제 실패]', error);
                 openAlert({
                     title: '결제 실패',
                     message: error?.message || '결제 중 오류가 발생했습니다.',
@@ -48,45 +74,48 @@ const PaymentModal = ({ open = true, onClose, onSuccess, estimateNo }) => {
         );
     };
 
-    // 취소 버튼 클릭 시 모달 닫기
     const handleCancel = () => {
         setShowPayModal(false);
-        // 외부에서 onClose prop이 있으면 호출
         if (onClose) onClose();
     };
-
-    // 외부에서 다시 열기 위해 showPayModal 상태를 props로 제어할 수 있도록 함
-    // (부모에서 <PaymentModal open={show} onClose={() => setShow(false)} /> 형태로 사용)
 
     return (
         <>
             <Alert
                 isOpen={showPayModal}
-                title="결제 테스트"
+                title="결제하기"
                 message={
                     <div style={{ minWidth: 260 }}>
-                        <div style={{ marginBottom: 16 }}>결제 금액을 입력하고 확인 버튼을 눌러주세요.</div>
+                        <div style={{ marginBottom: 16 }}>
+                            결제 금액을 입력하고 확인 버튼을 눌러주세요.
+                        </div>
                         <Input
                             type="number"
                             value={amount}
                             min={0}
                             onChange={e => {
-                                // 앞자리 0 자동 제거
                                 const val = e.target.value.replace(/^0+(?=\d)/, "");
                                 setAmount(val);
                             }}
                             placeholder="금액을 입력하세요"
                             style={{ width: '100%', marginBottom: 16 }}
+                            disabled={isProcessing}
                         />
                         <S.MountText>
-                            {isProcessing ? '결제 진행 중...' : `${amount ? Number(amount).toLocaleString() : ''}원 결제하기`}
+                            {isProcessing 
+                                ? '결제 진행 중...' 
+                                : `${amount ? Number(amount).toLocaleString() : '0'}원 결제하기`
+                            }
                         </S.MountText>
                     </div>
                 }
                 onConfirm={handlePortOnePayment}
                 onCancel={handleCancel}
-                closeOnOverlay={false}
-                closeOnEsc={false}
+                confirmText={isProcessing ? "처리 중..." : "결제하기"}
+                cancelText="취소"
+                confirmDisabled={isProcessing}
+                closeOnOverlay={!isProcessing}
+                closeOnEsc={!isProcessing}
             />
             <Alert {...alertState} />
         </>

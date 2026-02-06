@@ -2,8 +2,6 @@
 
 import { axiosAuth } from '../reqApi';
 
-const API = window.ENV?.API_URL || "http://localhost:8080";
-
 /**
  * 채팅방 공통 API prefix
  */
@@ -26,13 +24,10 @@ export const createRoomApi = (estimateNo, chatMessageDto) => {
 
 /**
  * 채팅 WebSocket URL 생성 함수
+ * config.js의 window.Env.CHAT_WS_URL 사용
  */
 export function getChatWsUrl(estimateNo) {
-    // http(s) → ws(s) 변환
-    const wsHost = API.replace(/^http/, 'ws');
-    // API에 /api가 붙어있으면 제거
-    const cleanWsHost = wsHost.replace(/\/api$/, '');
-    return `${cleanWsHost}/ws/chat/${estimateNo}`;
+    return `${window.Env.CHAT_WS_URL}/${estimateNo}`;
 }
 
 
