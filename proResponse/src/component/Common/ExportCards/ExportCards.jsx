@@ -1,7 +1,7 @@
 import { CardListWrapper } from "./ExportCards.styled.js";
 import ExportCardItem from "./ExportCardItem";
 
-const ExportCard = ({ data = [], currentPage, itemsPerPage,categoryName , detailCategoryNo  }) => {
+const ExportCard = ({ data = [], currentPage, itemsPerPage, categoryName, detailCategoryNo, onLike }) => {
   const page = currentPage || 1;
   const perPage = itemsPerPage || 6;
   const indexOfLastItem = page * perPage;
@@ -13,7 +13,13 @@ const ExportCard = ({ data = [], currentPage, itemsPerPage,categoryName , detail
   return (
     <CardListWrapper>
       {currentItems.map((item, idx) => (
-        <ExportCardItem key={idx} data={item} categoryName={categoryName} detailCategoryNo = {detailCategoryNo}/>
+        <ExportCardItem
+          key={idx}
+          data={item}
+          categoryName={categoryName}
+          detailCategoryNo={detailCategoryNo}
+          onLike={onLike}
+        />
       ))}
     </CardListWrapper>
   );

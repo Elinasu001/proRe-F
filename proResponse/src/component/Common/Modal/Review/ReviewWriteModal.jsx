@@ -98,7 +98,7 @@ const ReviewWriteModal = ({ isOpen, onClose = () => {}, onSubmit, tagOptions }) 
 
     onSubmit({
       starScore,
-      images: images.map(img => img.preview), // preview URL 전달
+      images: images.map(img => img.file), // File 객체 전달
       text: reviewText,
       tags: selectedTags.map(t => t.value), // value만 전달
     });

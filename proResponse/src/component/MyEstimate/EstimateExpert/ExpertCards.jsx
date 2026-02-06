@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CardItem from './CardItem.jsx';
+import MatchedCardItem from './MatchedCardItem.jsx';
 import * as S from '../styles/Cards.styled.js';
 import * as TB from '../../Common/Button/Tab.styled.js';
 import * as T from '../../Common/Title/Title.styled.js';
@@ -8,7 +9,7 @@ import Pagination from '../../Common/Pagination/Pagination.jsx';
 import defaultImg from '../../../assets/images/common/default_profile.png';
 import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
 import { useAuth } from '../../../context/AuthContext.jsx';
-const ExpertCards = () => {
+const ExpertCards = ({ onRequestDetail, onEstimateSuccess, onMatchedDetail, onChatStart, onDeleteEstimate, refreshKey }) => {
 
     const { currentUser } = useAuth();
     const nickname = currentUser?.nickname;
@@ -24,7 +25,7 @@ const ExpertCards = () => {
 
     useEffect(() => {
         fetchExperts();
-    }, [activeTab, currentPage]);
+    }, [activeTab, currentPage, refreshKey]);
 
     const fetchExperts = async () => {
         let endpoint = '';
@@ -35,12 +36,16 @@ const ExpertCards = () => {
             endpoint = `/api/experts/matches?pageNo=${currentPage}`;
         }
         
+        console.log("호출 API:", endpoint);
+        
         axiosAuth.getList(endpoint).then(res =>{
-            setExperts(res.data.list);
-            console.log(res.data);
+            console.log("받은 데이터:", res.data);
+            console.log("리스트:", res.data.list);
+            setExperts(res.data.list || []);
             setPageInfo(res.data.pageInfo);
         }).catch(err => {
-            console.error(err);
+            console.error("API 에러:", err);
+            setExperts([]);  // 에러 시 빈 배열로 초기화
         })
     };
 
@@ -78,14 +83,32 @@ const ExpertCards = () => {
         <L.CardSection>
             <S.ReservationGrid>
                 {experts.map(expert => (
-                    <CardItem
-                        key={expert.requestNo}
-                        data={{
-                            profileImg: expert.profileImg || defaultImg,
-                            nickName: expert.nickname,       
-                            address: expert.address,
-                        }}
-                    />
+                    activeTab === '받은 요청' ? (
+                        <CardItem
+                            key={expert.requestNo}
+                            data={{
+                                requestNo: expert.requestNo,
+                                profileImg: expert.profileImg || defaultImg,
+                                nickName: expert.nickname,       
+                                address: expert.address,
+                            }}
+                            onRequestDetail={onRequestDetail}
+                            onEstimateSuccess={onEstimateSuccess}
+                            onDeleteEstimate={onDeleteEstimate}
+                        />
+                    ) : (
+                        <MatchedCardItem
+                            key={expert.requestNo || expert.estimateNo}
+                            data={{
+                                ...expert, // 원본 데이터 전체 포함
+                                profileImg: expert.profileImg || defaultImg,
+                                nickName: expert.nickname,       
+                            }}
+                            onRequestDetail={onMatchedDetail}
+                            onChatStart={onChatStart}
+                            onDeleteEstimate={onDeleteEstimate}
+                        />
+                    )
                 ))}
             </S.ReservationGrid>
             <Pagination

@@ -1,16 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ReservationDetail from './ReservationDetail';
 import Button from '../../Common/Button/Button.jsx';
 import * as S from '../styles/CardItem.styled';
 import * as C from '../../Common/ExportCards/ExportCards.styled.js';
-
-// import mStarImg from '../../../assets/images/common/m_star.png';
-// import mTimeImg from '../../../assets/images/common/m_time.png';
 import mLocationImg from '../../../assets/images/common/m_location.png';
 
-const CardItem = ({ data, onRequestDetail, onEstimateSuccess, onDeleteEstimate }) => {
-
-    const [isDetailOpen, setIsDetailOpen] = useState(false);
+const MatchedCardItem = ({ data, onRequestDetail, onChatStart, onDeleteEstimate }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
@@ -25,15 +19,18 @@ const CardItem = ({ data, onRequestDetail, onEstimateSuccess, onDeleteEstimate }
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // 자세히 보기 - 회원 요청 정보 + 내가 보낸 견적 (탭으로 전환)
     const handleDetailClick = () => {
+        console.log("자세히 보기 클릭 - requestNo:", data.requestNo);
         if (onRequestDetail && data.requestNo) {
             onRequestDetail(data.requestNo);
         }
     };
 
-    const handleEstimateSuccess = () => {
-        setIsDetailOpen(false);
-        onEstimateSuccess && onEstimateSuccess();
+    const handleChatClick = () => {
+        if (onChatStart) {
+            onChatStart(data);
+        }
     };
 
     const handleDelete = () => {
@@ -44,20 +41,12 @@ const CardItem = ({ data, onRequestDetail, onEstimateSuccess, onDeleteEstimate }
     };
 
     return (
-        <>
         <S.Card>
             <S.ExpertInfo>
                 <C.Profile>
                     <C.ProfileImg src={data.profileImg} alt="프로필" />
                     <S.Col>
                         <C.Name><span>{data.nickName}</span> 회원</C.Name>
-                        {/* <S.Row>
-                            <C.Icon src={mStarImg} alt="별점" />
-                            <C.TextWrapper>
-                                <C.Data>{data.starScore}</C.Data>
-                                (<C.Data>{data.reviewCount}</C.Data>)
-                            </C.TextWrapper>
-                        </S.Row> */}
                     </S.Col>
                 </C.Profile>
                 {/* 더보기 메뉴 */}
@@ -81,10 +70,6 @@ const CardItem = ({ data, onRequestDetail, onEstimateSuccess, onDeleteEstimate }
                         <C.Icon src={mLocationImg} alt="위치" />
                         <C.Data>{data?.address}</C.Data>
                     </C.InfoRow>
-                    {/* <C.InfoRow>
-                        <C.Icon src={mTimeImg} alt="시간" />
-                        연락 가능 시간 : <C.Data>{data?.startTime}</C.Data> ~ <C.Data>{data?.endTime}</C.Data>
-                    </C.InfoRow> */}
                 </S.InfoList>
             </C.InfoBox>
 
@@ -98,23 +83,14 @@ const CardItem = ({ data, onRequestDetail, onEstimateSuccess, onDeleteEstimate }
                     </Button>
                     <Button 
                         variant="primary"
-                        onClick={() => setIsDetailOpen(true)}
+                        onClick={handleChatClick}
                     >
-                    견적 보내기
+                    채팅 하기
                     </Button>
                 </S.ButtonGroup>
             </S.ActionContainer>
         </S.Card>
-
-        {isDetailOpen && (
-            <ReservationDetail
-                data={data}
-                onClose={() => setIsDetailOpen(false)}
-                onSuccess={handleEstimateSuccess}
-            />
-        )}
-        </>
     );
 };
 
-export default CardItem;
+export default MatchedCardItem;

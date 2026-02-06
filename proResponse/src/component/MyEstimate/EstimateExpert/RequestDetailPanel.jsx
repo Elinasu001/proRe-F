@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import * as SR from "../../Common/Review/Review.styled.js";
 import * as EC from "../../Common/ExportCards/ExportCards.styled.js";
-import { PhotoSection, SectionTitle, MainImageContainer, MainImage, NoImagePlaceholder, ThumbnailContainer, ThumbnailWrapper, ThumbnailImage } from "../../Common/Modal/ExportDetail/ExpertDetailModal.styled.js";
+import { MainImageContainer, MainImage, NoImagePlaceholder, ThumbnailContainer, ThumbnailWrapper, ThumbnailImage, PhotoSection, SectionTitle } from "../../Common/Modal/ExportDetail/ExpertDetailModal.styled.js";
 import mTimeImg from "../../../assets/images/common/m_time.png";
 import mLocationImg from "../../../assets/images/common/m_location.png";
 import mHireImg from "../../../assets/images/common/m_hire.png";
 import mCarerImg from "../../../assets/images/common/m_carer.png";
 import defaultImg from "../../../assets/images/common/default_profile.png";
 
-const RequestDetailPanel = ({ selectedRequest }) => {
+const RequestDetailPanel = ({ requestDetail, onClose }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
-  const files = selectedRequest?.files || [];
+  if (!requestDetail) return null;
+  
+  const files = requestDetail.files || [];
   const currentMainImage = files.length > 0 
     ? (typeof files[selectedImageIndex] === 'string' ? files[selectedImageIndex] : files[selectedImageIndex]?.filePath)
     : null;
@@ -21,10 +23,10 @@ const RequestDetailPanel = ({ selectedRequest }) => {
       {/* 헤더 */}
       <div style={{ padding: "20px", borderBottom: "1px solid #e0e0e0" }}>
         <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "bold" }}>
-          내 문의 상세
+          받은 요청 상세
         </h2>
         <p style={{ margin: "4px 0 0 0", color: "#666", fontSize: "14px" }}>
-          보낸 견적 요청의 상세 정보를 확인해보세요.
+          고객이 보낸 견적 요청의 상세 정보를 확인해보세요.
         </p>
       </div>
 
@@ -41,41 +43,50 @@ const RequestDetailPanel = ({ selectedRequest }) => {
           <EC.Top>
             <EC.Profile>
               <EC.ProfileImg
-                src={selectedRequest.profileImg || defaultImg}
+                src={requestDetail.profileImg || defaultImg}
                 alt="프로필"
               />
               <EC.Name>
-                사용자 <span>{selectedRequest.nickname}</span>
+                <span>{requestDetail.nickname || requestDetail.nickName}</span> 회원
               </EC.Name>
             </EC.Profile>
           </EC.Top>
+
           <EC.Col>
             <EC.Row>
               <EC.Icon src={mTimeImg} alt="카테고리" />
               <EC.TextWrapper>
-                <EC.Data>{selectedRequest.categoryName}</EC.Data>
+                <EC.Data>{requestDetail.categoryName || "카테고리 없음"}</EC.Data>
               </EC.TextWrapper>
             </EC.Row>
             <EC.Row>
               <EC.Icon src={mLocationImg} alt="주소" />
               <EC.TextWrapper>
-                <EC.Data>{selectedRequest.address}</EC.Data>
+                <EC.Data>{requestDetail.address || "주소 정보 없음"}</EC.Data>
               </EC.TextWrapper>
             </EC.Row>
           </EC.Col>
+
           <EC.InfoBox>
-            <EC.InfoRow>
-              <EC.Icon src={mHireImg} alt="요청 유형" />
-              <EC.Data>{selectedRequest.requestType}</EC.Data>
-            </EC.InfoRow>
-            <EC.InfoRow>
-              <EC.Icon src={mCarerImg} alt="서비스" />
-              <EC.Data>{selectedRequest.requestService}</EC.Data>
-            </EC.InfoRow>
-            <EC.InfoRow>
-              <EC.Icon src={mTimeImg} alt="요청 날짜" />
-              <EC.Data>{selectedRequest.requestDate}</EC.Data>
-            </EC.InfoRow>
+            {requestDetail.requestType && (
+              <EC.InfoRow>
+                <EC.Icon src={mHireImg} alt="요청 유형" />
+                <EC.Data>{requestDetail.requestType}</EC.Data>
+              </EC.InfoRow>
+            )}
+            {requestDetail.requestService && (
+              <EC.InfoRow>
+                <EC.Icon src={mCarerImg} alt="서비스" />
+                <EC.Data>{requestDetail.requestService}</EC.Data>
+              </EC.InfoRow>
+            )}
+            {requestDetail.requestDate && (
+              <EC.InfoRow>
+                <EC.Icon src={mTimeImg} alt="요청 날짜" />
+                <EC.Data>{requestDetail.requestDate}</EC.Data>
+              </EC.InfoRow>
+            )}
+
             <EC.InfoRow
               style={{
                 flexDirection: "column",
@@ -105,10 +116,11 @@ const RequestDetailPanel = ({ selectedRequest }) => {
                   width: "100%",
                 }}
               >
-                {selectedRequest.content}
+                {requestDetail.content || "요청 내용이 없습니다."}
               </div>
             </EC.InfoRow>
-            {selectedRequest.files && selectedRequest.files.length > 0 && (
+
+            {requestDetail.files && requestDetail.files.length > 0 && (
               <EC.InfoRow
                 style={{
                   flexDirection: "column",
@@ -127,7 +139,7 @@ const RequestDetailPanel = ({ selectedRequest }) => {
                     alt="첨부 파일"
                     style={{ marginRight: "8px" }}
                   />
-                  <strong>상세 이미지</strong>
+                  <strong>첨부 이미지</strong>
                 </div>
                 <PhotoSection>
                   <MainImageContainer>

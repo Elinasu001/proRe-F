@@ -68,7 +68,8 @@ const ReportModal = ({ isOpen, onClose, onSubmit, tagOptions = [], estimateNo })
       text: inputText,
       tags: inputTags,
     });
-    refetch();
+    // 신고 후 최신 내역 강제 반영 (모달 닫기 전에)
+    await refetch();
   };
 
 
@@ -81,7 +82,6 @@ const ReportModal = ({ isOpen, onClose, onSubmit, tagOptions = [], estimateNo })
         {hasReport ? (
           <>
             <S.ModalTitle id="write-report-title">내가 보낸 신고</S.ModalTitle>
-            {/* <div style={{color:'#888'}}>이미 신고한 내역이 있습니다.</div> */}
           </>
         ) : (
           <S.ModalTitle id="write-report-title">신고 작성하기</S.ModalTitle>
@@ -105,7 +105,6 @@ const ReportModal = ({ isOpen, onClose, onSubmit, tagOptions = [], estimateNo })
                 ? report.selectedTags.filter(t => t.selected || t.reasonNo || t.value).map((tag, index) => (
                     <W.SelectableTag
                       key={tag.reasonNo ?? tag.value ?? index}
-                      // $selected={true}
                       disabled
                     >
                       {tag.reasonName || tag.label}
@@ -131,11 +130,15 @@ const ReportModal = ({ isOpen, onClose, onSubmit, tagOptions = [], estimateNo })
       </W.WriteContent>
       {/* 버튼 그룹 */}
       <S.ButtonGroup>
-        <S.ConfirmButton onClick={hasReport ? onClose : handleSubmit}>
-          확인
-        </S.ConfirmButton>
+        {hasReport ? (
+          <S.ConfirmButton onClick={onClose}>확인</S.ConfirmButton>
+        ) : (
+          <>
+            <S.CancelButton onClick={onClose}>취소</S.CancelButton>
+            <S.ConfirmButton onClick={handleSubmit}>신고</S.ConfirmButton>
+          </>
+        )}
       </S.ButtonGroup>
-      
     </CommonModal>
   );
 };

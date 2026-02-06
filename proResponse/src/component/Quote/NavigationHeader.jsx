@@ -18,7 +18,7 @@ import {
   SubMenuTitle,
   TopNav,
 } from "./Quote.styled";
-import { axiosPublic } from "../../api/reqApi.js";
+import { axiosAuth, axiosPublic } from "../../api/reqApi.js";
 import { useNavigate } from "react-router-dom";
 
 // 카테고리별 아이콘 매핑
@@ -94,7 +94,7 @@ const NavigationHeader = () => {
   };
 
   const handleDetailClick = (detailCategoryNo , sectionTitle) => {
-    axiosPublic
+    axiosAuth
       .getList(`/api/categories/experts/${detailCategoryNo}`)
       .then((res) => {
         const expertsData = res.data || [];
