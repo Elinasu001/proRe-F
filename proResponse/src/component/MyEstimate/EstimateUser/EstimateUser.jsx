@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import * as S from "../../Common/Layout/EstimateLayout.styled.js";
-import UserCards from "./UserCards.jsx";
+import { createRoomApi } from "../../../api/chat/chatApi.js";
 import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
+import { ImageUpload, TextArea } from "../../Common/Input/Input.jsx";
+import * as S from "../../Common/Layout/EstimateLayout.styled.js";
+import EstimateDetailPanel from "./EstimateDetailPanel.jsx";
 import ExpertDetailPanel from "./ExpertDetailPanel.jsx";
 import RequestDetailPanel from "./RequestDetailPanel.jsx";
-import EstimateDetailPanel from "./EstimateDetailPanel.jsx";
-import { createRoomApi } from "../../../api/chat/chatApi.js";
-import { ImageUpload, TextArea } from "../../Common/Input/Input.jsx";
-import Toast from '../../Common/Toast/Toast.jsx';
+import UserCards from "./UserCards.jsx";
 
 
 const EstimateUser = () => {
@@ -155,7 +154,7 @@ const handleChatStart = async (data) => {
   } catch (error) {
     const msg = error?.response?.data?.message;
     if (msg && msg.includes("이미 채팅방이 존재합니다")) {
-      showToastMessage('이미 채팅방이 존재합니다. 바로 입장합니다.', 'info');
+      showToastMessage('이미 채팅방이 존재하는 견적입니다. 기존 채팅방으로 이동합니다.', 'info');
       navigate(`/chatRoom/${data?.estimateNo}`);
       return;
     }

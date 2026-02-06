@@ -1,10 +1,13 @@
 import { useCallback, useState } from 'react';
 import paymentApi from '../../../api/payment/paymentApi';
+import { PORTONE_CHANNEL_KEY } from '../../../api/reqApi';
+
 
 /**
  * 포트원 결제 커스텀 훅
  */
 const usePayment = () => {
+    
     const [isProcessing, setIsProcessing] = useState(false);
     // const { showToastMessage } = useToast();
 
@@ -43,7 +46,18 @@ const usePayment = () => {
 
             // 3. 포트원 결제 요청
             const IMP = window.IMP;
-            IMP.init(process.env.REACT_APP_PORTONE_IMP_CODE);
+            if(!IMP) {
+                onFail && onFail({ message: '결제 모듈 로드에 실패했습니다.' });
+                setIsProcessing(false);
+                return;
+            }
+            console.log('PORTONE_CHANNEL_KEY:', PORTONE_CHANNEL_KEY);
+            if (!PORTONE_CHANNEL_KEY) {
+                onFail && onFail({ message: 'PORTONE_CHANNEL_KEY가 설정되지 않았습니다. 환경 변수 또는 config.js를 확인하세요.' });
+                setIsProcessing(false);
+                return;
+            }
+            IMP.init(PORTONE_CHANNEL_KEY);
             IMP.request_pay(
                 {
                     pg: 'tosspayments',

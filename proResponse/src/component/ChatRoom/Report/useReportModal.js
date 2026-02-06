@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getAllReportTagsApi, getReportApi, saveReportApi } from '../../../api/report/reportApi';
 
 import useToast from '../../Common/Toast/useToast';
@@ -48,7 +48,7 @@ export function useReportTags() {
         setLoading(true);
         try {
             const res = await getAllReportTagsApi();
-            //console.log('신고 태그 API 응답:', res);
+            console.log('신고 태그 API 응답:', res);
             const options = res.map(c => ({
                 value: c.reasonNo, label: c.reasonName
             }));
@@ -71,48 +71,66 @@ export function useReportTags() {
 /**
  * 신고 모달 상태 관리 훅
  */
-export function useReportModal(estimateNo) {
-    
+export function useReportModal(estimateNo, messages, userNo) {
     const [reportModal, setReportModal] = useState({
         isOpen: false,
         tagOptions: [],
         onSubmit: null,
+        existingReport: null,
     });
 
     const { showToastMessage } = useToast();
 
-    const openReportModal = (tagOptions) => {
+    const openReportModal = async (tagOptions) => {
+        const targetUserNo = Array.isArray(messages)
+            ? messages.find(m => m.userNo !== userNo)?.userNo || null
+            : null;
+
+        //  모달 열 때 기존 신고 조회
+        let existingReport = null;
+        try {
+            existingReport = await getReportApi(estimateNo);
+            console.log('기존 신고 내역:', existingReport);
+        } catch (err) {
+            // 신고 내역 없으면 null (정상)
+            console.log('신고 내역 없음 (신규 작성 모드)');
+        }
+
         setReportModal({
             isOpen: true,
             tagOptions,
+            existingReport,
             onSubmit: async (reportData) => {
                 try {
-
-                    const payload = {
-                        content: reportData.text,
-                        tagList: reportData.tags.map(t => t.value),
-                        estimateNo: Number(estimateNo),
-                    };
-
-                    const res = await saveReportApi(payload);
-                    if (res && res.success) {
-                        showToastMessage('신고가 성공적으로 저장되었습니다.', res.success);
+                    const formData = new FormData();
+                    formData.append('estimateNo', estimateNo);
+                    formData.append('content', reportData.text);
+                    formData.append('reporterUserNo', userNo);
+                    formData.append('targetUserNo', targetUserNo);
+                    
+                    if (reportData.tags && reportData.tags.length > 0) {
+                        formData.append('reasonNo', reportData.tags[0].value);
+                    } else {
+                        throw new Error('신고 사유를 선택해주세요.');
                     }
+
+                    await saveReportApi(formData);
+                    showToastMessage('신고가 접수되었습니다.', 'success');
+
                 } catch (error) {
                     showToastMessage('신고 등록에 실패했습니다.', error.message);
+                    throw error;
                 }
-                // 모달 닫지 않음 - ReportModal에서 refetch() 후 조회 모드로 전환됨
             },
         });
     };
-
-
 
     const closeReportModal = () => {
         setReportModal({
             isOpen: false,
             tagOptions: [],
             onSubmit: null,
+            existingReport: null,
         });
     };
 

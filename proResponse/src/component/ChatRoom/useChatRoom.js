@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useWebSocket from 'react-use-websocket';
 import { getChatWsUrl, getMessagesApi, saveMessageApi } from '../../api/chat/chatApi';
 
@@ -6,6 +6,11 @@ export default function useChatRoom(estimateNo, userNo, navi) {
 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
+    // 상대방 userNo (메시지 없어도 항상 계산)
+    const [otherUserNo, setOtherUserNo] = useState(null);
+    const [nextCursor, setNextCursor] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
@@ -14,6 +19,7 @@ export default function useChatRoom(estimateNo, userNo, navi) {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [toastVariant, setToastVariant] = useState('success');
+
     const showToastMessage = (message, variant = 'success') => {
         setToastMessage(message);
         setToastVariant(variant);
@@ -35,28 +41,48 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         }
     );
 
-    // 과거 메시지 불러오기
+    // 최초 메시지 불러오기 (mount/방 진입 시)
     useEffect(() => {
-        const fetchMessages = async () => {
-            try {
-                const res = await getMessagesApi(estimateNo, { size: 50 });
-                if (res?.messages) {
-                    const sortedMessages = [...res.messages]
-                        .reverse()
-                        .map(msg => ({
-                            ...msg,
-                            mine: Number(msg.userNo) === userNo
-                        }));
-                    setMessages(sortedMessages);
-                }
-            } catch (error) {
-                //console.error('메시지 조회 실패:', error);
-                showToastMessage('채팅방을 불러올 수 없습니다.', 'error');
-                navi(-1);
-            }
-        };
-        fetchMessages();
-    }, [estimateNo, navi, userNo]);
+        setMessages([]);
+        setNextCursor(null);
+        setHasMore(true);
+        fetchMessages(null, true);
+        // eslint-disable-next-line
+    }, [estimateNo, userNo]);
+
+    // 상대방 userNo 계산: messages에 내 userNo와 다른 userNo가 있으면 그 값, 없으면 null
+    useEffect(() => {
+        // 메시지에 상대방 userNo가 있으면 사용
+        const found = messages.find(m => m.userNo !== userNo)?.userNo;
+        if (found) {
+            setOtherUserNo(found);
+        } else {
+            // 메시지가 없을 때: 1:1 채팅방이므로 내 userNo와 다른 참여자 userNo를 추론해야 함
+            // (추후 참여자 정보를 props나 API로 받아올 수 있으면 여기서 세팅)
+            // 현재 구조에서는 null로 둠
+            setOtherUserNo(null);
+        }
+    }, [messages, userNo]);
+
+    // 커서 기반 메시지 불러오기
+    const fetchMessages = useCallback(async (cursor = null, isInit = false) => {
+        if (loading || !hasMore) return;
+        setLoading(true);
+        try {
+            const params = { size: 50 };
+            // console.log('fetchMessages cursor:', cursor);
+            if (cursor) params.cursor = cursor;
+            const res = await getMessagesApi(estimateNo, params);
+            const newMessages = (res?.messages || []).reverse(); // 오래된 → 최신 순서로 정렬
+            setMessages(prev => isInit ? newMessages : [...newMessages, ...prev]);
+            setNextCursor(res.nextCursor);
+            setHasMore(res.nextCursor !== null);
+        } catch (error) {
+            showToastMessage('채팅방을 불러올 수 없습니다.', 'error');
+            if (isInit) navi(-1);
+        }
+        setLoading(false);
+    }, [estimateNo, userNo, loading, hasMore]);
 
     // messages가 바뀔 때마다 항상 맨 아래로 스크롤
     useEffect(() => {
@@ -249,5 +275,11 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         toastVariant,
         closeToast,
         showToastMessage,
+        // 추가 반환값
+        fetchMessages,
+        hasMore,
+        loading,
+        nextCursor,
+        otherUserNo, // 상대방 userNo 반환
     };
 }

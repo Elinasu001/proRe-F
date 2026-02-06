@@ -12,4 +12,6 @@ export const getReportApi = (estimateNo) =>
 
 // 신고 등록
 export const saveReportApi = (reportDTO) =>
-  axiosAuth.post(baseApi, reportDTO);
+  axiosAuth.post(baseApi, reportDTO, {
+    headers: { "Content-Type": "multipart/form-data" }
+  });
