@@ -3,12 +3,13 @@ import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import CommonGlobalStyles from './assets/styles/CommonGlobalStyles';
 import ChatRoom from './component/ChatRoom/ChatRoom.jsx';
-import PaymentExample from './component/ChatRoom/Payment/PaymentExample.jsx';
+import PaymentModal from './component/ChatRoom/Payment/PaymentModal.jsx';
 import AlertExample from './component/Common/Alert/AlertExample.jsx';
+import EstimateLayout from './component/Common/Layout/EstimateLayout.jsx';
 import Layout from './component/Common/Layout/Layout.jsx';
-import Map from './component/Common/Map/Map.jsx';
 import ExpertDetailModalExample from './component/Common/Modal/ExportDetail/ExpertDetailModalExample.jsx';
 import ReviewModalExample from './component/Common/Modal/Review/ReviewModalExample.jsx';
+import ProtectedRoute from './component/Common/ProtectedRoute.jsx';
 import EstimateRequestExample from './component/EstimateRequest/EstimateRequestExample.jsx';
 import ExportList from './component/ExportList/ExportList.jsx';
 import Favorite from './component/Favorite/Favorite.jsx';
@@ -20,12 +21,14 @@ import EstimateUser from './component/MyEstimate/EstimateUser/EstimateUser.jsx';
 import MypageUser from './component/MyPage/MypageUser.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
 import MypageExpert from './component/Mypage/MypageExpert.jsx';
+import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
+import AdminDashboard from './component/Admin/AdminDashboard.jsx';
+import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
+import AdminMemberList from './component/Admin/AdminMemberList.jsx';
+import AdminReportList from './component/Admin/AdminReportList.jsx';
 import { AuthProvider } from './context/AuthContext';
-import EstimateLayout from './component/Common/Layout/EstimateLayout.jsx';
-import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
-import ProtectedRoute from './component/Common/ProtectedRoute.jsx';
 
 function App() {
   return (
@@ -59,7 +62,8 @@ function App() {
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
-          <Route path="/Testpayment" element={<PaymentExample />} />
+          <Route path="/Testpayment" element={<PaymentModal />} />
+            <Route path="/nearby" element= {<Map />} />
           <Route path="/mypageUser" element={
             <ProtectedRoute roles={["ROLE_USER"]}>
               <MypageUser />
@@ -88,10 +92,17 @@ function App() {
             </ProtectedRoute>
           } />
         </Route>
+        {/* 관리자 페이지 */}
+        <Route element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/members" element={<AdminMemberList />} />
+          <Route path="/admin/reports" element={<AdminReportList />} />
+
+        </Route>
           
       </Routes>
     </AuthProvider>
   );
 }
 
-export default App
+export default App;

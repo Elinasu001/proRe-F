@@ -169,8 +169,18 @@ export const MessageBubble = styled.div`
     font-weight: var(--font-w-r);
     line-height: 1.5;
     word-wrap: break-word;
-    background-color: ${({ $sender }) => $sender === 'me' ? 'var(--primary)' : 'var(--gray-primary)'};
-    color: ${({ $sender }) => $sender === 'me' ? 'var(--white)' : 'var(--color-3)'};
+    background-color: ${({ $sender, $type }) =>
+        $type === 'PAYMENT'
+            ? 'transparent'
+            : $sender === 'me'
+                ? 'var(--primary)'
+                : 'var(--gray-primary)'};
+    color: ${({ $sender, $type }) =>
+        $type === 'PAYMENT'
+            ? 'var(--color-3)'
+            : $sender === 'me'
+                ? 'var(--white)'
+                : 'var(--color-3)'};
     text-align: ${({ $sender }) => $sender === 'me' ? 'right' : 'left'};
     animation: ${({ $animate }) => $animate ? bubbleIn : 'none'} 0.35s cubic-bezier(0.4, 0.7, 0.4, 1.2);
 `;

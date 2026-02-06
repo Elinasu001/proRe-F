@@ -1,13 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
-import ReservationDetail from './ReservationDetail';
+import { useEffect, useRef, useState } from 'react';
 import Button from '../../Common/Button/Button.jsx';
-import * as S from '../styles/CardItem.styled';
 import * as C from '../../Common/ExportCards/ExportCards.styled.js';
+import * as S from '../styles/CardItem.styled';
+import ReservationDetail from './ReservationDetail';
 
+import mLocationImg from '../../../assets/images/common/m_location.png';
 import mStarImg from '../../../assets/images/common/m_star.png';
 import mTimeImg from '../../../assets/images/common/m_time.png';
-import mLocationImg from '../../../assets/images/common/m_location.png';
-import payImg from '../../../assets/images/common/pay.png';
 
 const CardItem = ({
     data,

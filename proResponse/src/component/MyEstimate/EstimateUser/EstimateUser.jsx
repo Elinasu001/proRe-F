@@ -8,6 +8,8 @@ import RequestDetailPanel from "./RequestDetailPanel.jsx";
 import EstimateDetailPanel from "./EstimateDetailPanel.jsx";
 import { createRoomApi } from "../../../api/chat/chatApi.js";
 import { ImageUpload, TextArea } from "../../Common/Input/Input.jsx";
+import Toast from '../../Common/Toast/Toast.jsx';
+
 
 const EstimateUser = () => {
   const [selectedExpert, setSelectedExpert] = useState(null);
@@ -22,6 +24,18 @@ const EstimateUser = () => {
   const [editContent, setEditContent] = useState('');
   const [editImages, setEditImages] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  // 토스트 상태 및 함수 (useChatRoom과 동일)
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastVariant, setToastVariant] = useState('success');
+  const showToastMessage = (message, variant = 'success') => {
+    setToastMessage(message);
+    setToastVariant(variant);
+    setShowToast(true);
+  };
+  const closeToast = () => setShowToast(false);
+
 
   useEffect(() => {
     if (selectedExpert) {
@@ -109,21 +123,47 @@ const EstimateUser = () => {
     }
   };
 
-  const handleChatStart = async (estimateData) => {
-    try {
-      const estimateNo = estimateData?.estimateNo ?? estimateData?.requestNo;
-        const chatMessageDto = {
-          content: "안녕하세요",
-          type: "TEXT",
-        };
-        const response = await createRoomApi(estimateNo, chatMessageDto);
-      const created = response?.data?.data;
-      const enterEstimateNo = created?.estimateNo ?? estimateNo;
-      navigate(`/chatRoom/${enterEstimateNo}`);
-    } catch (error) {
-      console.error("채팅방 생성 실패:", error);
+  // const handleChatStart = async (estimateData) => {
+  //   try {
+  //     const estimateNo = estimateData?.estimateNo ?? estimateData?.requestNo;
+  //       const chatMessageDto = {
+  //         content: "안녕하세요",
+  //         type: "TEXT",
+  //       };
+  //       const response = await createRoomApi(estimateNo, chatMessageDto);
+  //     const created = response?.data?.data;
+  //     const enterEstimateNo = created?.estimateNo ?? estimateNo;
+  //     navigate(`/chatRoom/${enterEstimateNo}`);
+  //   } catch (error) {
+  //     console.error("채팅방 생성 실패:", error);
+  //   }
+  // };
+
+const handleChatStart = async (data) => {
+  setLoading(true);
+  try {
+    const estimateNo = data?.estimateNo;
+    const chatMessageDto = {
+      content: "안녕하세요",
+      type: "TEXT"
+    };
+    const response = await createRoomApi(estimateNo, chatMessageDto);
+    const created = response?.data?.data;
+    const enterEstimateNo = created?.estimateNo ?? estimateNo;
+    showToastMessage('채팅방이 생성되었습니다!', 'success');
+    navigate(`/chatRoom/${enterEstimateNo}`);
+  } catch (error) {
+    const msg = error?.response?.data?.message;
+    if (msg && msg.includes("이미 채팅방이 존재합니다")) {
+      showToastMessage('이미 채팅방이 존재합니다. 바로 입장합니다.', 'info');
+      navigate(`/chatRoom/${data?.estimateNo}`);
+      return;
     }
-  };
+    showToastMessage(msg || "채팅방 생성 실패", 'error');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleDeleteEstimate = async (requestNo) => {
     // 확인 창 표시

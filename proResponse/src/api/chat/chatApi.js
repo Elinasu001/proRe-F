@@ -7,16 +7,21 @@ const API = window.ENV?.API_URL || "http://localhost:8080";
 /**
  * 채팅방 공통 API prefix
  */
-export const chatApi = '/api/rooms';
+export const baseApi = '/api/rooms';
 
 
 
-// 채팅방 생성
-export const createRoomApi = (estimateNo, chatMessageDto) =>
-axiosAuth.post(chatApi, chatMessageDto, {
-    params: { estimateNo },
-    headers: { 'Content-Type': 'multipart/form-data' },
-});
+// 채팅방 생성 (FormData로 estimateNo, content, type 전달)
+export const createRoomApi = (estimateNo, chatMessageDto) => {
+    const formData = new FormData();
+    if (estimateNo !== undefined) formData.append('estimateNo', estimateNo);
+    if (chatMessageDto) {
+        Object.keys(chatMessageDto).forEach(key => formData.append(key, chatMessageDto[key]));
+    }
+    return axiosAuth.post(baseApi, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+    });
+};
 
 
 /**
@@ -33,7 +38,7 @@ export function getChatWsUrl(estimateNo) {
 
 // 채팅 메시지 조회 (커서 기반 페이징)
 export const getMessagesApi = (estimateNo, params) =>
-    axiosAuth.getActual(`${chatApi}/${estimateNo}/messages`, { params });
+    axiosAuth.getActual(`${baseApi}/${estimateNo}/messages`, { params });
 
 
 
@@ -42,7 +47,7 @@ export const getMessagesApi = (estimateNo, params) =>
 export const saveMessageApi = (estimateNo, chatMessageDto, config = {}) => {
     const isFormData = chatMessageDto instanceof FormData;
     return axiosAuth.post(
-        `${chatApi}/${estimateNo}`,
+        `${baseApi}/${estimateNo}`,
         chatMessageDto,
         {
         headers: {

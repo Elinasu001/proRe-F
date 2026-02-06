@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import CardItem from './CardItem.jsx';
-import * as S from '../styles/Cards.styled.js';
+import { useEffect, useState } from 'react';
+import { axiosAuth } from "../../../api/reqApi.js";
+import defaultImg from '../../../assets/images/common/default_profile.png';
+import { useAuth } from '../../../context/AuthContext.jsx';
 import * as TB from '../../Common/Button/Tab.styled.js';
-import * as T from '../../Common/Title/Title.styled.js';
 import * as L from '../../Common/Layout/EstimateLayout.styled.js';
 import Pagination from '../../Common/Pagination/Pagination.jsx';
-import defaultImg from '../../../assets/images/common/default_profile.png';
-import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
-import { useAuth } from '../../../context/AuthContext.jsx';
+import * as T from '../../Common/Title/Title.styled.js';
+import * as S from '../styles/Cards.styled.js';
+import CardItem from './CardItem.jsx';
 
 const UserCards = ({
     onExpertDetail,
