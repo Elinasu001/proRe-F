@@ -1,3 +1,4 @@
+
 import styled from 'styled-components';
 
 export const AdSectionContainer = styled.section`
@@ -97,4 +98,31 @@ export const LineImg = styled.img`
   object-fit: contain;
   pointer-events: none;
   z-index: 1;
+`;
+
+export const AdTooltip = styled.div`
+  position: absolute;
+  left: 50%;
+  top: -44px;
+  transform: translateX(-50%);
+  background: #222;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 15px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  z-index: 10;
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -8px;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #222;
+  }
 `;
