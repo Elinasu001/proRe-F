@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import paymentApi from '../../../api/payment/paymentApi';
-import { PORTONE_STORE_ID, PORTONE_CHANNEL_KEY } from '../../../api/reqApi';
+import { PORTONE_CHANNEL_KEY, PORTONE_STORE_ID } from '../../../api/reqApi';
 
 /**
  * 포트원 V2 결제 커스텀 훅
@@ -37,16 +37,13 @@ const usePayment = () => {
                 return;
             }
 
-            // 3. 환경변수 검증
-            if (!PORTONE_STORE_ID || !PORTONE_CHANNEL_KEY) {
-                onFail?.({ message: '포트원 설정이 올바르지 않습니다.' });
-                setIsProcessing(false);
-                return;
-            }
+            // 3. 포트원 V2 결제 요청
+            console.log('[포트원 결제 요청]', {
+                storeId: PORTONE_STORE_ID,
+                paymentId: merchantUid,
+                amount: params.amount
+            });
 
-            console.log('[포트원 V2] 결제 요청 - paymentId:', merchantUid);
-
-            // 4. 포트원 V2 결제 요청 (window.PortOne)
             const response = await window.PortOne.requestPayment({
                 storeId: PORTONE_STORE_ID,
                 channelKey: PORTONE_CHANNEL_KEY,
@@ -64,11 +61,13 @@ const usePayment = () => {
                     estimateNo: params.estimateNo,
                     roomNo: params.roomNo,
                 },
+                // 결제 완료 후 페이지 이동 방지
+                redirectUrl: undefined,
             });
 
             console.log('[포트원 V2] 결제 응답:', response);
 
-            // 5. 결제 결과 처리
+            // 4. 결제 실패 처리
             if (response.code != null) {
                 console.error('[포트원 V2] 결제 실패:', response);
                 onFail?.({
@@ -79,7 +78,7 @@ const usePayment = () => {
                 return;
             }
 
-            // 6. 서버 검증
+            // 5. 서버 검증
             const verifyParams = {
                 merchantUid: response.paymentId,
                 impUid: response.txId,
@@ -88,10 +87,18 @@ const usePayment = () => {
             console.log('[결제 검증] verifyParams:', verifyParams);
 
             const verifyResult = await paymentApi.verify(verifyParams);
+
+            console.log('[결제 검증 결과]', verifyResult);
             
             if (verifyResult.success) {
                 console.log('[결제 성공]', verifyResult);
-                onSuccess?.(verifyResult);
+                // 성공 콜백 호출 (웹소켓 메시지 전송)
+                onSuccess?.({
+                    merchantUid: response.paymentId,
+                    impUid: response.txId,
+                    amount: params.amount,
+                    ...verifyResult
+                });
             } else {
                 console.error('[결제 검증 실패]', verifyResult);
                 onFail?.(verifyResult);

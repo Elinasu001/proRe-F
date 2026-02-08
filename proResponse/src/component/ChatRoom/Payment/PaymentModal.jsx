@@ -3,6 +3,7 @@ import Alert from '../../Common/Alert/Alert';
 import useAlert from '../../Common/Alert/useAlert';
 import Input from '../../Common/Input/Input.jsx';
 import * as S from '../../Common/Input/Input.styled.js';
+import useCommonModal from '../useCommonModal';
 import usePayment from './usePayment';
 
 const PaymentModal = ({ 
@@ -16,7 +17,10 @@ const PaymentModal = ({
 }) => {
     const { alertState, openAlert, closeAlert } = useAlert();
     const [amount, setAmount] = useState("");
-    const [showPayModal, setShowPayModal] = useState(open);
+    // Remove internal modal state, rely on open prop
+    // Modal side effects: ESC, scroll lock
+    useCommonModal(open, onClose);
+
     const { isProcessing, requestPayment } = usePayment();
 
     const handlePortOnePayment = async () => {
@@ -52,16 +56,8 @@ const PaymentModal = ({
             },
             (result) => {
                 console.log('[결제 성공]', result);
-                openAlert({
-                    title: '결제 완료',
-                    message: `${numAmount.toLocaleString()}원 결제가 완료되었습니다.`,
-                    onConfirm: () => {
-                        closeAlert();
-                        if (onSuccess) onSuccess(numAmount, result);
-                        setShowPayModal(false);
-                        if (onClose) onClose();
-                    }
-                });
+                if (onSuccess) onSuccess(numAmount, result);
+                if (onClose) onClose();
             },
             (error) => {
                 console.error('[결제 실패]', error);
@@ -75,14 +71,13 @@ const PaymentModal = ({
     };
 
     const handleCancel = () => {
-        setShowPayModal(false);
         if (onClose) onClose();
     };
 
     return (
         <>
             <Alert
-                isOpen={showPayModal}
+                isOpen={open}
                 title="결제하기"
                 message={
                     <div style={{ minWidth: 260 }}>
