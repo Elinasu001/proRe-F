@@ -1,0 +1,437 @@
+
+:root {
+  --ew-bg: #f4f5f7;
+  --ew-card: #ffffff;
+  --ew-text: #111827;
+  --ew-sub: #6b7280;
+  --ew-line: #e5e7eb;
+  --ew-primary: var(--primary);
+
+  --ew-radius-lg: 18px;
+  --ew-radius-md: 12px;
+  --ew-shadow: 0 14px 40px rgba(17, 24, 39, 0.10);
+
+  --ew-gap-md: 18px;
+  --ew-gap-sm: 14px;
+
+  --ew-card-min-h: 560px;
+  --ew-card-pad-y: 72px;
+  --ew-card-pad-x: 64px;
+
+  --ew-choice-bg: #edf0f4;
+  --ew-choice-bg-hover: #e1e6ee;
+  --ew-choice-bg-active: #d6dce6;
+}
+
+/* =========================
+   Page Layout
+========================= */
+.expert-main {
+  min-height: 100vh;
+  background: var(--ew-bg);
+  display: flex;
+  justify-content: center;
+  padding: 104px 16px 80px;
+  box-sizing: border-box;
+}
+
+.expert-wrap {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* =========================
+   Card
+========================= */
+.expert-card {
+  background: var(--ew-card);
+  border: 1px solid rgba(229, 231, 235, 0.9);
+  border-radius: var(--ew-radius-lg);
+  padding: var(--ew-card-pad-y) var(--ew-card-pad-x);
+  min-height: var(--ew-card-min-h);
+  box-shadow: var(--ew-shadow);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  font-size: 16.5px;
+}
+
+.expert-card > * {
+  width: 100%;
+}
+
+.expert-content {
+  width: 100%;
+}
+
+.expert-bottom {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 26px;
+}
+
+/* loading */
+.loading-text {
+  text-align: center;
+  color: var(--ew-sub);
+  font-size: 15px;
+  padding: 14px 0;
+}
+
+/* =========================
+   Title
+========================= */
+.title {
+  margin: 6px 0 26px;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ew-text);
+  text-align: center;
+}
+
+/* =========================
+   Picked Info
+========================= */
+.picked {
+  margin: 12px 0 16px;
+  padding: 14px 16px;
+  border-radius: var(--ew-radius-md);
+  border: 1px solid var(--ew-line);
+  background: #fafafa;
+  color: var(--ew-sub);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.picked b {
+  color: var(--ew-text);
+  font-weight: 600;
+}
+
+/* links */
+.expert-card a,
+.expert-card a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================
+   Progress Bar (bottom)
+========================= */
+.step-indicator-bottom {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 4px;
+}
+
+.step-indicator {
+  width: min(620px, 100%);
+  display: flex;
+  gap: 10px;
+  margin: 0;
+}
+
+.step-indicator .dot {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: #dfe3ea;
+}
+
+.step-indicator .dot.active {
+  background: var(--ew-primary);
+}
+
+/* =========================
+   STEP 1: Choice Bar UI
+========================= */
+.choice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ew-gap-md);
+  justify-items: center;
+  margin-top: 10px;
+}
+
+.choice-card,
+.choice-card:hover,
+.choice-card:active,
+.choice-card:focus,
+.choice-card:focus-visible {
+  width: 420px !important;
+  padding: 0 !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 16px !important;
+  background: transparent !important;
+}
+
+.choice-inner {
+  height: 72px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 16px;
+  background: var(--ew-choice-bg);
+}
+
+.choice-card:hover .choice-inner {
+  background: var(--ew-choice-bg-hover);
+}
+
+.choice-card.active .choice-inner {
+  background: var(--ew-choice-bg-active);
+}
+
+.choice-iconBox {
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.choice-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  background: transparent;
+  border: none;
+}
+
+.choice-label {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ew-text);
+  text-align: left;
+  padding-left: 110px;
+}
+
+/* =========================
+   STEP 2/3 Grid
+========================= */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ew-gap-sm);
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================
+   Form Spacing
+========================= */
+.field {
+  margin-top: 20px;
+}
+
+/* 라벨 텍스트(필드 제목)만 타겟팅 */
+.field > span {
+  display: block;
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ew-text);
+}
+
+.helper {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: var(--ew-sub);
+}
+
+/* =========================
+   File List
+========================= */
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.file-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--ew-line);
+  border-radius: var(--ew-radius-md);
+  background: #fafafa;
+}
+
+/* =========================
+   Summary
+========================= */
+.summary {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--ew-radius-md);
+  border: 1px solid var(--ew-line);
+  background: #fafafa;
+  color: var(--ew-sub);
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* =========================
+   Bottom Buttons
+========================= */
+.btn-row {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 26px;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 920px) {
+  .expert-wrap {
+    max-width: 760px;
+  }
+
+  .expert-card {
+    padding: 60px 48px;
+    min-height: 520px;
+    font-size: 16px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .choice-card,
+  .choice-card:hover,
+  .choice-card:active,
+  .choice-card:focus,
+  .choice-card:focus-visible {
+    width: 380px !important;
+  }
+
+  .step-indicator {
+    width: min(560px, 100%);
+  }
+}
+
+@media (max-width: 720px) {
+  .expert-wrap {
+    max-width: 620px;
+  }
+
+  .expert-card {
+    padding: 52px 38px;
+    min-height: 500px;
+    font-size: 15.5px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .choice-card,
+  .choice-card:hover,
+  .choice-card:active,
+  .choice-card:focus,
+  .choice-card:focus-visible {
+    width: 340px !important;
+  }
+
+  .step-indicator {
+    width: min(520px, 100%);
+  }
+}
+
+@media (max-width: 420px) {
+  .expert-main {
+    padding: 88px 14px 64px;
+  }
+
+  .expert-card {
+    padding: 44px 22px;
+    min-height: 460px;
+    font-size: 15px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .choice-card,
+  .choice-card:hover,
+  .choice-card:active,
+  .choice-card:focus,
+  .choice-card:focus-visible {
+    width: 100% !important;
+  }
+
+  .step-indicator {
+    width: 100%;
+  }
+}
+
+/* =========================
+   STEP2 / STEP3 Checkbox Tone (SAFE SCOPE)
+   - Input/에러메시지 영향 X
+========================= */
+
+.checkbox-scope {
+  --ew-checkbox-text: #6b7280;
+  --ew-checkbox-active: #374151;
+  --ew-checkbox-icon: #9ca3af;
+}
+
+/* 체크박스 라벨에만 적용 (label 전체 덮지 않음) */
+.checkbox-scope label {
+  color: var(--ew-checkbox-text);
+}
+
+/* label 내부 텍스트 요소들만 제한적으로 */
+.checkbox-scope label span,
+.checkbox-scope label p,
+.checkbox-scope label strong,
+.checkbox-scope label em {
+  color: inherit;
+}
+
+/* 아이콘만 */
+.checkbox-scope svg {
+  color: var(--ew-checkbox-icon);
+}
+
+/* 체크된 상태: (체크박스 구조가 input + (label/텍스트) 형태일 때를 고려한 안전 타겟) */
+.checkbox-scope input[type="checkbox"]:checked + label,
+.checkbox-scope input[type="checkbox"]:checked + label * {
+  color: var(--ew-checkbox-active);
+  font-weight: 700;
+}
+
+/* 체크된 상태 아이콘 */
+.checkbox-scope input[type="checkbox"]:checked + label svg {
+  color: var(--ew-primary);
+}

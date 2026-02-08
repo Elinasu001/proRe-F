@@ -1,0 +1,51 @@
+/* DeleteMember.module.css (필요한 최소 예시) */
+.page {
+  padding: 120px 16px 64px;
+}
+
+.wrap {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.heading {
+  margin: 0 0 18px 0;
+  text-align: center;
+  font-size: 28px;
+  font-weight: 800;
+}
+
+.section {
+  margin-top: 18px;
+}
+
+.sectionTitle {
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.reasonList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reasonItem {
+  width: 100%;
+  padding: 12px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+}
+
+.active {
+  border-color: var(--primary);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}

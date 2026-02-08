@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import EstimateRequest from './EstimateRequest';
+import { useNavigate } from "react-router-dom";
 
 /**
  * EstimateRequest 사용 예제
  */
 const EstimateRequestExample = () => {
+  const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const expertInfo = {
@@ -12,8 +14,13 @@ const EstimateRequestExample = () => {
   };
 
   const handleSubmit = (formData) => {
-    console.log('견적 요청 제출:', formData);
+    //console.log('견적 요청 제출:', formData);
+
+    
     alert('견적 요청이 전송되었습니다!');
+    
+    navigate(`/estimateUser`);
+    
   };
 
   return (

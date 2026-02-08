@@ -220,7 +220,7 @@ const NavMenu = ({
                                 </>
                             ) : (
                                 <>
-                                    <a href="/mypageUser">
+                                    <a href="/mypageuser">
                                         <ProfileDropdownItem
                                             onClick={() => {
                                                 setIsProfileOpen(false);
@@ -247,6 +247,7 @@ const NavMenu = ({
                                         onClick={() => {
                                             setIsProfileOpen(false);
                                             closeMobileMenu();
+                                            navigate("/expert/register")
                                             // 기능 없음
                                         }}
                                         role="menuitem"
