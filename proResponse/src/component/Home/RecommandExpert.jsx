@@ -1,6 +1,7 @@
 import {
     Desc,
     LineImg,
+    ProfileImg,
     QuoteImg,
     RecommandSection,
     RecommandTitle,
@@ -93,7 +94,7 @@ const RecommandExpert = () => {
                         />
                       <Desc className="desc">{expert.content}</Desc>
                       <SlideProfile>
-                        <img src={expert.profileImg} alt={expert.nickname} style={{width:'56px',height:'56px',borderRadius:'50%',objectFit:'cover',marginRight:'16px'}} />
+                        <ProfileImg src={expert.profileImg} alt={expert.nickname}/>
                         <div>
                           <SlideName>{expert.nickname}</SlideName>
                           <SlideLocation className="address">{expert.address}</SlideLocation>

@@ -123,3 +123,11 @@ export const SlideLocation = styled.div`
     margin-top:0.2rem;
     color: #888;
 `;
+
+export const ProfileImg = styled.img`
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 16px;
+`;
