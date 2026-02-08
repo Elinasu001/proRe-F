@@ -6,7 +6,7 @@ export default function useChatRoom(estimateNo, userNo, navi) {
 
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
-    
+    const [roomNo, setRoomNo] = useState(null);
 
     // 상대방 userNo (메시지 없어도 항상 계산)
     const [otherUserNo, setOtherUserNo] = useState(null);
@@ -52,13 +52,13 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         // eslint-disable-next-line
     }, [estimateNo, userNo]);
 
-     useEffect(() => {
+    useEffect(() => {
         // 채팅방 초기화 시 roomNo 가져오기
         const initChatRoom = async () => {
             try {
                 const response = await chatApi.getRoomByEstimate(estimateNo);
                 if (response.success && response.data) {
-                    setRoomNo(response.data.roomNo);  // ✅ roomNo 설정
+                    setRoomNo(response.data.roomNo);
                     // WebSocket 연결 등...
                 }
             } catch (error) {
@@ -300,5 +300,6 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         loading,
         nextCursor,
         otherUserNo, // 상대방 userNo 반환
+        roomNo,
     };
 }

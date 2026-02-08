@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
@@ -18,10 +17,9 @@ import { useReportModal, useReportTags } from './Report/useReportModal.js';
 import ReviewViewModal from './Review/ReviewViewModal.jsx';
 import ReviewWriteModal from './Review/ReviewWriteModal.jsx';
 import useChatRoom from './useChatRoom';
-const ChatRoom = () => {
-    const { id:estimateNo } = useParams();
-    const navi = useNavigate();
-    const userNo = Number(localStorage.getItem('userNo'));
+
+const ChatRoom = ({ estimateNo, userNo, onClose }) => {
+    // 팝업에서는 useParams, useNavigate, userNo 중복 선언 제거
     const [showPayment, setShowPayment] = useState(false);
     const [paidAmount, setPaidAmount] = useState(null);
 
@@ -42,7 +40,9 @@ const ChatRoom = () => {
         toastVariant,
         closeToast,
         roomNo,
-    } = useChatRoom(estimateNo, userNo, navi);
+        sendJsonMessage
+    } = useChatRoom(estimateNo, userNo, onClose);
+
     const { currentUser } = useAuth();
     const userRole = currentUser?.userRole || '';
 
@@ -102,16 +102,35 @@ const ChatRoom = () => {
 
     // 결제 성공 시 채팅 메시지에 결제 금액 표시
     const handlePaymentSuccess = (amount, result) => {
-        setPaidAmount(amount);
-        setShowPayment(false);  // 결제 모달 닫기
-        //  채팅 메시지에 결제 완료 표시
-        handleSendMessage({
+        console.log('[결제 성공 핸들러]', { amount, result, readyState });
+
+
+        if (readyState !== WebSocket.OPEN) {
+            console.error('[웹소켓 끊김] 결제 메시지 전송 불가');
+            alert('채팅 연결이 끊어졌습니다. 페이지를 새로고침해주세요.');
+            return;
+        }
+
+        // 결제 완료 메시지 전송
+        const paymentMessage = {
             type: 'PAYMENT',
             content: `${amount.toLocaleString()}원 결제 완료`,
-            merchantUid: result.merchantUid,  // 결제 ID 포함
-        });
-    };
+            merchantUid: result.merchantUid,
+            amount: amount,
+            paidDate: new Date().toISOString().replace('T', ' ').substring(0, 19),
+            userNo: userNo,
+        };
 
+        console.log('[결제 메시지 전송]', paymentMessage);
+        
+        // WebSocket으로 전송
+        sendJsonMessage(paymentMessage);
+        
+        // 모달 닫기 (약간의 딜레이 후)
+        setTimeout(() => {
+            setShowPayment(false);
+        }, 100);
+    };
     return (
         <>
             {/* 리뷰 Alert */}
@@ -149,7 +168,7 @@ const ChatRoom = () => {
                         <S.ChatTitle>채팅하기</S.ChatTitle>
                         <S.ChatSubtitle>{connectionStatus}</S.ChatSubtitle>
                     </div>
-                    <S.CloseButton onClick={() => navi(-1)}>✕</S.CloseButton>
+                    <S.CloseButton onClick={onClose}>✕</S.CloseButton>
                 </S.ChatHeader>
 
                 <S.ChatActions>
@@ -179,28 +198,28 @@ const ChatRoom = () => {
                 </S.ChatActions>
 
                 <S.ChatMessages>
-                    {messages.map((msg, index) => (
-                        <S.Message
-                            key={msg.messageNo || msg.tempId || index}
-                            className={msg.mine ? "message-me" : "message-other"}
-                        >
-                            <S.MessageBubble $sender={msg.mine ? 'me' : 'other'} $type={msg.type}>
-                                {msg.type === 'TEXT' && msg.content}
-
-                                {msg.type === 'FILE' && (
-                                    <div style={{ position: 'relative' }}>
-                                        <div>{msg.content}</div>
-
-                                        {msg.status === 'UPLOADING' && (
-                                            <S.UploadingBox>
-                                                <S.UploadingText>업로드 중... {msg.progress}%</S.UploadingText>
-                                                <S.UploadingBarWrapper>
-                                                <S.UploadingBar style={{ width: `${msg.progress}%` }} />
-                                                </S.UploadingBarWrapper>
-                                            </S.UploadingBox>
+                    {messages.map((msg, index) => {
+                        const isMine = Number(msg.userNo) === Number(userNo);
+                        return (
+                            <S.Message
+                                key={msg.messageNo || msg.tempId || index}
+                                className={isMine ? "message-me" : "message-other"}
+                            >
+                                <S.MessageBubble $sender={isMine ? 'me' : 'other'} $type={msg.type}>
+                                    {msg.type === 'TEXT' && msg.content}
+                                    {msg.type === 'FILE' && (
+                                        <div style={{ position: 'relative' }}>
+                                            <div>{msg.content}</div>
+                                            {msg.status === 'UPLOADING' && (
+                                                <S.UploadingBox>
+                                                    <S.UploadingText>업로드 중... {msg.progress}%</S.UploadingText>
+                                                    <S.UploadingBarWrapper>
+                                                    <S.UploadingBar style={{ width: `${msg.progress}%` }} />
+                                                    </S.UploadingBarWrapper>
+                                                </S.UploadingBox>
                                             )}
                                             {msg.status === 'FAILED' && (
-                                            <S.FailedBox>전송 실패</S.FailedBox>
+                                                <S.FailedBox>전송 실패</S.FailedBox>
                                             )}
                                             {msg.attachments?.map((att, i) => (
                                                 <S.ChatAttachmentImage
@@ -210,18 +229,33 @@ const ChatRoom = () => {
                                                     $uploading={msg.status === 'UPLOADING'}
                                                 />
                                             ))}
-                                    </div>
-                                )}
-
-                                {msg.type === 'PAYMENT' && (
-                                    <PaymentMessageCard 
-                                        amount={parseInt(msg.content.replace(/[^0-9]/g, '')) || 0}
-                                        date={msg.sentDate ? new Date(msg.sentDate).toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}
-                                    />
-                                )}
-                            </S.MessageBubble>
-                        </S.Message>
-                    ))}
+                                        </div>
+                                    )}
+                                    {msg.type === 'PAYMENT' && (
+                                        <PaymentMessageCard 
+                                            amount={parseInt(msg.content.replace(/[^0-9]/g, '')) || msg.amount || 0}
+                                            date={msg.sentDate || msg.paidDate 
+                                                ? new Date(msg.sentDate || msg.paidDate).toLocaleString('ko-KR', { 
+                                                    year: 'numeric', 
+                                                    month: '2-digit', 
+                                                    day: '2-digit', 
+                                                    hour: '2-digit', 
+                                                    minute: '2-digit' 
+                                                }) 
+                                                : new Date().toLocaleString('ko-KR', { 
+                                                    year: 'numeric', 
+                                                    month: '2-digit', 
+                                                    day: '2-digit', 
+                                                    hour: '2-digit', 
+                                                    minute: '2-digit' 
+                                                })
+                                            }
+                                        />
+                                    )}
+                                </S.MessageBubble>
+                            </S.Message>
+                        );
+                    })}
                     <div ref={messagesEndRef} />
                 </S.ChatMessages>
 
@@ -290,8 +324,8 @@ const ChatRoom = () => {
                     onClose={() => setShowPayment(false)}
                     onSuccess={handlePaymentSuccess}
                     estimateNo={estimateNo}
-                    roomNo={roomNo}  // 필수 추가
-                    buyerName={currentUser?.userName || "고객"}  // 사용자 정보
+                    roomNo={roomNo}
+                    buyerName={currentUser?.userName || "고객"}
                     buyerTel={currentUser?.userPhone || "010-0000-0000"}
                     buyerEmail={currentUser?.userEmail || "customer@example.com"}
                 />

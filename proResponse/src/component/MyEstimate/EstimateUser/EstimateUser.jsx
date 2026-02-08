@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRoomApi } from "../../../api/chat/chatApi.js";
 import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
+import ChatRoom from '../../ChatRoom/ChatRoom.jsx';
 import { ImageUpload, TextArea } from "../../Common/Input/Input.jsx";
 import * as S from "../../Common/Layout/EstimateLayout.styled.js";
 import EstimateDetailPanel from "./EstimateDetailPanel.jsx";
@@ -24,6 +25,9 @@ const EstimateUser = () => {
   const [editImages, setEditImages] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  // 채팅방 모달 상태
+  const [showChatRoom, setShowChatRoom] = useState(false);
+  const [chatRoomEstimateNo, setChatRoomEstimateNo] = useState(null);
   // 토스트 상태 및 함수 (useChatRoom과 동일)
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -150,12 +154,14 @@ const handleChatStart = async (data) => {
     const created = response?.data?.data;
     const enterEstimateNo = created?.estimateNo ?? estimateNo;
     showToastMessage('채팅방이 생성되었습니다!', 'success');
-    navigate(`/chatRoom/${enterEstimateNo}`);
+    setChatRoomEstimateNo(enterEstimateNo);
+    setShowChatRoom(true);
   } catch (error) {
     const msg = error?.response?.data?.message;
     if (msg && msg.includes("이미 채팅방이 존재합니다")) {
       showToastMessage('이미 채팅방이 존재하는 견적입니다. 기존 채팅방으로 이동합니다.', 'info');
-      navigate(`/chatRoom/${data?.estimateNo}`);
+      setChatRoomEstimateNo(data?.estimateNo);
+      setShowChatRoom(true);
       return;
     }
     showToastMessage(msg || "채팅방 생성 실패", 'error');
@@ -269,6 +275,14 @@ const handleChatStart = async (data) => {
       </S.RightContent>
 
       {/* 견적 수정 모달 */}
+      {/* 채팅방 모달 */}
+      {showChatRoom && (
+        <ChatRoom
+          estimateNo={chatRoomEstimateNo}
+          userNo={localStorage.getItem('userNo')}
+          onClose={() => setShowChatRoom(false)}
+        />
+      )}
       {editModal.isOpen && (
         <div style={{
           position: 'fixed',
