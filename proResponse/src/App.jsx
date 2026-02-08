@@ -2,9 +2,13 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import CommonGlobalStyles from './assets/styles/CommonGlobalStyles';
+import AdminDashboard from './component/Admin/AdminDashboard.jsx';
+import AdminMemberList from './component/Admin/AdminMemberList.jsx';
+import AdminReportList from './component/Admin/AdminReportList.jsx';
 import ChatRoom from './component/ChatRoom/ChatRoom.jsx';
 import PaymentModal from './component/ChatRoom/Payment/PaymentModal.jsx';
 import AlertExample from './component/Common/Alert/AlertExample.jsx';
+import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
 import EstimateLayout from './component/Common/Layout/EstimateLayout.jsx';
 import Layout from './component/Common/Layout/Layout.jsx';
 import ExpertDetailModalExample from './component/Common/Modal/ExportDetail/ExpertDetailModalExample.jsx';
@@ -24,10 +28,6 @@ import MypageExpert from './component/Mypage/MypageExpert.jsx';
 import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
-import AdminDashboard from './component/Admin/AdminDashboard.jsx';
-import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
-import AdminMemberList from './component/Admin/AdminMemberList.jsx';
-import AdminReportList from './component/Admin/AdminReportList.jsx';
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -36,7 +36,7 @@ function App() {
       <CommonGlobalStyles />
       <Routes>
         <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
           <Route path="/quote" element={
             <ProtectedRoute roles={["ROLE_USER"]}>
               <Quote />
