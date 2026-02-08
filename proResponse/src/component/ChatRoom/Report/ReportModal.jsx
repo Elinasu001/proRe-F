@@ -6,6 +6,8 @@ import CommonModal from '../../Common/Modal/CommonModal.jsx';
 import * as S from '../../Common/Modal/Review/Modal.styled';
 import * as W from '../../Common/Modal/Review/ReviewWrite.styled.js';
 import useToast from '../../Common/Toast/useToast';
+import useCommonModal from '../useCommonModal';
+
 const ReportModal = ({ 
   isOpen, 
   onClose, 
@@ -30,12 +32,12 @@ const ReportModal = ({
   useEffect(() => {
     if (isOpen) {
       if (existingReport) {
-        // 이미 신고한 경우 → 조회 모드
+        // 이미 신고한 경우 > 조회 모드
         setReport(existingReport);
         setInputText('');
         setInputTags([]);
       } else {
-        // 신고 안 한 경우 → 입력 모드
+        // 신고 안 한 경우 > 입력 모드
         setReport(null);
         setInputText('');
         setInputTags([]);
@@ -43,35 +45,14 @@ const ReportModal = ({
     }
   }, [isOpen, existingReport]);
 
-  // 배경 스크롤 방지
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  // ESC 키로 모달 닫기
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleEscape = (e) => {
-      if (e.key === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
-
+  // 공통 모달 부수효과 적용 (ESC, 스크롤락)
+  useCommonModal(isOpen, onClose);
 
 
   // 태그 토글 (value 기준으로 비교)
   const handleTagToggle = (tag) => {
     const isSelected = inputTags.some(t => t.value === tag.value);
+    
     if (isSelected) {
       setInputTags(inputTags.filter(t => t.value !== tag.value));
     } else {

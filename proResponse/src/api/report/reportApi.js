@@ -1,5 +1,6 @@
 import { axiosAuth } from '../reqApi';
 
+
 const baseApi = '/api/reports';
 
 // 신고 태그 전체 조회

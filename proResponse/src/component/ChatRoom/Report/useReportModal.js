@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getAllReportTagsApi, getReportApi, saveReportApi } from '../../../api/report/reportApi';
+import { useAuth } from '../../../context/AuthContext.jsx';
 
 import useToast from '../../Common/Toast/useToast';
 
@@ -71,7 +72,9 @@ export function useReportTags() {
 /**
  * 신고 모달 상태 관리 훅
  */
-export function useReportModal(estimateNo, messages, userNo) {
+export function useReportModal(estimateNo, messages) {
+    const { currentUser } = useAuth();
+    const userNo = currentUser?.userNo;
     const [reportModal, setReportModal] = useState({
         isOpen: false,
         tagOptions: [],

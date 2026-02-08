@@ -1,25 +1,30 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 
-export default function useCommonModal() {
-    const [modal, setModal] = useState({ isOpen: false, onClose: () => {}, onSubmit: () => {}, tagOptions: [] });
+/**
+ * useCommonModal - 모달 공통 기능(ESC 닫기, 배경 스크롤 방지)
+ * @param {boolean} isOpen - 모달 열림 여부
+ * @param {function} onClose - 닫기 콜백
+ */
+export default function useCommonModal(isOpen, onClose) {
+    // 배경 스크롤 방지 및 복구
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
 
-    const openModal = (tagOptions = [], onSubmit = () => {}) => {
-        setModal({
-        isOpen: true,
-        onClose: () => setModal(m => ({ ...m, isOpen: false })),
-        onSubmit: (data) => {
-            onSubmit(data);
-            setModal(m => ({ ...m, isOpen: false }));
-        },
-        tagOptions,
-        });
-    };
-
-    const closeModal = () => setModal(m => ({ ...m, isOpen: false }));
-
-    return {
-        modal,
-        openModal,
-        closeModal,
-    };
+    // ESC 키로 닫기
+    useEffect(() => {
+        if (!isOpen) return;
+        const handleEscape = (e) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleEscape);
+        return () => document.removeEventListener('keydown', handleEscape);
+    }, [isOpen, onClose]);
 }
