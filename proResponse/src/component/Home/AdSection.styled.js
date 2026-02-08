@@ -30,6 +30,7 @@ export const AdContent = styled.div`
     max-width: 1200px;
     padding:0 20px;
     margin: 0 auto;
+    justify-content: space-between;
 `;
 
 export const AdIcon = styled.span`
@@ -74,13 +75,25 @@ export const CTAButton = styled.button`
   }
 `;
 
+
 export const AdTitle = styled.div`
     color: #222;
 `;
 
 export const AdProfile = styled.div`
     color: #222;
+    max-width: 600px;
+    border-radius:10px;
+    border-radius: 10px;
+    overflow: hidden;
 `;
+
+export const ServiceImg = styled.img`
+    width: 100%;
+    height: auto;
+    object-fit:contain
+`;
+
 
 
 export const HighlightWrap = styled.span`

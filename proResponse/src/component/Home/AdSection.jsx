@@ -1,4 +1,5 @@
 import lineImg from '../../assets/images/common/line.png';
+import mainGif from '../../assets/images/common/main.gif';
 import roundwaveBg from '../../assets/images/common/roundwave_bg.png';
 
 import { useState } from 'react';
@@ -49,7 +50,7 @@ const AdSection = () => {
                     </A.CTAButton>
                 </A.AdTitle>
                 <A.AdProfile>
-                    {/* <img src="https://via.placeholder.com/600x400.png?text=광고+프로필+이미지" alt="광고 프로필" style={{width: '100%', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'}} /> */}
+                    <A.ServiceImg src={mainGif} alt="서비스 이미지"/>
                 </A.AdProfile>
             </A.AdContent>
         </A.AdSectionContainer>
