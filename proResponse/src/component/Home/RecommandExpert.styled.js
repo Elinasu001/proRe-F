@@ -39,10 +39,10 @@ export const Desc = styled.div`
     font-size: 16px;
     font-weight: var(--font-w-r);
     color: #6A7685;
+    min-width:300px;
     white-space: pre-line;
     line-height:1.5;
     padding-bottom:32px;
-    border-bottom:1px solid var(--secondary);
 `;
 
 export const RecommandTitleWrap = styled.div`
@@ -100,16 +100,24 @@ export const SlideCard = styled.div`
     padding: 32px 24px 24px 24px;
     min-width: 320px;
     max-width: 360px;
+    min-height:400px;
     flex: 1 0 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 `;
 
+export const Top = styled.div`
+    flex-grow: 1;
+`;
+
 export const SlideProfile = styled.div`
     display: flex;
     align-items: center;
-    margin-top: 24px;
+    padding-top: 24px;
+    min-width: 320px;
+    wuidth:100%;
+    border-top:1px solid var(--secondary);
 `;
 
 export const SlideName = styled.div`
@@ -120,7 +128,7 @@ export const SlideName = styled.div`
 
 export const SlideLocation = styled.div`
     font-size: var(--font14);
-    margin-top:0.2rem;
+    margin-top:0.5rem;
     color: #888;
 `;
 
@@ -130,4 +138,5 @@ export const ProfileImg = styled.img`
     border-radius: 50%;
     object-fit: cover;
     margin-right: 16px;
+
 `;
