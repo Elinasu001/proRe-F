@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import Toast from '../../Common/Toast/Toast.jsx';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import * as S from '../../Common/Layout/EstimateLayout.styled.js';
-import ExpertCards from './ExpertCards.jsx';
-import RequestDetailPanel from './RequestDetailPanel.jsx';
-import MatchedDetailPanel from './MatchedDetailPanel.jsx';
 import { axiosAuth } from '../../../api/reqApi.js';
+import ChatRoom from '../../ChatRoom/ChatRoom.jsx';
+import * as S from '../../Common/Layout/EstimateLayout.styled.js';
+import Toast from '../../Common/Toast/Toast.jsx';
+import ExpertCards from './ExpertCards.jsx';
+import MatchedDetailPanel from './MatchedDetailPanel.jsx';
+import RequestDetailPanel from './RequestDetailPanel.jsx';
 // import { createRoomApi } from '../../../api/chat/chatApi.js';
 import { createRoomApi } from "../../../api/chat/chatApi.js";
 
@@ -16,6 +17,9 @@ const EstimateExpert = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [loading, setLoading] = useState(false);
   // 토스트 상태 및 함수 (useChatRoom과 동일)
+  // 채팅방 모달 상태
+  const [showChatRoom, setShowChatRoom] = useState(false);
+  const [chatRoomEstimateNo, setChatRoomEstimateNo] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [toastVariant, setToastVariant] = useState('success');
@@ -74,34 +78,29 @@ const EstimateExpert = () => {
   const handleChatStart = async (data) => {
     setLoading(true);
     try {
-      
       const estimateNo = data?.estimateNo;
       const chatMessageDto = {
         content: "안녕하세요",
         type: "TEXT"
       };
-
       const response = await createRoomApi(
         estimateNo ? Number(estimateNo) : undefined,
         chatMessageDto
       );
-
       const created = response?.data?.data;
       const enterEstimateNo = created?.estimateNo ?? estimateNo;
       showToastMessage('채팅방이 생성되었습니다!', 'success');
-      navigate(`/chatRoom/${enterEstimateNo}`);
-
+      setChatRoomEstimateNo(enterEstimateNo);
+      setShowChatRoom(true);
     } catch (error) {
-      
       const msg = error?.response?.data?.message;
       if (msg && msg.includes("이미 채팅방이 존재합니다")) {
         showToastMessage('이미 채팅방이 존재합니다. 바로 입장합니다.', 'info');
-        navigate(`/chatRoom/${data?.estimateNo}`);
+        setChatRoomEstimateNo(data?.estimateNo);
+        setShowChatRoom(true);
         return;
       }
-
       showToastMessage(msg || "채팅방 생성 실패", 'error');
-
     } finally {
       setLoading(false);
     }
@@ -166,6 +165,14 @@ const EstimateExpert = () => {
           <S.Section>내 견적 보내기 (전문가)</S.Section>
         )}
       </S.RightContent>
+      {/* 채팅방 모달 */}
+      {showChatRoom && (
+        <ChatRoom
+          estimateNo={chatRoomEstimateNo}
+          userNo={localStorage.getItem('userNo')}
+          onClose={() => setShowChatRoom(false)}
+        />
+      )}
     </>
   );           
 };

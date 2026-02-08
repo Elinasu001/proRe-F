@@ -1,5 +1,6 @@
 import { axiosAuth } from '../reqApi';
 
+
 const baseApi = '/api/reports';
 
 // 신고 태그 전체 조회
@@ -12,4 +13,6 @@ export const getReportApi = (estimateNo) =>
 
 // 신고 등록
 export const saveReportApi = (reportDTO) =>
-  axiosAuth.post(baseApi, reportDTO);
+  axiosAuth.post(baseApi, reportDTO, {
+    headers: { "Content-Type": "multipart/form-data" }
+  });

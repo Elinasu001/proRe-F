@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // 리뷰 관련 커스텀 훅 (더보기, 이미지 확대 등)
 export function useReviewItemFeatures(review) {

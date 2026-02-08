@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { getReviewTags, createReview, deleteReview, getReview } from '../../../../api/review/reviewApi';
+import { useCallback, useState } from 'react';
+import { createReview, deleteReview, getReview, getReviewTags } from '../../../../api/review/reviewApi';
 
 /**
  * 리뷰 모달 상태 관리 훅
@@ -51,6 +51,7 @@ export default function useReviewModal(estimateNo) {
     try {
       // 기존 리뷰가 있는지 확인
       const existingReview = await getReview(estimateNo);
+      console.log('리뷰 조회 시도, existingReview:', existingReview);
       if (existingReview) {
         setViewModal({ isOpen: true, data: existingReview });
         return;
@@ -77,9 +78,8 @@ export default function useReviewModal(estimateNo) {
       formData.append('starScore', data.starScore);
       formData.append('content', data.text);
 
-      console.log('리뷰 제출 데이터:', data);
-
-      console.log('리뷰사진', typeof data.images, data.images);
+      //console.log('리뷰 제출 데이터:', data);
+      //console.log('리뷰사진', typeof data.images, data.images);
 
       if (data.tags && data.tags.length > 0) {
         data.tags.forEach(tag => formData.append('tagNos', tag));
@@ -104,13 +104,16 @@ export default function useReviewModal(estimateNo) {
       const review = await getReview(estimateNo);
       setWriteModal({ isOpen: false, tagOptions: [] });
       setViewModal({ isOpen: true, data: review });
+
     } catch (error) {
+
       console.error('리뷰 등록 실패:', error);
       openAlert({
         title: '오류',
         message: '리뷰 등록에 실패했습니다.',
         onConfirm: closeAlert
       });
+
     }
   }, [estimateNo, openAlert, closeAlert]);
 
