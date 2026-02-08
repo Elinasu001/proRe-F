@@ -36,7 +36,7 @@ const AdSection = () => {
                         </A.HighlightWrap>
                     </A.AdTopTitle>
                     <A.AdSubTitle>
-                        {currentUser?.userName ? `${currentUser.userName}님이 아닌 서비스는 어때요?` : '서비스를 이용해 보세요!'}
+                        {currentUser?.userName ? `${currentUser.userName}님! 이 서비스는 어떠세요?` : '서비스를 이용해 보세요!'}
                     </A.AdSubTitle>
                     <A.CTAButton>
                         전문가 프로필 상세보기 <span style={{fontSize: '22px', marginLeft: '8px'}}>→</span>
