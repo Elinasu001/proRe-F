@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createRoomApi } from "../../../api/chat/chatApi.js";
 import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
+import detailImg from '../../../assets/images/common/detail.png';
 import ChatRoom from '../../ChatRoom/ChatRoom.jsx';
 import { ImageUpload, TextArea } from "../../Common/Input/Input.jsx";
 import * as S from "../../Common/Layout/EstimateLayout.styled.js";
@@ -9,7 +10,6 @@ import EstimateDetailPanel from "./EstimateDetailPanel.jsx";
 import ExpertDetailPanel from "./ExpertDetailPanel.jsx";
 import RequestDetailPanel from "./RequestDetailPanel.jsx";
 import UserCards from "./UserCards.jsx";
-
 
 const EstimateUser = () => {
   const [selectedExpert, setSelectedExpert] = useState(null);
@@ -270,7 +270,12 @@ const handleChatStart = async (data) => {
         ) : selectedRequest ? (
           <RequestDetailPanel selectedRequest={selectedRequest} />
         ) : (
-          <S.Section>내 견적 보내기 (전문가)</S.Section>
+          <S.Section>
+            <S.DefaultContent>
+            <S.DetailImg src={detailImg} alt="상세보기"/> 
+            <span>견적 확인 후 서비스를 받아보세요!</span>
+            </S.DefaultContent>
+          </S.Section>
         )}
       </S.RightContent>
 

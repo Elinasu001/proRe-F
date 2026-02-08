@@ -18,8 +18,8 @@ export const EstimateContent = styled.div`
 
 export const LeftContent = styled.aside`
     padding-top:30px;
-    flex: 3 1 0%;
-    min-width: 0;
+    flex: 3 1 4%;
+    ${'' /* min-width: 0; */}
     border-radius: 12px;
     /* box-shadow: 0 2px 8px rgba(0,0,0,0.04); */
     @media (max-width: 900px) {
@@ -37,7 +37,7 @@ export const RightContent = styled.section`
     padding-top:30px;
     background-color: var(--white);
     flex: 7 1 0%;
-    min-width: 0;
+    ${'' /* min-width: 0; */}
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     @media (max-width: 900px) {
@@ -57,4 +57,21 @@ export const Section = styled.section`
 
 export const CardSection = styled.section`
     padding: 20px 20px 50px 20px;      
+`;
+
+
+export const DefaultContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100dvh;
+    color: var(--thirdary);
+    font-size: var(--font18);
+`;
+
+export const DetailImg = styled.img`
+    width: 290px;
+    object-fit: contain;
+    margin-bottom: 16px;
 `;

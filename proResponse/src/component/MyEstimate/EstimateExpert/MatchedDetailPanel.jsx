@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import * as EC from "../../Common/ExportCards/ExportCards.styled.js";
-import mTimeImg from "../../../assets/images/common/m_time.png";
-import mLocationImg from "../../../assets/images/common/m_location.png";
-import mHireImg from "../../../assets/images/common/m_hire.png";
-import mCarerImg from "../../../assets/images/common/m_carer.png";
+import { useState } from "react";
 import defaultImg from "../../../assets/images/common/default_profile.png";
-import { TabButtons, TabButton, ServiceSection, SectionTitle, ServiceDescription, PhotoSection, MainImageContainer, MainImage, NoImagePlaceholder, ThumbnailContainer, ThumbnailWrapper, ThumbnailImage } from "../../Common/Modal/ExportDetail/ExpertDetailModal.styled.js";
+import mCarerImg from "../../../assets/images/common/m_carer.png";
+import mHireImg from "../../../assets/images/common/m_hire.png";
+import mLocationImg from "../../../assets/images/common/m_location.png";
+import mTimeImg from "../../../assets/images/common/m_time.png";
+import * as EC from "../../Common/ExportCards/ExportCards.styled.js";
+import { MainImage, MainImageContainer, NoImagePlaceholder, PhotoSection, SectionTitle, ServiceDescription, ServiceSection, TabButton, TabButtons, ThumbnailContainer, ThumbnailImage, ThumbnailWrapper } from "../../Common/Modal/ExportDetail/ExpertDetailModal.styled.js";
 
 const MatchedDetailPanel = ({ matchedDetail, onClose }) => {
   const [activeTab, setActiveTab] = useState('request'); // 'request' 또는 'estimate'
@@ -63,7 +63,7 @@ const MatchedDetailPanel = ({ matchedDetail, onClose }) => {
           style={{
             borderRadius: "16px",
             background: "#fff",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
+            // boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
             padding: "24px",
           }}
         >

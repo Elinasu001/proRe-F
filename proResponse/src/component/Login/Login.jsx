@@ -1,6 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
 import Input from "../Common/Input/Input";
@@ -83,7 +83,7 @@ const validate = () => {
       if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_ROOT') {
       navigate('/admin');  // 관리자 대시보드
       } else {
-      navigate('/main');   // 일반 메인
+      navigate('/');   // 일반 메인
       }
 
     } catch (err) {
