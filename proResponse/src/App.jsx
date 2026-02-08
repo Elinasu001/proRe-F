@@ -29,6 +29,11 @@ import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
 import AdminMemberList from './component/Admin/AdminMemberList.jsx';
 import AdminReportList from './component/Admin/AdminReportList.jsx';
 import { AuthProvider } from './context/AuthContext';
+import SignUp from './component/Signup/Signup.jsx';
+import ExpertRegister from './component/ExpertRegister/ExpertRegister.jsx';
+import ExpertEdit from './component/ExpertEdit/ExpertEdit.jsx';
+import EditMe from "./component/MyPage/sections/EditMe.jsx";
+import DeleteMember from './component/MyPage/sections/DeleteMember.jsx';
 
 function App() {
   return (
@@ -62,17 +67,15 @@ function App() {
           <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
           <Route path="/auth/loginForm" element={<Login />} />
           <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
+          <Route path="/mypageUser" element={<MypageUser />} />
+          {/* <Route path="/estimateUser" element={<EstimateUser />} /> */}
+          <Route path="/mypageExpert" element={<MypageExpert />} />
+          <Route path="/signUp" element={<SignUp />} />
+          <Route path="/expert/register" element={<ExpertRegister />} />
+          <Route path="/expert/edit" element={<ExpertEdit />} />
+          <Route path="/mypage/me/edit" element={<EditMe />} />
+          <Route path="/mypage/me/delete" element={<DeleteMember />} />
           <Route path="/Testpayment" element={<PaymentModal />} />
-          <Route path="/mypageUser" element={
-            <ProtectedRoute roles={["ROLE_USER"]}>
-              <MypageUser />
-            </ProtectedRoute>
-          } />
-          <Route path="/mypageExpert" element={
-            <ProtectedRoute roles={["ROLE_EXPERT"]}>
-              <MypageExpert />
-            </ProtectedRoute>
-          } />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={
