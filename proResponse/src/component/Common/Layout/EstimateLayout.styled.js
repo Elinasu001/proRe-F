@@ -19,7 +19,7 @@ export const EstimateContent = styled.div`
 export const LeftContent = styled.aside`
     padding-top:30px;
     flex: 3 1 4%;
-    ${'' /* min-width: 0; */}
+    min-width: 0;
     border-radius: 12px;
     /* box-shadow: 0 2px 8px rgba(0,0,0,0.04); */
     @media (max-width: 900px) {
@@ -37,7 +37,7 @@ export const RightContent = styled.section`
     padding-top:30px;
     background-color: var(--white);
     flex: 7 1 0%;
-    ${'' /* min-width: 0; */}
+    min-width: 0;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     @media (max-width: 900px) {

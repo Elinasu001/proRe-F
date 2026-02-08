@@ -251,15 +251,8 @@ export default function useChatRoom(estimateNo, userNo, navi) {
             );
 
             // 파일 업로드 성공 후 WebSocket으로 브로드캐스트
-            const result = res.data;
-            if (result.attachments && result.attachments.length > 0) {
-                sendJsonMessage({
-                    type: "FILE",
-                    content: result.content,
-                    attachments: result.attachments,
-                    userNo: userNo,
-                });
-            }
+            // 파일 업로드 성공 후 WebSocket 메시지로만 교체
+            // sendJsonMessage 호출 제거: 중복 메시지 방지
 
         } catch (error) {
             setMessages(prev =>

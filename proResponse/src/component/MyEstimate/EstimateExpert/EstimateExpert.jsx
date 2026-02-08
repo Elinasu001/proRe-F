@@ -9,6 +9,7 @@ import MatchedDetailPanel from './MatchedDetailPanel.jsx';
 import RequestDetailPanel from './RequestDetailPanel.jsx';
 // import { createRoomApi } from '../../../api/chat/chatApi.js';
 import { createRoomApi } from "../../../api/chat/chatApi.js";
+import detailImg from '../../../assets/images/common/detail.png';
 
 const EstimateExpert = () => {
   const navigate = useNavigate();
@@ -162,7 +163,12 @@ const EstimateExpert = () => {
             onClose={() => setSelectedMatched(null)}
           />
         ) : (
-          <S.Section>내 견적 보내기 (전문가)</S.Section>
+          <S.Section>
+            <S.DefaultContent>
+              <S.DetailImg src={detailImg} alt="상세보기"/>
+              <span>견적 확인 후 서비스를 받아보세요!</span>
+              </S.DefaultContent>
+          </S.Section>
         )}
       </S.RightContent>
       {/* 채팅방 모달 */}
