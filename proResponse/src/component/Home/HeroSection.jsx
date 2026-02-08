@@ -1,7 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import WaveBg from '../../assets/images/common/wave_bg.png';
 import * as H from './HeroSection.styled.js';
 
 const HeroSection = () => {
+    const navigate = useNavigate();
+    const handleGoQuote = () => {
+        navigate('/quote');
+    };
     return (
         <H.HeroContainer>
         {/* 배경 웨이브 이미지 */}
@@ -47,7 +52,7 @@ const HeroSection = () => {
                 <H.SubTitle>
                     전문가와 1:1 매칭 되어 원하시는 서비스를 받아보세요.
                 </H.SubTitle>
-                <H.CTAButton>
+                <H.CTAButton onClick={handleGoQuote}>
                     견적 요청 페이지
                     <span>→</span>
                 </H.CTAButton>

@@ -36,44 +36,44 @@ function App() {
       <CommonGlobalStyles />
       <Routes>
         <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-          <Route path="/quote" element={
-            <ProtectedRoute roles={["ROLE_USER"]}>
-              <Quote />
-            </ProtectedRoute>
-          } />
-          <Route path="/myquote" element={<MyQuote />} />
-          <Route path="/exportList" element={
-            <ProtectedRoute roles={["ROLE_USER"]}>
-              <ExportList />
-            </ProtectedRoute>
-          } />
-          <Route path="/chatRoom/:id" element={<ChatRoom />} />
-          <Route path="/favorite" element={
-            <ProtectedRoute roles={["ROLE_USER"]}>
-              <Favorite />
-            </ProtectedRoute>
-          } />
-          <Route path="/inputTest" element={<InputTest />} />
-          <Route path="/AlertExample" element={<AlertExample />} />
-          <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
-          <Route path="/TestChatRooms" element={<TestChatRooms />} />
-          <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
-          <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
-          <Route path="/auth/loginForm" element={<Login />} />
-          <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
-          <Route path="/Testpayment" element={<PaymentModal />} />
-            <Route path="/nearby" element= {<Map />} />
-          <Route path="/mypageUser" element={
-            <ProtectedRoute roles={["ROLE_USER"]}>
-              <MypageUser />
-            </ProtectedRoute>
-          } />
-          <Route path="/mypageExpert" element={
-            <ProtectedRoute roles={["ROLE_EXPERT"]}>
-              <MypageExpert />
-            </ProtectedRoute>
-          } />
+          <Route path="/" element={<Home />} />
+            <Route path="/quote" element={
+              <ProtectedRoute roles={["ROLE_USER"]}>
+                <Quote />
+              </ProtectedRoute>
+            } />
+            <Route path="/myquote" element={<MyQuote />} />
+            <Route path="/exportList" element={
+              <ProtectedRoute roles={["ROLE_USER"]}>
+                <ExportList />
+              </ProtectedRoute>
+            } />
+            <Route path="/chatRoom/:id" element={<ChatRoom />} />
+            <Route path="/favorite" element={
+              <ProtectedRoute roles={["ROLE_USER"]}>
+                <Favorite />
+              </ProtectedRoute>
+            } />
+            <Route path="/inputTest" element={<InputTest />} />
+            <Route path="/AlertExample" element={<AlertExample />} />
+            <Route path="/ReviewModalExample" element={<ReviewModalExample/>} />
+            <Route path="/TestChatRooms" element={<TestChatRooms />} />
+            <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
+            <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
+            <Route path="/auth/loginForm" element={<Login />} />
+            <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
+            <Route path="/Testpayment" element={<PaymentModal />} />
+              <Route path="/nearby" element= {<Map />} />
+            <Route path="/mypageUser" element={
+              <ProtectedRoute roles={["ROLE_USER"]}>
+                <MypageUser />
+              </ProtectedRoute>
+            } />
+            <Route path="/mypageExpert" element={
+              <ProtectedRoute roles={["ROLE_EXPERT"]}>
+                <MypageExpert />
+              </ProtectedRoute>
+            } />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={

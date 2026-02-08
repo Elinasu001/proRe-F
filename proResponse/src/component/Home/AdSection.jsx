@@ -2,6 +2,7 @@ import lineImg from '../../assets/images/common/line.png';
 import roundwaveBg from '../../assets/images/common/roundwave_bg.png';
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import * as A from './AdSection.styled.js';
 import { AdTooltip } from './AdSection.styled.js';
@@ -9,10 +10,15 @@ import { AdTooltip } from './AdSection.styled.js';
 const AdSection = () => {
     const { currentUser } = useAuth();
     const [showTooltip, setShowTooltip] = useState(false);
+    const navigate = useNavigate();
 
     const handleIconClick = () => {
         setShowTooltip(true);
         setTimeout(() => setShowTooltip(false), 1800);
+    };
+
+    const handleGoQuote = () => {
+        navigate('/quote');
     };
 
     return (
@@ -38,7 +44,7 @@ const AdSection = () => {
                     <A.AdSubTitle>
                         {currentUser?.userName ? `${currentUser.userName}님! 이 서비스는 어떠세요?` : '서비스를 이용해 보세요!'}
                     </A.AdSubTitle>
-                    <A.CTAButton>
+                    <A.CTAButton onClick={handleGoQuote}>
                         전문가 프로필 상세보기 <span style={{fontSize: '22px', marginLeft: '8px'}}>→</span>
                     </A.CTAButton>
                 </A.AdTitle>
