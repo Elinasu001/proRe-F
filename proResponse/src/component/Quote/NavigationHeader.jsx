@@ -102,7 +102,9 @@ const NavigationHeader = () => {
         // ExportList 페이지로 이동, state로 전문가 데이터 전달
         navigate("/exportList", { state: { experts: expertsData , categoryName: sectionTitle ,detailCategoryNo : detailCategoryNo } });
       })
-      .catch(console.error);
+      .catch(() => {
+  alert("해당 카테고리의 전문가가 없습니다.");
+});
   };
 
   // menuData 생성
