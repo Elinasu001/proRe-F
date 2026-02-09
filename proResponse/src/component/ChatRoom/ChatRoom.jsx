@@ -1,114 +1,84 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { fetchChatRoomDetails } from "../../api/chat/chatApi.js";
+import { useState } from 'react';
 import emojiImg from '../../assets/images/common/emoji.png';
 import fileImg from '../../assets/images/common/file.png';
 import payImg from '../../assets/images/common/pay.png';
 import reportImg from '../../assets/images/common/report.png';
+import reviewImg from '../../assets/images/common/review_btn.png';
 import sendImg from '../../assets/images/common/send.png';
+import { useAuth } from '../../context/AuthContext.jsx';
+import Alert from '../Common/Alert/Alert';
+import useReviewModal from '../Common/Modal/Review/useReviewModal';
+import Toast from '../Common/Toast/Toast.jsx';
+import * as S from './ChatRoom.styled.js';
+import PaymentMessageCard from './Payment/PaymentMessageCard.jsx';
+import PaymentModal from './Payment/PaymentModal.jsx';
+import ReportModal from './Report/ReportModal.jsx';
+import { useReportModal, useReportTags } from './Report/useReportModal.js';
+import ReviewViewModal from './Review/ReviewViewModal.jsx';
+import ReviewWriteModal from './Review/ReviewWriteModal.jsx';
+import useChatRoom from './useChatRoom';
 
-import {
-    ActionButton,
-    ActionLightWrapper,
-    ActionRightWrapper,
-    ChatActions,
-    ChatBox,
-    ChatHeader,
-    ChatImage,
-    ChatInput,
-    ChatInputContainer,
-    ChatMessages,
-    ChatPopup,
-    ChatPopupOverlay,
-    ChatSubtitle,
-    ChatTitle,
-    CloseButton,
-    EmojiItem,
-    EmojiPicker,
-    IconButton,
-    Message,
-    MessageBubble
-} from './ChatRoom.styled.js';
+const ChatRoom = ({ estimateNo, userNo, onClose }) => {
+    // 팝업에서는 useParams, useNavigate, userNo 중복 선언 제거
+    const [showPayment, setShowPayment] = useState(false);
+    const [paidAmount, setPaidAmount] = useState(null);
 
-const ChatRoom = () => {
+    const {
+        message,
+        setMessage,
+        messages,
+        showEmojiPicker,
+        setShowEmojiPicker,
+        messagesEndRef,
+        fileInputRef,
+        handleSendMessage,
+        handleFileChange,
+        readyState,
+        // 토스트 관련 추가
+        showToast,
+        toastMessage,
+        toastVariant,
+        closeToast,
+        roomNo,
+        sendJsonMessage
+    } = useChatRoom(estimateNo, userNo, onClose);
 
-    const { id } = useParams();
-    const navi = useNavigate();
-    const [, setRoomInfo] = useState(null);
-    const [message, setMessage] = useState('');
-    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [messages, setMessages] = useState([
-        { text: '홍길동 전문가님의 채팅방입니다.', sender: 'other' },
-        { text: '안녕하세요.', sender: 'me' }
-    ]);
-    const [animateIndex, setAnimateIndex] = useState(null);
+    const { currentUser } = useAuth();
+    const userRole = currentUser?.userRole || '';
 
-    const messagesEndRef = useRef(null);
-    // Ref for file input
-    const fileInputRef = useRef(null);
-    // Handle file button click
-    const handleFileButtonClick = () => {
-        if (fileInputRef.current) {
-            fileInputRef.current.click();
-        }
-    };
+    const emojis = [
+        '😊', '😂', '❤️', '👍', '🙏', '😍', '🎉', '👏', '🔥', '💯',
+        '😢', '😭', '😅', '🤔', '😎', '🙌', '✨', '💪', '👌', '🤗'
+    ];
 
-    // Handle file selection
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.type.startsWith('image/')) {
-                // 이미지 파일이면 미리보기 URL 생성
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    const newMessages = [...messages, { text: '', image: event.target.result, sender: 'me' }];
-                    setMessages(newMessages);
-                    setAnimateIndex(newMessages.length - 1);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                const newMessages = [...messages, { text: `파일 첨부: ${file.name}`, sender: 'me' }];
-                setMessages(newMessages);
-                setAnimateIndex(newMessages.length - 1);
-            }
-        }
-        // 같은 파일을 연속 첨부할 수 있도록 value 초기화
-        e.target.value = '';
-    };
-    
-    useEffect(() => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages]);
+    const { tags: reportTags } = useReportTags();
 
-    const emojis = ['😊', '😂', '❤️', '👍', '🙏', '😍', '🎉', '👏', '🔥', '💯', '😢', '😭', '😅', '🤔', '😎', '🙌', '✨', '💪', '👌', '🤗'];
+    // 리뷰 모달 훅
+    const {
+        viewModal: reviewViewModal,
+        writeModal: reviewWriteModal,
+        alertState: reviewAlertState,
+        openReviewModal,
+        submitReview,
+        confirmDeleteReview,
+        closeViewModal: closeReviewViewModal,
+        closeWriteModal: closeReviewWriteModal,
+    } = useReviewModal(estimateNo);
 
-    useEffect(() => {
-        // 채팅방 상세 정보 불러오기
-        fetchChatRoomDetails(id)
-            .then((res) =>{
-                console.log(res.data.data);
-                setRoomInfo(res.data.data);
-            })
-            .catch((err) => {
-                // console.error("채팅방 정보 불러오기 실패:", err);
-                const message = err.res.data.message;
-                console.log(message);
-            })
-    }, [id]);
+    const {
+        reportModal,
+        openReportModal,
+        closeReportModal,
+    } = useReportModal(estimateNo, messages, userNo);
 
-    const handleClose = () => {
-        navi(-1); // 이전 페이지로 이동
-    };
-
-    const handleSendMessage = () => {
-        if (message.trim()) {
-            const newMessages = [...messages, { text: message, sender: 'me' }];
-            setMessages(newMessages);
-            setAnimateIndex(newMessages.length - 1); // 방금 보낸 메시지에만 애니메이션
-            setMessage('');
-        }
+    /**
+     * 신고 모달 열기
+     */
+    const handleOpenReportModal = () => {
+        openReportModal(reportTags,
+            () => alert('신고가 제출되었습니다!'),
+            () => alert('신고 등록에 실패했습니다.')
+        );
     };
 
     const handleKeyPress = (e) => {
@@ -123,103 +93,246 @@ const ChatRoom = () => {
         setShowEmojiPicker(false);
     };
 
-    const toggleEmojiPicker = () => {
-        setShowEmojiPicker(!showEmojiPicker);
-    };
+    const connectionStatus = {
+        [WebSocket.CONNECTING]: '연결 중...',
+        [WebSocket.OPEN]: '연결됨',
+        [WebSocket.CLOSING]: '종료 중...',
+        [WebSocket.CLOSED]: '연결 끊김',
+    }[readyState];
 
-    useEffect(() => {
-        if (animateIndex !== null) {
-            const timer = setTimeout(() => setAnimateIndex(null), 400);
-            return () => clearTimeout(timer);
+    // 결제 성공 시 채팅 메시지에 결제 금액 표시
+    const handlePaymentSuccess = (amount, result) => {
+        console.log('[결제 성공 핸들러]', { amount, result, readyState });
+
+
+        if (readyState !== WebSocket.OPEN) {
+            console.error('[웹소켓 끊김] 결제 메시지 전송 불가');
+            alert('채팅 연결이 끊어졌습니다. 페이지를 새로고침해주세요.');
+            return;
         }
-    }, [animateIndex]);
 
+        // 결제 완료 메시지 전송
+        const paymentMessage = {
+            type: 'PAYMENT',
+            content: `${amount.toLocaleString()}원 결제 완료`,
+            merchantUid: result.merchantUid,
+            amount: amount,
+            paidDate: new Date().toISOString().replace('T', ' ').substring(0, 19),
+            userNo: userNo,
+        };
+
+        console.log('[결제 메시지 전송]', paymentMessage);
+        
+        // WebSocket으로 전송
+        sendJsonMessage(paymentMessage);
+        
+        // 모달 닫기 (약간의 딜레이 후)
+        setTimeout(() => {
+            setShowPayment(false);
+        }, 100);
+    };
     return (
-        <ChatPopupOverlay>
-            <ChatPopup>
-                {/* 헤더 */}
-                <ChatHeader>
-                    <div>
-                        <ChatTitle>채팅하기</ChatTitle>
-                        <ChatSubtitle>채팅으로 서비스 거래해 보세요.</ChatSubtitle>
-                    </div>
-                    <CloseButton onClick={handleClose}>✕</CloseButton>
-                </ChatHeader>
+        <>
+            {/* 리뷰 Alert */}
+            <Alert {...reviewAlertState} />
 
-                {/* 액션 버튼 */}
-                <ChatActions>
-                    <ActionLightWrapper>
-                        <ActionButton>
+            {reportModal.isOpen && (
+                <ReportModal
+                    {...reportModal}
+                    estimateNo={estimateNo}
+                    onClose={closeReportModal}
+                    existingReport={reportModal.existingReport}
+                />
+            )}
+            {reviewWriteModal.isOpen && (
+                <ReviewWriteModal
+                    isOpen={reviewWriteModal.isOpen}
+                    onClose={closeReviewWriteModal}
+                    onSubmit={submitReview}
+                    tagOptions={reviewWriteModal.tagOptions}
+                />
+            )}
+            {reviewViewModal.isOpen && reviewViewModal.data && (
+                <ReviewViewModal
+                    isOpen={reviewViewModal.isOpen}
+                    review={reviewViewModal.data}
+                    onClose={closeReviewViewModal}
+                    onDelete={confirmDeleteReview}
+                    onConfirm={closeReviewViewModal}
+                />
+            )}
+            <S.ChatPopupOverlay>
+                <S.ChatPopup>
+                <S.ChatHeader>
+                    <div>
+                        <S.ChatTitle>채팅하기</S.ChatTitle>
+                        <S.ChatSubtitle>{connectionStatus}</S.ChatSubtitle>
+                    </div>
+                    <S.CloseButton onClick={onClose}>✕</S.CloseButton>
+                </S.ChatHeader>
+
+                <S.ChatActions>
+                    <S.ActionLightWrapper>
+                        <S.ActionButton
+                        onClick={handleOpenReportModal}
+                        >
                             <img src={reportImg} alt="report" />
                             신고하기
-                        </ActionButton>
-                    </ActionLightWrapper>
-                    <ActionRightWrapper>
-                        <ActionButton>
+                        </S.ActionButton>
+                    </S.ActionLightWrapper>
+
+                    <S.ActionRightWrapper>
+                        {userRole === 'ROLE_USER' && (
+                            <S.ActionLightWrapper>
+                                <S.ActionButton onClick={openReviewModal}>
+                                    <img src={reviewImg} alt="review" />
+                                    후기쓰기
+                                </S.ActionButton>
+                            </S.ActionLightWrapper>
+                        )}
+                        <S.ActionButton onClick={() => setShowPayment(true)}>
                             <img src={payImg} alt="pay" />
                             송금하기
-                        </ActionButton>
-                    </ActionRightWrapper>
-                </ChatActions>
+                        </S.ActionButton>
+                    </S.ActionRightWrapper>
+                </S.ChatActions>
 
-                {/* 메시지 영역 */}
-                <ChatMessages>
-                    {messages.map((msg, index) => (
-                        <Message key={index} className={msg.sender === 'me' ? 'message-me' : 'message-other'}>
-                            <MessageBubble $sender={msg.sender} $animate={index === animateIndex}>
-                                {msg.image ? (
-                                    <ChatImage src={msg.image} alt="첨부 이미지" />
-                                ) : (
-                                    msg.text
-                                )}
-                            </MessageBubble>
-                        </Message>
-                    ))}
+                <S.ChatMessages>
+                    {messages.map((msg, index) => {
+                        const isMine = Number(msg.userNo) === Number(userNo);
+                        return (
+                            <S.Message
+                                key={msg.messageNo || msg.tempId || index}
+                                className={isMine ? "message-me" : "message-other"}
+                            >
+                                <S.MessageBubble $sender={isMine ? 'me' : 'other'} $type={msg.type}>
+                                    {msg.type === 'TEXT' && msg.content}
+                                    {msg.type === 'FILE' && (
+                                        <div style={{ position: 'relative' }}>
+                                            <div>{msg.content}</div>
+                                            {msg.status === 'UPLOADING' && (
+                                                <S.UploadingBox>
+                                                    <S.UploadingText>업로드 중... {msg.progress}%</S.UploadingText>
+                                                    <S.UploadingBarWrapper>
+                                                    <S.UploadingBar style={{ width: `${msg.progress}%` }} />
+                                                    </S.UploadingBarWrapper>
+                                                </S.UploadingBox>
+                                            )}
+                                            {msg.status === 'FAILED' && (
+                                                <S.FailedBox>전송 실패</S.FailedBox>
+                                            )}
+                                            {msg.attachments?.map((att, i) => (
+                                                <S.ChatAttachmentImage
+                                                    key={i}
+                                                    src={att.filePath}
+                                                    alt={att.originName}
+                                                    $uploading={msg.status === 'UPLOADING'}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                    {msg.type === 'PAYMENT' && (
+                                        <PaymentMessageCard 
+                                            amount={parseInt(msg.content.replace(/[^0-9]/g, '')) || msg.amount || 0}
+                                            date={msg.sentDate || msg.paidDate 
+                                                ? new Date(msg.sentDate || msg.paidDate).toLocaleString('ko-KR', { 
+                                                    year: 'numeric', 
+                                                    month: '2-digit', 
+                                                    day: '2-digit', 
+                                                    hour: '2-digit', 
+                                                    minute: '2-digit' 
+                                                }) 
+                                                : new Date().toLocaleString('ko-KR', { 
+                                                    year: 'numeric', 
+                                                    month: '2-digit', 
+                                                    day: '2-digit', 
+                                                    hour: '2-digit', 
+                                                    minute: '2-digit' 
+                                                })
+                                            }
+                                        />
+                                    )}
+                                </S.MessageBubble>
+                            </S.Message>
+                        );
+                    })}
                     <div ref={messagesEndRef} />
-                </ChatMessages>
+                </S.ChatMessages>
 
-                {/* 입력 영역 */}
-                <ChatInputContainer>
+                <S.ChatInputContainer>
                     {showEmojiPicker && (
-                        <EmojiPicker>
+                        <S.EmojiPicker>
                             {emojis.map((emoji, index) => (
-                                <EmojiItem
+                                <S.EmojiItem
                                     key={index}
                                     onClick={() => handleEmojiClick(emoji)}
                                 >
                                     {emoji}
-                                </EmojiItem>
+                                </S.EmojiItem>
                             ))}
-                        </EmojiPicker>
+                        </S.EmojiPicker>
                     )}
-                    <ChatBox>
-                        <ChatInput
+
+                    <S.ChatBox>
+                        <S.ChatInput
                             type="text"
                             placeholder="메시지를 입력하세요"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
                             onKeyPress={handleKeyPress}
+                            disabled={readyState !== WebSocket.OPEN}
                         />
-                        <IconButton className="emoji-button" onClick={toggleEmojiPicker}>
+
+                        <S.IconButton onClick={() => setShowEmojiPicker(!showEmojiPicker)}>
                             <img src={emojiImg} alt="emoji" />
-                        </IconButton>
-                        <IconButton className="attach-button" onClick={handleFileButtonClick}>
+                        </S.IconButton>
+
+                        <S.IconButton onClick={() => fileInputRef.current?.click()}>
                             <img src={fileImg} alt="file" />
-                        </IconButton>
+                        </S.IconButton>
                         <input
                             type="file"
                             ref={fileInputRef}
                             style={{ display: 'none' }}
                             onChange={handleFileChange}
+                            multiple
+                            accept="image/*"
                         />
-                        <IconButton className="send-button" onClick={handleSendMessage}>
+
+                        <S.IconButton
+                            onClick={() => {
+                                handleSendMessage();
+                            }}
+                            disabled={readyState !== WebSocket.OPEN}
+                        >
                             <img src={sendImg} alt="send" />
-                        </IconButton>
-                    </ChatBox>
-                </ChatInputContainer>
-            </ChatPopup>
-        </ChatPopupOverlay>
+                        </S.IconButton>
+                    </S.ChatBox>
+                </S.ChatInputContainer>
+                </S.ChatPopup>
+            </S.ChatPopupOverlay>
+            <Toast
+                isVisible={showToast}
+                message={toastMessage}
+                variant={toastVariant}
+                onClose={closeToast}
+            />
+            {/* 송금하기 모달 */}
+            {showPayment && (
+                <PaymentModal
+                    open={showPayment}
+                    onClose={() => setShowPayment(false)}
+                    onSuccess={handlePaymentSuccess}
+                    estimateNo={estimateNo}
+                    roomNo={roomNo}
+                    buyerName={currentUser?.userName || "고객"}
+                    buyerTel={currentUser?.userPhone || "010-0000-0000"}
+                    buyerEmail={currentUser?.userEmail || "customer@example.com"}
+                />
+            )}
+
+        </>
     );
-}
+};
 
 export default ChatRoom;

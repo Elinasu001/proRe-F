@@ -1,0 +1,98 @@
+import { PageButton, PaginationContainer } from './Pagination.styled';
+import prev from '../../../assets/images/common/prev.png';
+import dPrev from '../../../assets/images/common/d_prev.png';
+const Pagination = ({
+    currentPage,
+    setCurrentPage,
+    pageInfo = {
+        startPage:"",
+        endPage:"",
+        totalPage:"",
+    },
+    campaignsLength = 0
+}) => {
+    // 페이지 번호 배열 생성
+    const getPageNumbers = () => {
+        if (pageInfo) {
+            const numbers = [];
+            for (let i = Number(pageInfo.startPage); i <= Number(pageInfo.endPage); i++) {
+                numbers.push(i);
+            }
+            // console.log(pageInfo.startPage)
+            // console.log(pageInfo.endPage)
+            // console.log(numbers);
+            return numbers;
+        }
+        return [];
+    };
+    // 페이지 이동 핸들러
+    const handleFirstPage = () => {
+        setCurrentPage(1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    // 이전 페이지 그룹 이동
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+    // 특정 페이지 클릭
+    const handlePageClick = (page) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    // 다음 페이지 그룹 이동
+    const handleNextPage = () => {
+        if (currentPage < pageInfo.totalPage) {
+            setCurrentPage(currentPage + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+    // 마지막 페이지 이동
+    const handleLastPage = () => {
+        setCurrentPage(pageInfo.totalPage);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    const pageNumbers = getPageNumbers();
+    return (
+        <PaginationContainer>
+            <PageButton
+                onClick={handleFirstPage}
+                disabled={currentPage === 1}
+            >
+                <img src={dPrev} alt="처음" style={{width:20, height:20, opacity: currentPage === 1 ? 0.5 : 1}} />
+            </PageButton>
+            <PageButton
+                onClick={handlePrevPage}
+                disabled={currentPage === 1}
+            >
+                <img src={prev} alt="이전" style={{width:20, height:20, opacity: currentPage === 1 ? 0.5 : 1}} />
+            </PageButton>
+            {pageNumbers.map(page => {
+                return (
+                    <PageButton
+                        key={page}
+                        onClick={() => handlePageClick(page)}
+                        $active={currentPage === page}
+                    >
+                        {page}
+                    </PageButton>
+                );
+            })}
+            <PageButton
+                onClick={handleNextPage}
+                disabled={currentPage === pageInfo.totalPage || (currentPage === pageInfo.totalPage && campaignsLength === 0)}
+            >
+                <img src={prev} alt="다음" style={{width:20, height:20, transform:'scaleX(-1)', opacity: currentPage === pageInfo.totalPage ? 0.5 : 1}} />
+            </PageButton>
+            <PageButton
+                onClick={handleLastPage}
+                disabled={pageInfo.totalPage === 0 || currentPage === pageInfo.totalPage}
+            >
+                <img src={dPrev} alt="마지막" style={{width:20, height:20, transform:'scaleX(-1)', opacity: currentPage === pageInfo.totalPage ? 0.5 : 1}} />
+            </PageButton>
+        </PaginationContainer>
+    );
+};
+export default Pagination;

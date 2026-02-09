@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import likeIcon from '../../../assets/images/common/like.png';
 import transIcon from '../../../assets/images/common/trans.png';
 import userIcon from '../../../assets/images/common/user.png';
 import {
+    Badge,
     CenteredNavList,
     DropdownButton,
     DropdownItem,
@@ -31,8 +33,11 @@ const NavMenu = ({
     mobileMenuRef,
     setIsDropdownOpen,
     isLoggedIn = false,
-    favoriteCount = 0
+    logout,
+    currentUser,
+    favoriteCount = 0, // 부모에서 전달, 실제 찜 개수로 연결
 }) => {
+    const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     const toggleProfile = () => {
@@ -40,7 +45,8 @@ const NavMenu = ({
     };
 
     const handleLogout = () => {
-        console.log('로그아웃');
+        logout();
+        //console.log('로그아웃');
         setIsProfileOpen(false);
         closeMobileMenu();
     };
@@ -125,11 +131,12 @@ const NavMenu = ({
 
             {/* 모바일에서만 표시되는 UserActions */}
             {!isLoggedIn ? (
-                <NavItem style={{ width: '100%', borderTop: '1px solid #f0f0f0', marginTop: '1rem', paddingTop: '1rem' }}>
+                <NavItem>
                     <LoginButton
                         onClick={() => {
-                            console.log('로그인 버튼 클릭');
+                            //console.log('로그인 버튼 클릭');
                             closeMobileMenu();
+                            navigate("/auth/loginForm");
                         }}
                         aria-label="로그인"
                     >
@@ -138,18 +145,23 @@ const NavMenu = ({
                 </NavItem>
             ) : (
                 <UserActions>
-                    {/* 찜 목록 (하트 아이콘) */}
-                    <a href="/favorite" style={{display:'flex',alignItems:'center'}}>
-                        <IconButton
-                            onClick={() => {
-                                console.log('찜 목록 클릭');
-                                closeMobileMenu();
-                            }}
-                        >
-                            <img src={likeIcon} alt="찜 목록" />
-                            <IconButtonLabel>찜 목록</IconButtonLabel>
-                        </IconButton>
-                    </a>
+                    {/* 찜 목록 (하트 아이콘) - ROLE_USER만 표시 */}
+                    {currentUser?.userRole === 'ROLE_USER' && (
+                        <a href="/favorite">
+                            <IconButton
+                                onClick={() => {
+                                    console.log('찜 목록 클릭');
+                                    closeMobileMenu();
+                                }}
+                            >
+                                <img src={likeIcon} alt="찜 목록" />
+                                {favoriteCount > 0 && (
+                                    <Badge aria-label="찜한 항목 있음" />
+                                )}
+                                <IconButtonLabel>찜 목록</IconButtonLabel>
+                            </IconButton>
+                        </a>
+                    )}
 
                     {/* 프로필 드롭다운 */}
                     <ProfileDropdownWrapper>
@@ -173,17 +185,84 @@ const NavMenu = ({
                                 <h4>내 정보</h4>
                             </ProfileDropdownHeader>
 
-                            <a href="/mypage" style={{textDecoration:'none',color:'inherit'}}>
-                                <ProfileDropdownItem
-                                    onClick={() => {
-                                        setIsProfileOpen(false);
-                                        closeMobileMenu();
-                                    }}
-                                    role="menuitem"
-                                >
-                                    마이페이지
-                                </ProfileDropdownItem>
-                            </a>
+                            {/* 마이페이지 및 내 견적 메뉴 분기 */}
+
+                            {currentUser?.userRole === 'ROLE_EXPERT' ? (
+                                <>
+                                    <a href="/mypageExpert">
+                                        <ProfileDropdownItem
+                                            onClick={() => {
+                                                setIsProfileOpen(false);
+                                                closeMobileMenu();
+                                            }}
+                                            role="menuitem"
+                                        >
+                                            마이페이지
+                                        </ProfileDropdownItem>
+                                    </a>
+                                    <a href="/estimateExpert" style={{textDecoration:'none',color:'inherit'}}>
+                                        <ProfileDropdownItem
+                                            onClick={() => {
+                                                setIsProfileOpen(false);
+                                                closeMobileMenu();
+                                            }}
+                                            role="menuitem"
+                                        >
+                                            내 견적 보내기
+                                        </ProfileDropdownItem>
+                                    </a>
+                                    {/* 전문가면 일반 회원 전환 버튼 */}
+                                    <ProfileDropdownItem
+                                        onClick={() => {
+                                            setIsProfileOpen(false);
+                                            closeMobileMenu();
+                                            // 기능 없음
+                                        }}
+                                        role="menuitem"
+                                    >
+                                        <img src={transIcon} alt="일반 회원 전환" />
+                                        일반 회원 전환
+                                    </ProfileDropdownItem>
+                                </>
+                            ) : (
+                                <>
+                                    <a href="/mypageuser">
+                                        <ProfileDropdownItem
+                                            onClick={() => {
+                                                setIsProfileOpen(false);
+                                                closeMobileMenu();
+                                            }}
+                                            role="menuitem"
+                                        >
+                                            마이페이지
+                                        </ProfileDropdownItem>
+                                    </a>
+                                    <a href="/estimateUser" style={{textDecoration:'none',color:'inherit'}}>
+                                        <ProfileDropdownItem
+                                            onClick={() => {
+                                                setIsProfileOpen(false);
+                                                closeMobileMenu();
+                                            }}
+                                            role="menuitem"
+                                        >
+                                            내 견적 요청
+                                        </ProfileDropdownItem>
+                                    </a>
+                                    {/* 일반 회원이면 전문가 전환 버튼 */}
+                                    <ProfileDropdownItem
+                                        onClick={() => {
+                                            setIsProfileOpen(false);
+                                            closeMobileMenu();
+                                            navigate("/expert/register")
+                                            // 기능 없음
+                                        }}
+                                        role="menuitem"
+                                    >
+                                        <img src={transIcon} alt="전문가 전환" />
+                                        전문가 전환
+                                    </ProfileDropdownItem>
+                                </>
+                            )}
 
                             {/* 로그아웃 */}
                             <ProfileDropdownItem
@@ -194,35 +273,6 @@ const NavMenu = ({
                                     <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
                                 </svg>
                                 로그아웃
-                            </ProfileDropdownItem>
-
-                            {/* 견적 요청 */}
-                            <a href="/myquote" style={{textDecoration:'none',color:'inherit'}}>
-                                <ProfileDropdownItem
-                                    onClick={() => {
-                                        setIsProfileOpen(false);
-                                        closeMobileMenu();
-                                    }}
-                                    role="menuitem"
-                                >
-                                    <svg viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
-                                    </svg>
-                                    견적 요청
-                                </ProfileDropdownItem>
-                            </a>
-
-                            {/* 전문가 전환 */}
-                            <ProfileDropdownItem
-                                onClick={() => {
-                                    console.log('전문가 모드로 전환');
-                                    setIsProfileOpen(false);
-                                    closeMobileMenu();
-                                }}
-                                role="menuitem"
-                            >
-                                <img src={transIcon} alt="전문가 전환" />
-                                전문가 전환
                             </ProfileDropdownItem>
                         </ProfileDropdown>
                     </ProfileDropdownWrapper>

@@ -1,95 +1,108 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-// 프론트에서 사용할 5가지 STATUS에 맞는 더미 데이터
-const initialRooms = [
-    { id: 1, name: "홍길동", role: "EXPERT", estimateStatus: "REQUESTED" },
-    { id: 2, name: "김철수", role: "EXPERT", estimateStatus: "QUOTED" },
-    { id: 3, name: "이영희", role: "EXPERT", estimateStatus: "MATCHED" },
-    { id: 4, name: "박민수", role: "EXPERT", estimateStatus: "MATCHED" },
-    { id: 5, name: "정지원", role: "EXPERT", estimateStatus: "DONE" },
-    { id: 6, name: "최유진", role: "USER", estimateStatus: "EXPIRED" }
-];
+import { createRoomApi } from "../../api/chat/chatApi.js";
 
 const TestChatRooms = () => {
-    const [rooms] = useState(initialRooms);
+    const [estimateNo, setEstimateNo] = useState('');
+    const [content, setContent] = useState('안녕하세요');
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState(null);
+    const [enterEstimateNo, setEnterEstimateNo] = useState(''); 
     const navi = useNavigate();
 
-    // 실제 로그인 정보로 대체 (true: 전문가, false: 회원)
-    const isExpert = false;
+    // 채팅방 생성 (estimateNo 입력 없으면 랜덤)
+    const handleCreateRoom = async () => {
+        setLoading(true);
+        try {
+            const chatMessageDto = {
+                content,
+                type: 'TEXT'
+            };
+            const res = await createRoomApi(
+                estimateNo ? Number(estimateNo) : undefined,
+                chatMessageDto
+            );
+            console.log('채팅방 생성 결과:', res.data);
+            setResult(res.data?.data);
+            alert('채팅방이 생성되었습니다!');
+        } catch (err) {
+            console.error('채팅방 생성 실패:', err);
+            alert(err?.response?.data?.message || '채팅방 생성 실패');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    // 각 버튼 클릭 시 동작 예시
-    const handleCreateChatRoom = (roomId) => {
-        navi(`/chatRoom/${roomId}`);
-    };
-    const handleSendEstimate = (roomId) => {
-        alert(`견적 보내기: ${roomId}`);
-    };
-    const handleAcceptEstimate = (roomId) => {
-        alert(`견적 확인 및 채팅 시작: ${roomId}`);
+    // estimateNo로 입장
+    const handleEnterRoom = () => {
+        if (!enterEstimateNo) {
+            alert('견적 번호를 입력하세요');
+            return;
+        }
+        navi(`/chatRoom/${enterEstimateNo}`);  //estimateNo로 이동
     };
 
     return (
-        <>
-            <h2>채팅방 목록</h2>
-            <ul>
-                {rooms.map(room => (
-                    <li key={room.id}>
-                        <div>
-                            <b>{room.name} {room.role === 'EXPERT' ? '전문가님' : '님'}의 채팅방입니다.</b> / <b>견적상태:</b> {room.estimateStatus}
+        <div style={{ padding: '20px' }}>
+            <h2>채팅 테스트</h2>
+
+            {/* 채팅방 생성 */}
+            <div style={{ marginBottom: '30px', padding: '15px', border: '1px solid #ccc' }}>
+                <h3>1. 채팅방 생성</h3>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>견적 번호 (estimateNo, 비워두면 랜덤): </label>
+                    <input
+                        type="number"
+                        value={estimateNo}
+                        onChange={(e) => setEstimateNo(e.target.value)}
+                        placeholder="비우면 랜덤 생성"
+                    />
+                </div>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>첫 메시지: </label>
+                    <input
+                        type="text"
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        placeholder="안녕하세요"
+                        style={{ width: '200px' }}
+                    />
+                </div>
+                <button onClick={handleCreateRoom} disabled={loading}>
+                    {loading ? '생성 중...' : '채팅방 생성'}
+                </button>
+
+                {result && (
+                    <div style={{ marginTop: '15px', padding: '10px', background: '#e8f5e9' }}>
+                        <p><b>생성 완료!</b></p>
+                        <p>roomNo: {result.roomNo}</p>
+                        <p>estimateNo: {result.estimateNo}</p>
+                        <button onClick={() => navi(`/chatRoom/${result.estimateNo}`)}>
+                            채팅방 입장
+                        </button>
+                        <div style={{marginTop:'10px', fontSize:'13px', color:'#555'}}>
+                            <b>WebSocket 예시:</b><br/>
+                            ws://localhost:8080/ws/chat/<b>{result.estimateNo}</b>
                         </div>
-                        {/* 회원 화면 조건부 렌더링 */}
-                        {!isExpert && (
-                            <>
-                                {/* 1. 견적 요청 후 대기 중 */}
-                                {room.estimateStatus === 'REQUESTED' && (
-                                    <div>전문가의 견적을 기다리는 중입니다.</div>
-                                )}
-                                {/* 2. 전문가가 견적을 보낸 경우, 회원이 견적 확인 및 수락 */}
-                                {room.estimateStatus === 'QUOTED' && (
-                                    <button onClick={() => handleAcceptEstimate(room.id)}>견적 확인 및 채팅 시작</button>
-                                )}
-                                {/* 3. 회원이 견적을 수락하면 바로 채팅방 입장 */}
-                                {room.estimateStatus === 'MATCHED' && (
-                                    <button onClick={() => handleCreateChatRoom(room.id)}>채팅방 입장</button>
-                                )}
-                                {/* 4. 완료/만료 */}
-                                {room.estimateStatus === 'DONE' && (
-                                    <div>견적 및 채팅이 완료되었습니다.</div>
-                                )}
-                                {room.estimateStatus === 'EXPIRED' && (
-                                    <div>견적이 만료되었습니다.</div>
-                                )}
-                            </>
-                        )}
-                        {/* 전문가 화면 조건부 렌더링 */}
-                        {isExpert && (
-                            <>
-                                {/* 1. 회원이 견적 요청한 경우, 전문가가 견적 보냄 */}
-                                {room.estimateStatus === 'REQUESTED' && (
-                                    <button onClick={() => handleSendEstimate(room.id)}>견적 보내기</button>
-                                )}
-                                {/* 2. 견적 보낸 후 회원의 수락 대기 */}
-                                {room.estimateStatus === 'QUOTED' && (
-                                    <div>회원의 견적 수락을 기다리는 중입니다.</div>
-                                )}
-                                {/* 3. 회원이 견적을 수락하면 바로 채팅방 입장 */}
-                                {room.estimateStatus === 'MATCHED' && (
-                                    <button onClick={() => handleCreateChatRoom(room.id)}>채팅방 입장</button>
-                                )}
-                                {/* 4. 완료/만료 */}
-                                {room.estimateStatus === 'DONE' && (
-                                    <div>견적 및 채팅이 완료되었습니다.</div>
-                                )}
-                                {room.estimateStatus === 'EXPIRED' && (
-                                    <div>견적이 만료되었습니다.</div>
-                                )}
-                            </>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </>
+                    </div>
+                )}
+            </div>
+
+            {/* 기존 채팅방 입장 */}
+            <div style={{ padding: '15px', border: '1px solid #ccc' }}>
+                <h3>2. 기존 채팅방 입장</h3>
+                <div style={{ marginBottom: '10px' }}>
+                    <label>견적 번호 (estimateNo): </label>
+                    <input
+                        type="number"
+                        value={enterEstimateNo}
+                        onChange={(e) => setEnterEstimateNo(e.target.value)}
+                        placeholder="예: 81"
+                    />
+                </div>
+                <button onClick={handleEnterRoom}>채팅방 입장</button>
+            </div>
+        </div>
     );
 };
 

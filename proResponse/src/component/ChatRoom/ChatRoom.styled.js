@@ -1,8 +1,5 @@
-import { keyframes } from 'styled-components';
 
-
-
-import styled from 'styled-components';
+import { keyframes, styled } from 'styled-components';
 
 export const ChatPopupOverlay = styled.div`
     position: fixed;
@@ -102,6 +99,7 @@ export const ActionLightWrapper = styled.div`
 
 export const ActionRightWrapper = styled.div`
     display: flex;
+    gap:12px;
 `;
 
 export const ChatMessages = styled.div`
@@ -171,8 +169,18 @@ export const MessageBubble = styled.div`
     font-weight: var(--font-w-r);
     line-height: 1.5;
     word-wrap: break-word;
-    background-color: ${({ $sender }) => $sender === 'me' ? 'var(--primary)' : 'var(--gray-primary)'};
-    color: ${({ $sender }) => $sender === 'me' ? 'var(--white)' : 'var(--color-3)'};
+    background-color: ${({ $sender, $type }) =>
+        $type === 'PAYMENT'
+            ? 'transparent'
+            : $sender === 'me'
+                ? 'var(--primary)'
+                : 'var(--gray-primary)'};
+    color: ${({ $sender, $type }) =>
+        $type === 'PAYMENT'
+            ? 'var(--color-3)'
+            : $sender === 'me'
+                ? 'var(--white)'
+                : 'var(--color-3)'};
     text-align: ${({ $sender }) => $sender === 'me' ? 'right' : 'left'};
     animation: ${({ $animate }) => $animate ? bubbleIn : 'none'} 0.35s cubic-bezier(0.4, 0.7, 0.4, 1.2);
 `;
@@ -227,6 +235,7 @@ export const ChatBox = styled.div`
 export const ChatInput = styled.input`
     flex: 1;
     padding: 16px;
+    border: none;
     font-size: var(--font16);
     outline: none;
     &:focus {
@@ -257,4 +266,88 @@ export const IconButton = styled.button`
     &.send-button:hover {
         background: #e8f4ff;
     }
+`;
+
+
+export const UploadingBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+`;
+
+export const UploadingText = styled.div`
+    font-size: 12px;
+    margin-bottom: 4px;
+`;
+
+export const UploadingBarWrapper = styled.div`
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+`;
+
+export const UploadingBar = styled.div`
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s;
+`;
+
+export const FailedBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(255,0,0,0.1);
+    border-radius: 4px;
+    color: #f44336;
+    font-size: 12px;
+`;
+
+export const ChatAttachmentImage = styled.img`
+    max-width: 200px;
+    margin-top: 8px;
+    border-radius: 8px;
+    opacity: ${({ $uploading }) => $uploading ? 0.6 : 1};
+`;
+
+
+export const FileUploadingBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(0,0,0,0.1);
+    border-radius: 4px;
+`;
+
+export const FileUploadingText = styled.div`
+    font-size: 12px;
+    margin-bottom: 4px;
+`;
+
+export const FileUploadingBarBg = styled.div`
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+`;
+
+export const FileUploadingBar = styled.div`
+    height: 100%;
+    background: #4CAF50;
+    transition: width 0.3s;
+`;
+
+export const FileFailedBox = styled.div`
+    margin-top: 8px;
+    padding: 8px;
+    background: rgba(255,0,0,0.1);
+    border-radius: 4px;
+    color: #f44336;
+    font-size: 12px;
+`;
+
+export const FileAttachmentImg = styled.img`
+    max-width: 200px;
+    margin-top: 8px;
+    border-radius: 8px;
+    opacity: ${({ $uploading }) => ($uploading ? 0.6 : 1)};
 `;

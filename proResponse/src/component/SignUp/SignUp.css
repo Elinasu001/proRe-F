@@ -1,0 +1,242 @@
+/* =========================
+   SignUp Page (Layout only)
+   - Input/Button 내부 스타일은 styled-components가 담당
+   - 여기서는 "레이아웃/간격/배치" 위주
+========================= */
+
+.signup-container {
+  background: #f4f5f7;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 120px 16px 64px;
+  box-sizing: border-box;
+}
+
+/* 상단 타이틀 */
+.signup-container > h2 {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 0 10px 0;
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+/* 로그인 안내 */
+.signup-container > p {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 0 18px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.signup-container > p span {
+  margin-left: 6px;
+  color: #111;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 단계 표시 */
+.step-indicator {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 0 14px 0;
+  text-align: right;
+  font-size: 13px;
+  color: #666;
+}
+
+/* =========================
+   Step Card (공통)
+========================= */
+.step {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px 20px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+}
+
+/* step 내부 요소 간격 (Input이 wrapper를 갖든 말든 안전하게) */
+.step > * + * {
+  margin-top: 14px;
+}
+
+/* Step1에서 EmailVerifySection + Input들이 세로로 예쁘게 */
+.step-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* =========================
+   하단 버튼 영역 (이전/다음/완료)
+   - Button.styled가 width:auto라면 여기서 flex로 늘려줌
+========================= */
+.step-actions {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Button 컴포넌트가 실제 <button>이라 가정 */
+.step-actions button {
+  flex: 1;
+  height: 48px;            /* 기존 10px 20px padding이 있어도 높이 안정 */
+  border-radius: 10px;     /* Button이 8px인데 페이지는 조금 둥글게 통일 */
+  font-weight: 800;
+}
+
+/* =========================
+   Step2 (성별/주소)
+========================= */
+
+/* 성별 행: 좌측 라벨 + 우측 버튼그룹 */
+.gender-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gender-row .label {
+  min-width: 52px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* 남/여 버튼 그룹 */
+.gender-buttons {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Button 기본이 width:auto라서 강제로 균등 */
+.gender-buttons button {
+  flex: 1;
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+/* aria-pressed 토글 스타일 (Button 기본 스타일 위에 "선택됨"만 덮어쓰기) */
+.gender-buttons button[aria-pressed="true"] {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+/* Step2 주소 행: Input + 주소찾기 */
+.row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+/* Input 쪽이 늘어나게 */
+.row > :first-child {
+  flex: 1;
+}
+
+/* 주소찾기 버튼 높이 맞추기 */
+.row button {
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* =========================
+   Step3 (프로필 이미지)
+========================= */
+
+.step-3 {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-image-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 999px;
+  border: 2px dashed #e5e5e5;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.profile-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  font-size: 44px;
+  line-height: 1;
+  color: #aaa;
+  font-weight: 800;
+}
+
+/* 이미지 선택 버튼 */
+.upload-label button {
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 800;
+}
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 420px) {
+  .step {
+    padding: 24px 16px;
+  }
+
+  .signup-container > h2 {
+    font-size: 28px;
+  }
+
+  /* 주소 줄은 모바일에서 세로로 */
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .row button {
+    width: 100%;
+  }
+
+  /* signUp.css 안에 없으면 추가 (빨간 글씨) */
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+}
