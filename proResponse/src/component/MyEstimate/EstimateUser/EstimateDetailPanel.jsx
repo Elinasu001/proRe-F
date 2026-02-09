@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
-import * as EC from "../../Common/ExportCards/ExportCards.styled.js";
-import * as SR from "../../Common/Review/Review.styled.js";
-import starImg from "../../../assets/images/common/m_star.png";
-import defaultImg from "../../../assets/images/common/default_profile.png";
-import mTimeImg from "../../../assets/images/common/m_time.png";
-import mLocationImg from "../../../assets/images/common/m_location.png";
-import mCarerImg from "../../../assets/images/common/m_carer.png";
-import ExportBasicInfo from "../../Common/Export/ExportBasicInfo";
-import ExpertDetail from "../../Common/Export/ExportDetail";
-import ExpertReviewList from "./ExpertReviewList";
+import { useEffect, useState } from "react";
 import { axiosAuth, axiosPublic } from "../../../api/reqApi.js";
-import { TabButtons, TabButton, ServiceSection, SectionTitle, ServiceDescription, PhotoSection, MainImageContainer, MainImage, NoImagePlaceholder, ThumbnailContainer, ThumbnailWrapper, ThumbnailImage, NoImageThumbnail } from "../../Common/Modal/ExportDetail/ExpertDetailModal.styled.js";
+import defaultImg from "../../../assets/images/common/default_profile.png";
+import mCarerImg from "../../../assets/images/common/m_carer.png";
+import mLocationImg from "../../../assets/images/common/m_location.png";
+import starImg from "../../../assets/images/common/m_star.png";
+import mTimeImg from "../../../assets/images/common/m_time.png";
+import ExpertDetail from "../../Common/Export/ExportDetail";
+import * as EC from "../../Common/ExportCards/ExportCards.styled.js";
+import { MainImage, MainImageContainer, NoImagePlaceholder, NoImageThumbnail, PhotoSection, SectionTitle, ServiceDescription, ServiceSection, TabButton, TabButtons, ThumbnailContainer, ThumbnailImage, ThumbnailWrapper } from "../../Common/Modal/ExportDetail/ExpertDetailModal.styled.js";
+import * as SR from "../../Common/Review/Review.styled.js";
+import ExpertReviewList from "./ExpertReviewList";
 
 const statusLabelMap = {
   QUOTED: "견적 대기",
@@ -111,7 +110,7 @@ const EstimateDetailPanel = ({ estimateDetail, selectedImageIndex, setSelectedIm
           style={{
             borderRadius: "16px",
             background: "#fff",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
+            // boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)",
             padding: "24px",
           }}
         >

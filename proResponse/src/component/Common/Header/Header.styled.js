@@ -387,16 +387,16 @@ export const IconButton = styled.button`
 // 알림 배지
 export const Badge = styled.span`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -2px;
+  right: -3px;
   background-color: #ff4444;
   color: white;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.15rem 0.35rem;
   border-radius: 10px;
-  min-width: 16px;
-  height: 16px;
+  min-width: 10px;
+  height: 10px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,6 +1,6 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { ErrorMessage } from "../Common/Input/Input.styled";
 
@@ -76,7 +76,18 @@ export default function Login() {
       });
 
       login(res);
-      navigate("/");
+
+
+      // userRole 가져오기
+      const userRole = res.data.data?.userRole;
+
+      // 역할에 따라 리다이렉트
+      if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_ROOT') {
+      navigate('/admin');  // 관리자 대시보드
+      } else {
+      navigate('/');   // 일반 메인
+      }
+
     } catch (err) {
       // 공통 에러로 처리 (입력 검증 에러 상태와 분리)
       setCommonError("이메일 또는 비밀번호가 올바르지 않습니다.");

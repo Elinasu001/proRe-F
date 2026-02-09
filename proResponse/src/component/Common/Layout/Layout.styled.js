@@ -38,9 +38,10 @@ export const LayoutContainer = styled.div`
 export const MainContent = styled.main`
   flex: 1;
   margin:0 auto;
-  margin-top: 40px;
+  ${'' /* margin-top: 40px; */}
   margin-bottom:40px;
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
   max-width: 1200px;
   width:100%;
+  ${props => props.$isHome && 'max-width: unset;'}
 `;

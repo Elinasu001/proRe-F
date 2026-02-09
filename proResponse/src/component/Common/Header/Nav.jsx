@@ -4,6 +4,7 @@ import likeIcon from '../../../assets/images/common/like.png';
 import transIcon from '../../../assets/images/common/trans.png';
 import userIcon from '../../../assets/images/common/user.png';
 import {
+    Badge,
     CenteredNavList,
     DropdownButton,
     DropdownItem,
@@ -34,7 +35,7 @@ const NavMenu = ({
     isLoggedIn = false,
     logout,
     currentUser,
-    // favoriteCount = 0
+    favoriteCount = 0, // 부모에서 전달, 실제 찜 개수로 연결
 }) => {
     const navigate = useNavigate();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -144,18 +145,23 @@ const NavMenu = ({
                 </NavItem>
             ) : (
                 <UserActions>
-                    {/* 찜 목록 (하트 아이콘) */}
-                    <a href="/favorite">
-                        <IconButton
-                            onClick={() => {
-                                console.log('찜 목록 클릭');
-                                closeMobileMenu();
-                            }}
-                        >
-                            <img src={likeIcon} alt="찜 목록" />
-                            <IconButtonLabel>찜 목록</IconButtonLabel>
-                        </IconButton>
-                    </a>
+                    {/* 찜 목록 (하트 아이콘) - ROLE_USER만 표시 */}
+                    {currentUser?.userRole === 'ROLE_USER' && (
+                        <a href="/favorite">
+                            <IconButton
+                                onClick={() => {
+                                    console.log('찜 목록 클릭');
+                                    closeMobileMenu();
+                                }}
+                            >
+                                <img src={likeIcon} alt="찜 목록" />
+                                {favoriteCount > 0 && (
+                                    <Badge aria-label="찜한 항목 있음" />
+                                )}
+                                <IconButtonLabel>찜 목록</IconButtonLabel>
+                            </IconButton>
+                        </a>
+                    )}
 
                     {/* 프로필 드롭다운 */}
                     <ProfileDropdownWrapper>
