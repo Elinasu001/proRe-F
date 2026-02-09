@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import Alert from "../Common/Alert/Alert.jsx";
 import useAlert from "../Common/Alert/useAlert";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 const GET_MY_EXPERT_URL = `${apiUrl}/api/experts/me`; // 수정 초기값 조회
 const UPDATE_URL = `${apiUrl}/api/experts/me`; // 수정 저장(PUT)

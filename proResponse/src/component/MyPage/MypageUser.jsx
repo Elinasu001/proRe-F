@@ -19,7 +19,7 @@ import PostcodeModal from "../Address/PostcodeModal";
 import styles from "./sections/EditMe.module.css";
 import profileStyles from "./sections/ProfileSection.module.css";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 const PHONE_REGEX = /^010\d{8}$/;
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/;
 

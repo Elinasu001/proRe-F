@@ -9,7 +9,7 @@ import Step3 from "./Step3";
 import "./signUp.css";
 import { ErrorMessage } from "../Common/Input/Input.styled";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 const SIGNUP_URL = `${apiUrl}/api/members`;
 

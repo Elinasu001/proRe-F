@@ -1,7 +1,7 @@
 import axios from "axios";
 import ExpertWizard from "./ExpertWizard";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 
 const REGISTER_URL = `${apiUrl}/api/experts/registration`;

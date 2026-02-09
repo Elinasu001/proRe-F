@@ -10,7 +10,7 @@ import Alert from "../Common/Alert/Alert.jsx";
 
 import { useAuth } from "../../context/AuthContext.jsx";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 const GET_TREE_URL = `${apiUrl}/api/experts/registration`;
 
 const EXPERT_TYPE_ICON = {
