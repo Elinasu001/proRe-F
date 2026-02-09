@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
-import { getAdminMembers, updateMemberStatus, updateMemberPenalty } from "../../api/admin/adminMemberApi";
-import { getReportsByTarget } from "../../api/admin/adminReportApi";
+import { getAdminMembers, updateMemberStatus, updateMemberPenalty } from "../../api/admin/adminMemberApi.js";
+import { getReportsByTarget } from "../../api/admin/adminReportApi.js";
 import * as S from './AdminMemberList.styled';
 
 const AdminMemberList = () => {
