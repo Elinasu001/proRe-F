@@ -14,7 +14,7 @@ import axios from "axios";
 export const AuthContext = createContext();
 
 /* API Base URL */
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 /* 로컬스토리지 키 상수 */
 const STORAGE_KEYS = {

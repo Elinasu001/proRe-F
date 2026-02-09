@@ -5,7 +5,7 @@ import * as SR from "../../Common/Review/Review.styled";
 import starImg from "../../../assets/images/common/m_star.png";
 import styles from "./ReviewSection.module.css";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 function toArray(v) {
   if (!v) return [];

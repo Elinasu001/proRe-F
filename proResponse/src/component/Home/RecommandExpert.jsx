@@ -45,10 +45,17 @@ const RecommandExpert = () => {
             <Swiper
                 className="mySwiper"
                 modules={[Navigation, Pagination]}
-                slidesPerView={3}
-                spaceBetween={24}
+                slidesPerView={1}
+                spaceBetween={16}
                 navigation
                 pagination={{ clickable: true }}
+                breakpoints={{
+                    320: { slidesPerView: 1, spaceBetween: 16 },
+                    600: { slidesPerView: 2, spaceBetween: 16 },
+                    1043: { slidesPerView: 3, spaceBetween: 20 },
+                //   1024: { slidesPerView:3, spaceBetween: 24 },
+                //   1400: { slidesPerView: 4, spaceBetween: 24 },
+                }}
             >
                 {expertData.map((expert, idx) => (
                 <SwiperSlide key={expert.expertNo || idx}>

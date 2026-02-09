@@ -16,7 +16,7 @@ import PostcodeModal from "../../Address/PostcodeModal";
 
 import styles from "./EditMe.module.css";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/;
 

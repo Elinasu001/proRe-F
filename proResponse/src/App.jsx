@@ -66,19 +66,15 @@ function App() {
             <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
             <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
             <Route path="/auth/loginForm" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/expert/register" element={<ExpertRegister />} />
+            <Route path="/expert/edit" element={<ExpertEdit />} />
+            <Route path="/mypage/me/edit" element={<EditMe />} />
+            <Route path="/mypage/me/delete" element={<DeleteMember />} />
             <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
             <Route path="/Testpayment" element={<PaymentModal />} />
-              <Route path="/nearby" element= {<Map />} />
-            <Route path="/mypageUser" element={
-              <ProtectedRoute roles={["ROLE_USER"]}>
-                <MypageUser />
-              </ProtectedRoute>
-            } />
-            <Route path="/mypageExpert" element={
-              <ProtectedRoute roles={["ROLE_EXPERT"]}>
-                <MypageExpert />
-              </ProtectedRoute>
-            } />
+            <Route path="/mypageUser" element={<MypageUser />} />
+            <Route path="/mypageExpert" element={<MypageExpert />} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={
@@ -102,7 +98,6 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/members" element={<AdminMemberList />} />
           <Route path="/admin/reports" element={<AdminReportList />} />
-
         </Route>
           
       </Routes>

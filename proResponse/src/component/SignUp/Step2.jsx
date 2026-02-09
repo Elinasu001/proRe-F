@@ -4,7 +4,7 @@ import Button from "../Common/Button/Button";
 import Input from "../Common/Input/Input";
 import axios from "axios";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 /*
  * - 생년월일 / 성별(토글) / 주소찾기 / 주소 / 상세주소

@@ -13,7 +13,7 @@ import useAlert from "../../Common/Alert/useAlert";
 import styles from "./DeleteMember.module.css";
 
 /* API 요청 URL */
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 const DELETE_MEMBER_URL = `${apiUrl}/api/members`;
 
 export default function DeleteMember() {
