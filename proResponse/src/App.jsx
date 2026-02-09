@@ -29,7 +29,7 @@ import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import { AuthProvider } from './context/AuthContext';
-import SignUp from './component/Signup/Signup.jsx';
+import SignUp from './component/SignUp/SignUp.jsx';
 import ExpertRegister from './component/ExpertRegister/ExpertRegister.jsx';
 import ExpertEdit from './component/ExpertEdit/ExpertEdit.jsx';
 import EditMe from "./component/MyPage/sections/EditMe.jsx";
