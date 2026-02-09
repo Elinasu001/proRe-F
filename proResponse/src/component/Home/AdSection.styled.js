@@ -31,6 +31,12 @@ export const AdContent = styled.div`
     padding:0 20px;
     margin: 0 auto;
     justify-content: space-between;
+
+    @media(max-width:1024px){
+        flex-direction: column;
+        margin-top:60px;
+        gap:60px;
+    }
 `;
 
 export const AdIcon = styled.span`
@@ -86,6 +92,10 @@ export const AdProfile = styled.div`
     border-radius:10px;
     border-radius: 10px;
     overflow: hidden;
+
+    @media(max-width:1024px){
+        margin:0 auto;
+    }
 `;
 
 export const ServiceImg = styled.img`

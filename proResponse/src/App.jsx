@@ -66,6 +66,11 @@ function App() {
             <Route path="/ExpertDetailModalExample" element={<ExpertDetailModalExample/>} />
             <Route path="/EstimateRequestExample" element={<EstimateRequestExample/>} />
             <Route path="/auth/loginForm" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/expert/register" element={<ExpertRegister />} />
+            <Route path="/expert/edit" element={<ExpertEdit />} />
+            <Route path="/mypage/me/edit" element={<EditMe />} />
+            <Route path="/mypage/me/delete" element={<DeleteMember />} />
             <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
             <Route path="/Testpayment" element={<PaymentModal />} />
             <Route path="/mypageUser" element={<MypageUser />} />

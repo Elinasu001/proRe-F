@@ -35,4 +35,10 @@ export const SwiperGlobalStyle = createGlobalStyle`
     width:40px;
     border-radius:10px;
   }
+
+  @media (max-width: 768px) {
+    .mySwiper .swiper-slide{
+      margin-right:0 !important;
+    }
+  }
 `;

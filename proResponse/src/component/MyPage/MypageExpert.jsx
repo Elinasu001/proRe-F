@@ -13,7 +13,7 @@ import ReviewSection from "./sections/ReviewSection.jsx";
 
 import styles from "./MypageExpert.module.css";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 export default function MypageExpert() {
   /* Auth */

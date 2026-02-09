@@ -3,11 +3,11 @@
  * 환경 변수 설정
  */
 
-export const API_BASE_URL = window.ENV?.API_URL || import.meta.env.VITE_API_URL || "http://localhost:8080";
-// export const WS_BASE_URL = window.ENV?.WS_URL || import.meta.env.VITE_WS_URL || "http://localhost:8080/ws-stomp";
-// export const KAKAO_REDIRECT_URI = window.ENV?.KAKAO_REDIRECT_URI || import.meta.env.VITE_KAKAO_REDIRECT_URI || "";
-// export const KAKAO_MAP_API_KEY = window.ENV?.KAKAO_MAP_API_KEY || import.meta.env.VITE_KAKAO_MAP_API_KEY || "";
-// export const KAKAO_CLIENT_ID = window.ENV?.KAKAO_CLIENT_ID || import.meta.env.VITE_KAKAO_CLIENT_ID || "";
+export const API_BASE_URL = window.Env?.API_URL || import.meta.env.VITE_API_URL || "http://localhost:8080";
+// export const WS_BASE_URL = window.Env?.WS_URL || import.meta.env.VITE_WS_URL || "http://localhost:8080/ws-stomp";
+// export const KAKAO_REDIRECT_URI = window.Env?.KAKAO_REDIRECT_URI || import.meta.env.VITE_KAKAO_REDIRECT_URI || "";
+// export const KAKAO_MAP_API_KEY = window.Env?.KAKAO_MAP_API_KEY || import.meta.env.VITE_KAKAO_MAP_API_KEY || "";
+// export const KAKAO_CLIENT_ID = window.Env?.KAKAO_CLIENT_ID || import.meta.env.VITE_KAKAO_CLIENT_ID || "";
 
 import axios from 'axios';
 

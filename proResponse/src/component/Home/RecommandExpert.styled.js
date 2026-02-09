@@ -6,7 +6,7 @@ export const RecommandSection = styled.section`
     max-width: 1200px;
     margin: 0 auto;
     background: #fff;
-    padding: 60px 0 80px 0;
+    padding: 100px 0 80px 0;
         .mySwiper{
             min-height: 500px;
         }
@@ -105,6 +105,12 @@ export const SlideCard = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    @media (max-width: 1024px) {
+        min-width: auto;
+        max-width: none;
+    }
+
 `;
 
 export const Top = styled.div`
@@ -116,7 +122,7 @@ export const SlideProfile = styled.div`
     align-items: center;
     padding-top: 24px;
     min-width: 320px;
-    wuidth:100%;
+    width:100%;
     border-top:1px solid var(--secondary);
 `;
 

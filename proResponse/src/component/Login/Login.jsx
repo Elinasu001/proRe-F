@@ -7,7 +7,7 @@ import { ErrorMessage } from "../Common/Input/Input.styled";
 import Input from "../Common/Input/Input";
 import "./Login.css";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 /* 이메일 & 비밀번호 정규표현식 */
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

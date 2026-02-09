@@ -4,7 +4,7 @@ import Button from "../Common/Button/Button";
 import Input from "../Common/Input/Input";
 import { ErrorMessage } from "../Common/Input/Input.styled";
 
-const apiUrl = window.ENV?.API_URL || "http://localhost:8080";
+const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 export default function EmailVerifySection({
   email,
