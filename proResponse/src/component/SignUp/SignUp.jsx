@@ -6,7 +6,7 @@ import Input from "../Common/Input/Input";
 import EmailVerifySection from "../Email/EmailVerifySection";
 import Step2 from "./Step2";
 import Step3 from "./Step3";
-import "./signUp.css";
+import "./SignUp.css";
 import { ErrorMessage } from "../Common/Input/Input.styled";
 
 const apiUrl = window.Env?.API_URL || "http://localhost:8080";
