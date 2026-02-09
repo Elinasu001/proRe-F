@@ -18,15 +18,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
-          # cache 설정 제거
+          cache: "npm"
+          cache-dependency-path: proResponse/package-lock.json
 
       - name: Install Dependencies
-        run: npm install  # npm ci → npm install로 변경
+        working-directory: ./proResponse
+        run: npm ci
 
       - name: Build React Project
+        working-directory: ./proResponse
         run: npm run build
 
       - name: Verify Build Output
+        working-directory: ./proResponse
         run: |
           if [ ! -d "dist" ]; then
             echo "빌드 실패: dist 폴더를 찾을 수 없습니다"
@@ -53,9 +57,9 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "dist/*"
+          source: "proResponse/dist/*"
           target: "/home/ubuntu/deploy/front/"
-          strip_components: 1
+          strip_components: 2
 
       - name: Fix Permissions
         if: github.event_name == 'push'
