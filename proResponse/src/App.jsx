@@ -68,7 +68,6 @@ function App() {
             <Route path="/auth/loginForm" element={<Login />} />
             <Route path="*" element={<div>페이지를 찾을 수 없습니다.</div>} />
             <Route path="/Testpayment" element={<PaymentModal />} />
-              <Route path="/nearby" element= {<Map />} />
             <Route path="/mypageUser" element={<MypageUser />} />
             <Route path="/mypageExpert" element={<MypageExpert />} />
         </Route>
@@ -94,7 +93,6 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/members" element={<AdminMemberList />} />
           <Route path="/admin/reports" element={<AdminReportList />} />
-
         </Route>
           
       </Routes>
