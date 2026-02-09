@@ -27,7 +27,7 @@ const ExpertDetailPanel = ({
       </div>
 
       <div style={{ flex: 1, overflowY: "auto", padding: "20px" }}>
-        <div style={{ borderRadius: "16px", background: "#fff", boxShadow: "0 10px 40px rgba(0, 0, 0, 0.2)", padding: "24px" }}>
+        <div style={{ borderRadius: "16px", background: "#fff", padding: "24px" }}>
           <EC.Top>
             <EC.Profile>
               <EC.ProfileImg src={expert?.profileImg || defaultImg} alt="프로필" />
