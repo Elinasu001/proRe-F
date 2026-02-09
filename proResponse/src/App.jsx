@@ -24,7 +24,7 @@ import EstimateExpert from './component/MyEstimate/EstimateExpert/EstimateExpert
 import EstimateUser from './component/MyEstimate/EstimateUser/EstimateUser.jsx';
 import MypageUser from './component/MyPage/MypageUser.jsx';
 import MyQuote from './component/MyQuote/MyQuote.jsx';
-import MypageExpert from './component/Mypage/MypageExpert.jsx';
+import MypageExpert from './component/MyPage/MypageExpert.jsx';
 import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
