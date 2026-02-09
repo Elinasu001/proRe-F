@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
-import { getAdminReports, updateReportStatus } from "../../api/admin/adminReportApi";
+import { getAdminReports, updateReportStatus } from "../../api/Admin/adminReportApi";
 import * as S from './AdminReportList.styled';
 
 const AdminReportList = () => {
