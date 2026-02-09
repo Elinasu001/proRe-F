@@ -29,6 +29,11 @@ import NearbyExperts from './component/NearbyExperts/NearbyExperts.jsx';
 import Quote from './component/Quote/Quote.jsx';
 import TestChatRooms from './component/TestChatRooms/TestChatRooms.jsx';
 import { AuthProvider } from './context/AuthContext';
+import SignUp from './component/Signup/Signup.jsx';
+import ExpertRegister from './component/ExpertRegister/ExpertRegister.jsx';
+import ExpertEdit from './component/ExpertEdit/ExpertEdit.jsx';
+import EditMe from "./component/MyPage/sections/EditMe.jsx";
+import DeleteMember from './component/MyPage/sections/DeleteMember.jsx';
 
 function App() {
   return (
