@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -9,16 +9,24 @@ export default function SwitchToUser() {
   const navigate = useNavigate();
   const { applyTokensAndRole } = useAuth(); //
 
+  const accessToken = localStorage.getItem("accessToken");
+  const ran = useRef(false);  
+
   useEffect(() => {
     let mounted = true;
-
+    if (ran.current) return;   // 두 번째 실행 차단
+    ran.current = true;
+    
     (async () => {
       try {
         /* 1) 전문가 -> 일반회원 전환 */
         const res = await axios.put(
           `${apiUrl}/api/experts/switch/user`,
           null,
-          { skipAuthErrorHandler: true }
+          { 
+            headers: { Authorization: `Bearer ${accessToken}` },
+            skipAuthErrorHandler: true 
+        }
         );
 
         /* 2) ResponseData.data */

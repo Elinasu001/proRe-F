@@ -9,6 +9,8 @@ export default function SwitchToExpert() {
   const navigate = useNavigate();
   const { applyTokensAndRole } = useAuth(); //
 
+   const accessToken = localStorage.getItem("accessToken");
+
   useEffect(() => {
     let mounted = true;
 
@@ -17,7 +19,10 @@ export default function SwitchToExpert() {
         /* 1) 전문가 이력 체크 */
         const exRes = await axios.get(
           `${apiUrl}/api/experts/checkExist`,
-          { skipAuthErrorHandler: true }
+          { 
+            headers: { Authorization: `Bearer ${accessToken}` },
+            skipAuthErrorHandler: true 
+        }
         );
         const exists = exRes?.data?.data;
 
