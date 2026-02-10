@@ -143,7 +143,7 @@ export default function Login() {
                 {commonError}
               </ErrorMessage>
             )}
-
+            
             {/* 로그인 버튼 */}
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "로그인 중..." : "이메일로 로그인"}
@@ -154,15 +154,11 @@ export default function Login() {
               <button type="button" className="link-btn" onClick={() => navigate("/signup")}>
                 회원가입
               </button>
-              <button type="button" className="link-btn" onClick={() => navigate("/find-password")}>
+              <button type="button" className="link-btn" onClick={() => navigate("/reset/password")}>
                 비밀번호 찾기
               </button>
             </div>
 
-            {/* 소셜 로그인 */}
-            <button type="button" className="btn-naver" onClick={() => alert("네이버 로그인 추후 연동")}>
-              N 네이버로 시작하기
-            </button>
           </form>
         </div>
       </div>
