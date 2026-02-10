@@ -581,7 +581,7 @@ const handleDetailMax3 = (vals) => {
                       placeholder="예) 어떤 서비스를 제공하는지, 강점, 진행 방식 등을 적어주세요."
                     />
                   </div>
-
+                  {/*      
                   <div className="field">
                     <span>사업자등록번호(선택)</span>
                     <Input
@@ -591,7 +591,7 @@ const handleDetailMax3 = (vals) => {
                         updateForm("businessRegNo", e.target.value.replace(/\D/g, "").slice(0, 10))
                       }
                     />
-                  </div>
+                  </div> */}
 
                   {/* edit: existing attachments */}
                   {mode === "edit" && (
