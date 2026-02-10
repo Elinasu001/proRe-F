@@ -25,7 +25,7 @@ const CoinIcon = styled.span`
   display: inline-block;
   width: 24px;
   height: 24px;
-  background: url('/src/assets/images/common/coin.svg') no-repeat center/cover;
+  background: url('../../../assets/images/common/coin.svg') no-repeat center/cover;
   margin-right: 6px;
 `;
 
