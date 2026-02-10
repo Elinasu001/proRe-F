@@ -44,3 +44,11 @@ export const updateReportAnswer = async (reportNo, answer) => {
   });
   return response.data;
 };
+
+/**
+ * 신고 관련 채팅 조회
+ */
+export const getReportChatContext = async (reportNo) => {
+  const response = await api.get(`/api/admin/reports/${reportNo}/chat`);
+  return response.data;
+};

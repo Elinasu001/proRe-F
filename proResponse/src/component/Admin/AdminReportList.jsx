@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
 import { getAdminReports, updateReportStatus } from "../../api/admin/adminReportApi";
+import ReportChatModal from "../Common/Modal/Admin/ReportChatModal";
 import * as S from './AdminReportList.styled';
 
 const AdminReportList = () => {
@@ -15,6 +16,8 @@ const AdminReportList = () => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedReportNo, setSelectedReportNo] = useState(null);
+
 
   // 신고 목록 조회
   const fetchReports = async () => {
@@ -114,7 +117,8 @@ const AdminReportList = () => {
         </thead>
         <tbody>
           {reports.map((report) => (
-            <tr key={report.reportNo}>
+            <tr key={report.reportNo} onClick={() => setSelectedReportNo(report.reportNo)}
+      style={{ cursor: 'pointer' }}>
               <S.Td>{report.reportNo}</S.Td>
               <S.Td>{report.reporterNickname}</S.Td>
               <S.Td>{report.targetNickname}</S.Td>
@@ -169,6 +173,13 @@ const AdminReportList = () => {
           </S.PageButton>
         </S.Pagination>
       )}
+      {/* 채팅 모달 */}
+    {selectedReportNo && (
+      <ReportChatModal
+        reportNo={selectedReportNo}
+        onClose={() => setSelectedReportNo(null)}
+      />
+    )}
     </S.Container>
   );
 };
