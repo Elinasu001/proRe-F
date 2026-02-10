@@ -34,6 +34,8 @@ import ExpertRegister from './component/ExpertRegister/ExpertRegister.jsx';
 import ExpertEdit from './component/ExpertEdit/ExpertEdit.jsx';
 import EditMe from "./component/MyPage/sections/EditMe.jsx";
 import DeleteMember from './component/MyPage/sections/DeleteMember.jsx';
+import SwitchToUser from "./component/Auth/SwitchToUser.jsx";
+import SwitchToExpert from "./component/Auth/SwitchToExpert.jsx";
 
 function App() {
   return (
@@ -75,6 +77,8 @@ function App() {
             <Route path="/Testpayment" element={<PaymentModal />} />
             <Route path="/mypageUser" element={<MypageUser />} />
             <Route path="/mypageExpert" element={<MypageExpert />} />
+            <Route path="/switch/user" element={<SwitchToUser />} />
+            <Route path="/switch/expert" element={<SwitchToExpert />} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={

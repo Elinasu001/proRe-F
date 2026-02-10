@@ -159,10 +159,6 @@ export default function Login() {
               </button>
             </div>
 
-            {/* 소셜 로그인 */}
-            <button type="button" className="btn-naver" onClick={() => alert("네이버 로그인 추후 연동")}>
-              N 네이버로 시작하기
-            </button>
           </form>
         </div>
       </div>

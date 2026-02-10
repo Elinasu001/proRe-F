@@ -216,6 +216,7 @@ const NavMenu = ({
                                         onClick={() => {
                                             setIsProfileOpen(false);
                                             closeMobileMenu();
+                                            navigate("/switch/user")
                                             // 기능 없음
                                         }}
                                         role="menuitem"
@@ -253,7 +254,7 @@ const NavMenu = ({
                                         onClick={() => {
                                             setIsProfileOpen(false);
                                             closeMobileMenu();
-                                            navigate("/expert/register")
+                                            navigate("/switch/expert")
                                             // 기능 없음
                                         }}
                                         role="menuitem"
