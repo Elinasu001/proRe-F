@@ -130,6 +130,38 @@ export const AuthProvider = ({ children }) => {
     });
   };
 
+  const applyTokensAndRole = ({ accessToken, refreshToken, userRole } = {}) => {
+  /* 토큰/헤더 */
+  if (accessToken) {
+    localStorage.setItem(STORAGE_KEYS.accessToken, accessToken);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+  }
+  if (refreshToken) {
+    localStorage.setItem(STORAGE_KEYS.refreshToken, refreshToken);
+  }
+
+  /* ROLE 저장 */
+  if (userRole !== undefined) {
+    localStorage.setItem(STORAGE_KEYS.userRole, userRole ?? "");
+  }
+
+  /* auth 같이 갱신 */
+  setAuth((prev) => ({
+    ...(prev || {}),
+    userRole: userRole ?? prev?.userRole,
+    accessToken: accessToken ?? prev?.accessToken,
+    refreshToken: refreshToken ?? prev?.refreshToken,
+    isAuthenticated: true,
+  }));
+
+  /* currentUser 같이 갱신 */
+  updateCurrentUser({ userRole });
+
+  if (userRole !== undefined) {
+  setIsAdmin((userRole ?? "") === "ROLE_ADMIN");
+}
+};
+
   /* =========================
      로그인
      - auth/currentUser 세팅
@@ -245,20 +277,26 @@ export const AuthProvider = ({ children }) => {
         const url = err?.config?.url || "";
         const msg = err?.response?.data?.message || "";
 
-        /* 0) 요청별 스킵 */
+        /* 요청별 스킵 */
         if (err?.config?.skipAuthErrorHandler) {
           return Promise.reject(err);
         }
 
-        /* 1) 로그인 요청 자체는 제외 */
+        /* 로그인 요청 자체는 제외 */
         const isLoginRequest = url.includes("/api/auth/login");
         if (isLoginRequest) return Promise.reject(err);
 
-        /* 2) 401/403일 때 "비번 불일치" 때 페이지를 벗어나지 않도록 */
+        /* 401/403일 때 "비번 불일치" 때 페이지를 벗어나지 않도록 */
         const looksLikePasswordMismatch = msg.includes("비밀번호");
         if (looksLikePasswordMismatch) return Promise.reject(err);
 
-        /* 3) "인증 만료"로 간주하고 처리 */
+        const isSwitchRequest =
+        url.includes("/api/experts/switch/") ||
+        url.includes("/api/experts/checkExist");
+
+        if (isSwitchRequest) return Promise.reject(err);
+
+        /* "인증 만료"로 간주하고 처리 */
         if (status === 401 || status === 403) {
           /* localStorage.clear() 대신 인증키만 제거 */
           Object.values(STORAGE_KEYS).forEach((key) => localStorage.removeItem(key));
@@ -286,6 +324,7 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         updateCurrentUser,
+        applyTokensAndRole,
       }}
     >
       {children}

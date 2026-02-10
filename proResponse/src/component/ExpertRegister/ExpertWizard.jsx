@@ -78,7 +78,7 @@ export default function ExpertWizard({
     careerNum <= 50;
 
     /* 유저 정보 */
-    const { currentUser } = useAuth();
+    const { currentUser, updateCurrentUser } = useAuth();
 
   const updateForm = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
@@ -176,7 +176,7 @@ export default function ExpertWizard({
       mounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [navigate, currentUser, navigate]);
+  }, [mode, currentUser?.userRole]);
 
   /* 2) init edit */
   useEffect(() => {
@@ -364,6 +364,41 @@ const handleDetailMax3 = (vals) => {
         return;
       }
 
+      if (mode === "create") {
+      /* 백엔드가 내려준 data 꺼내기 */
+      const data = res?.data?.data;
+
+      /* 토큰/권한 꺼내기 */
+      const accessToken = data?.tokens?.accessToken;
+      const refreshToken = data?.tokens?.refreshToken;
+      const userRole = data?.userRole;
+
+      /* 토큰이 둘 다 존재할 때만 동기화 */
+      if (accessToken && refreshToken) {
+        /* 로컬스토리지에 저장 */
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        /* axios 기본 Authorization 헤더 즉시 교체 (다음 요청부터 새 토큰 사용) */
+        axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+
+        /* 전역 currentUser 갱신 */
+        updateCurrentUser({
+          ...currentUser,
+          userRole: userRole || "ROLE_EXPERT",
+        });
+
+        /* 최신 내정보를 한 번 더 확정 */
+        try {
+          const me = await axios.get(`${apiUrl}/api/members/me`);
+          const meData = me?.data?.data;
+          if (meData) updateCurrentUser(meData);
+        } catch (e) {
+          console.error("회원정보 업데이트 실패:", e);
+        }
+      }
+    }
+
       openAlert({
         title: "완료",
         message: res?.data?.message || (mode === "edit" ? "수정이 완료되었습니다." : "등록이 완료되었습니다."),
@@ -546,7 +581,7 @@ const handleDetailMax3 = (vals) => {
                       placeholder="예) 어떤 서비스를 제공하는지, 강점, 진행 방식 등을 적어주세요."
                     />
                   </div>
-
+                  {/*      
                   <div className="field">
                     <span>사업자등록번호(선택)</span>
                     <Input
@@ -556,7 +591,7 @@ const handleDetailMax3 = (vals) => {
                         updateForm("businessRegNo", e.target.value.replace(/\D/g, "").slice(0, 10))
                       }
                     />
-                  </div>
+                  </div> */}
 
                   {/* edit: existing attachments */}
                   {mode === "edit" && (
