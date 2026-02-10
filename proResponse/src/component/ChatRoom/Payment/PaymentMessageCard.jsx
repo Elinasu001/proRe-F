@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import coinSvg from '../../../assets/images/common/coin.svg';
 
 const Card = styled.div`
   text-align: left;
@@ -25,7 +26,7 @@ const CoinIcon = styled.span`
   display: inline-block;
   width: 24px;
   height: 24px;
-  background: url('../../../assets/images/common/coin.svg') no-repeat center/cover;
+  background: url(${coinSvg}) no-repeat center/cover;
   margin-right: 6px;
 `;
 
