@@ -51,14 +51,27 @@ export default function SignUp() {
   /* 비밀번호 일치(성공) 메시지 */
   const [passwordConfirmOk, setPasswordConfirmOk] = useState("");
 
+  /* 연락처 검증 메시지 (하이픈 금지) */
+  const [phoneError, setPhoneError] = useState("");
+
   // @Pattern: 영문/숫자/특수문자 포함 + 공백 X
   const PASSWORD_REGEX = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/;
+
+  /* 연락처: 숫자만 허용(하이픈 금지) + 10~11자리 */
+  const PHONE_REGEX = /^\d{10,11}$/;
 
   const validatePassword = (pwd) => {
     if (!pwd || !pwd.trim()) return "비밀번호는 필수입니다.";
     if (pwd.length < 8 || pwd.length > 20) return "비밀번호는 8~20자 이내여야 합니다.";
     if (!PASSWORD_REGEX.test(pwd))
       return "비밀번호는 영문/숫자/특수문자를 모두 사용해야 하고, 공백이 없어야 합니다.";
+    return "";
+  };
+
+  /* 연락처 검증: 하이픈(-) 없이 숫자만 */
+  const validatePhone = (phone) => {
+    if (!phone || !phone.trim()) return "연락처는 필수입니다.";
+    if (!PHONE_REGEX.test(phone)) return "연락처는 하이픈(-) 없이 숫자만 입력해 주세요.";
     return "";
   };
 
@@ -88,7 +101,10 @@ export default function SignUp() {
       setPasswordConfirmError("");
       setPasswordConfirmOk("");
     }
-  }, [form.password, form.passwordConfirm]);
+
+    /* 연락처 입력 변화에 따라 메시지 갱신 */
+    setPhoneError(validatePhone(form.phone));
+  }, [form.password, form.passwordConfirm, form.phone]);
 
   /* 단계 이동 핸들러 */
   const goNext = () => {
@@ -112,6 +128,7 @@ export default function SignUp() {
     /* 1단계 */
     if (step === 1) {
       const pwdErr = validatePassword(form.password);
+      const phoneErr = validatePhone(form.phone);
       const pwdMatch = form.password && form.passwordConfirm && form.password === form.passwordConfirm;
 
       return (
@@ -120,6 +137,7 @@ export default function SignUp() {
         form.password &&
         form.passwordConfirm &&
         pwdErr === "" &&
+        phoneErr === "" &&
         pwdMatch === true &&
         form.name &&
         form.phone
@@ -153,6 +171,14 @@ export default function SignUp() {
       alert("비밀번호가 일치하지 않습니다.");
       return;
     }
+
+    /* 연락처 최종 검증 */
+    const phoneErr = validatePhone(form.phone);
+    if (phoneErr) {
+      alert(phoneErr);
+      return;
+    }
+
     if (!form.nickname.trim()) {
       alert("닉네임을 입력해 주세요.");
       return;
@@ -163,7 +189,7 @@ export default function SignUp() {
     }
 
     try {
-      // 파일 포함 가능성이 있으니 FormData로 전송 (이미지 없으면 일반 필드만 전달됨)
+      // FormData로 전송 (이미지 없으면 일반 필드만 전달됨)
       const fd = new FormData();
 
       // 1단계
@@ -235,7 +261,7 @@ export default function SignUp() {
               onChange={(e) => updateForm("password", e.target.value)}
               placeholder="비밀번호 입력"
             />
-            {/* 비밀번호 검증 메시지 (빨간 글씨) */}
+            {/* 비밀번호 검증 메시지 */}
             {form.password && passwordError && <ErrorMessage>{passwordError}</ErrorMessage>}
 
             <Input
@@ -245,9 +271,9 @@ export default function SignUp() {
               onChange={(e) => updateForm("passwordConfirm", e.target.value)}
               placeholder="비밀번호 다시 입력"
             />
-            {/* 비밀번호 불일치 메시지 (빨간 글씨) */}
+            {/* 비밀번호 불일치 메시지 */}
             {passwordConfirmError && <ErrorMessage>{passwordConfirmError}</ErrorMessage>}
-            {/* 비밀번호 일치 메시지 (파란 글씨) */}
+            {/* 비밀번호 일치 메시지 */}
             {passwordConfirmOk && (
               <ErrorMessage style={{ color: "#2f6bff" }}>{passwordConfirmOk}</ErrorMessage>
             )}
@@ -265,8 +291,10 @@ export default function SignUp() {
               type="text"
               value={form.phone}
               onChange={(e) => updateForm("phone", e.target.value)}
-              placeholder="010-0000-0000"
+              placeholder="01000000000"
             />
+            {/* 연락처 검증 메시지 */}
+            {form.phone && phoneError && <ErrorMessage>{phoneError}</ErrorMessage>}
           </div>
         );
 
