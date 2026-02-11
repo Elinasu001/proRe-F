@@ -1,36 +1,27 @@
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext.jsx";
-
-const apiUrl = window.ENV?.API_URL || window.Env?.API_URL || "http://localhost:8080";
+import { axiosAuth } from "../../api/reqApi.js"; 
 
 export default function SwitchToUser() {
   const navigate = useNavigate();
-  const { applyTokensAndRole } = useAuth(); //
+  const { applyTokensAndRole } = useAuth();
 
-  const accessToken = localStorage.getItem("accessToken");
-  const ran = useRef(false);  
+  const ran = useRef(false);
 
   useEffect(() => {
     let mounted = true;
-    if (ran.current) return;   // 두 번째 실행 차단
+
+    if (ran.current) return;
     ran.current = true;
-    
+
     (async () => {
       try {
-        /* 1) 전문가 -> 일반회원 전환 */
-        const res = await axios.put(
-          `${apiUrl}/api/experts/switch/user`,
-          null,
-          { 
-            headers: { Authorization: `Bearer ${accessToken}` },
-            skipAuthErrorHandler: true 
-        }
-        );
+        /* 전문가 -> 일반회원 전환 (공용 axiosAuth 사용) */
+        const res = await axiosAuth.put("/api/experts/switch/user", null);
 
-        /* 2) ResponseData.data */
-        const data = res?.data?.data;
+        /* ResponseData.data */
+        const data = res?.data;
 
         if (mounted) {
           applyTokensAndRole({
@@ -40,8 +31,9 @@ export default function SwitchToUser() {
           });
         }
 
-        /* 3) 홈으로 */
+        /* 홈 이동 */
         navigate("/", { replace: true });
+
       } catch (e) {
         console.error(e);
         navigate("/", { replace: true });
@@ -51,7 +43,7 @@ export default function SwitchToUser() {
     return () => {
       mounted = false;
     };
-  }, [navigate, applyTokensAndRole]); //
+  }, [navigate, applyTokensAndRole]);
 
   return <div style={{ padding: 24 }}>전환 처리중...</div>;
 }
