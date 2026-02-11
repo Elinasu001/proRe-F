@@ -225,6 +225,7 @@ export const AuthProvider = ({ children }) => {
      - 홈 이동
   */
   const logout = async () => {
+    console.log("[logout called]", new Error().stack);
     const accessToken = localStorage.getItem(STORAGE_KEYS.accessToken);
     const refreshToken = localStorage.getItem(STORAGE_KEYS.refreshToken);
 

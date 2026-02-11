@@ -18,7 +18,7 @@ export default function SwitchToExpert() {
       try {
         /* 1) 전문가 이력 체크 */
         const exRes = await axios.get(
-          `${apiUrl}/api/experts/checkExist`,
+          `${apiUrl}/api/experts/switch/checkExist`,
           { 
             headers: { Authorization: `Bearer ${accessToken}` },
             skipAuthErrorHandler: true 
