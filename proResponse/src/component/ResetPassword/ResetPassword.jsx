@@ -1,15 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { axiosPublic } from "../../api/reqApi"; 
 
 import Button from "../Common/Button/Button";
 import Input from "../Common/Input/Input";
 import Alert from "../Common/Alert/Alert";
 import useAlert from "../Common/Alert/useAlert";
-
 import styles from "./ResetPassword.module.css";
 
-const apiUrl = window.Env?.API_URL || "http://localhost:8080";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -68,21 +66,19 @@ export default function FindPassword() {
     setEmailError("");
 
     try {
-      const res = await axios.post(`${apiUrl}/api/emails/sendcode/password`, {
+      
+      const res = await axiosPublic.post(`/api/emails/sendcode/password`, {
         email: email.trim(),
       });
 
-      if (res.data?.success) {
-        showAlert("인증번호 발송", res.data?.message || "인증번호가 발송됐습니다.");
+      if (res?.success) {
+        showAlert("인증번호 발송", res?.message || "인증번호가 발송됐습니다.");
         return;
       }
 
-      showAlert("안내", res.data?.message || "인증번호 발송에 실패했습니다.");
+      showAlert("안내", res?.message || "인증번호 발송에 실패했습니다.");
     } catch (e) {
-      showAlert(
-        "안내",
-        e?.response?.data?.message || "서버 오류로 인증번호 발송에 실패했습니다."
-      );
+      showAlert("안내", e?.response?.data?.message || "서버 오류로 인증번호 발송에 실패했습니다.");
     } finally {
       setSending(false);
     }
@@ -92,11 +88,12 @@ export default function FindPassword() {
     setIssuing(true);
 
     try {
-      const res = await axios.post(`${apiUrl}/api/emails/temporary-password`, {
+      
+      const res = await axiosPublic.post(`/api/emails/temporary-password`, {
         email: email.trim(),
       });
 
-      if (res.data?.success) {
+      if (res?.success) {
         openAlert({
           title: "임시비밀번호 발송",
           message: "임시비밀번호가 발송됐습니다. 로그인 후 비밀번호를 변경해주세요.",
@@ -112,12 +109,9 @@ export default function FindPassword() {
         return;
       }
 
-      showAlert("안내", res.data?.message || "임시비밀번호 발송에 실패했습니다.");
+      showAlert("안내", res?.message || "임시비밀번호 발송에 실패했습니다.");
     } catch (e) {
-      showAlert(
-        "안내",
-        e?.response?.data?.message || "서버 오류로 임시비밀번호 발송에 실패했습니다."
-      );
+      showAlert("안내", e?.response?.data?.message || "서버 오류로 임시비밀번호 발송에 실패했습니다.");
     } finally {
       setIssuing(false);
     }
@@ -141,17 +135,18 @@ export default function FindPassword() {
     setCodeError("");
 
     try {
-      const res = await axios.post(`${apiUrl}/api/emails/verifications`, {
+      
+      const res = await axiosPublic.post(`/api/emails/verifications`, {
         email: email.trim(),
         code: code.trim(),
       });
 
-      if (res.data?.success) {
+      if (res?.success) {
         await issueTempPassword();
         return;
       }
 
-      showAlert("안내", res.data?.message || "인증번호가 올바르지 않습니다.");
+      showAlert("안내", res?.message || "인증번호가 올바르지 않습니다.");
     } catch (e) {
       showAlert("안내", e?.response?.data?.message || "서버 오류로 인증에 실패했습니다.");
     } finally {
@@ -160,8 +155,7 @@ export default function FindPassword() {
   };
 
   const canSend = emailValid && !sending && !verifying && !issuing;
-  const canVerify =
-    emailValid && !!code.trim() && !sending && !verifying && !issuing;
+  const canVerify = emailValid && !!code.trim() && !sending && !verifying && !issuing;
 
   return (
     <>

@@ -1,57 +1,49 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { useAuth } from "../../context/AuthContext.jsx";
-
-const apiUrl = window.ENV?.API_URL || window.Env?.API_URL || "http://localhost:8080";
+import { axiosAuth } from "../../api/reqApi.js"; // 너 공용 axios 모듈 경로에 맞게 수정
 
 export default function SwitchToExpert() {
   const navigate = useNavigate();
-  const { applyTokensAndRole } = useAuth(); //
-
-   const accessToken = localStorage.getItem("accessToken");
+  const { applyTokensAndRole } = useAuth();
 
   useEffect(() => {
     let mounted = true;
 
     (async () => {
       try {
-        /* 1) 전문가 이력 체크 */
-        const exRes = await axios.get(
-          `${apiUrl}/api/experts/switch/checkExist`,
-          { 
-            headers: { Authorization: `Bearer ${accessToken}` },
-            skipAuthErrorHandler: true 
-        }
-        );
-        const exists = exRes?.data?.data;
+        // 1) 전환은 PUT 한 번으로 끝 (서비스단에서 전문가 이력 검증)
+        const res = await axiosAuth.put("/api/experts/switch/expert", null);
 
-        /* 2) 이력 없으면 등록 페이지로 */
-        if (!exists) {
+        // ResponseData 구조: { message, data, success, timestamp }
+        const data = res?.data;
+
+        if (!data?.tokens?.accessToken) {
+          throw new Error("switch/expert 응답에 tokens가 없습니다.");
+        }
+
+        // 2) 토큰/권한 즉시 반영
+        if (mounted) {
+          applyTokensAndRole({
+            accessToken: data.tokens.accessToken,
+            refreshToken: data.tokens.refreshToken,
+            userRole: data.userRole || "ROLE_EXPERT",
+          });
+        }
+
+        // 3) 완료 후 이동
+        navigate("/", { replace: true });
+      } catch (e) {
+        // 공용 axios는 실패 시 throw(AxiosError). status 기준 분기
+        const status = e?.response?.status;
+
+        // 전문가 이력 없음(서비스단 검증) -> 404 -> 등록 화면으로
+        if (status === 404) {
           navigate("/expert/register", { replace: true });
           return;
         }
 
-        /* 3) 이력 있으면 전문가 전환 */
-        const res = await axios.put(
-          `${apiUrl}/api/experts/switch/expert`,
-          null,
-          { skipAuthErrorHandler: true }
-        );
-
-        const data = res?.data?.data;
-
-        if (mounted) {
-          applyTokensAndRole({
-            accessToken: data?.tokens?.accessToken,
-            refreshToken: data?.tokens?.refreshToken,
-            userRole: data?.userRole || "ROLE_EXPERT",
-          });
-        }
-
-        /* 4) 홈으로 */
-        navigate("/", { replace: true });
-      } catch (e) {
+        // 그 외(401/403은 인터셉터 정책에 따라 처리될 수 있음)
         console.error(e);
         navigate("/", { replace: true });
       }
@@ -60,7 +52,7 @@ export default function SwitchToExpert() {
     return () => {
       mounted = false;
     };
-  }, [navigate, applyTokensAndRole]); // 
+  }, [navigate, applyTokensAndRole]);
 
   return <div style={{ padding: 24 }}>전환 처리중...</div>;
 }
