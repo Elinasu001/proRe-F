@@ -101,8 +101,13 @@ function App() {
             </ProtectedRoute>
           } />
         </Route>
+
         {/* 관리자 페이지 */}
-        <Route element={<AdminLayout />}>
+        <Route element={
+          <ProtectedRoute roles={['ROLE_ADMIN', 'ROLE_ROOT']}>
+            <AdminLayout />
+          </ProtectedRoute>
+}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/members" element={<AdminMemberList />} />
           <Route path="/admin/reports" element={<AdminReportList />} />
