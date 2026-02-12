@@ -118,7 +118,6 @@ const NavMenu = ({
                     </DropdownMenu>
                 </NavItem>
                                  
-                {/* Contact Us
                 <NavItem>
                     <NavLink
                         href="/contact"
@@ -126,7 +125,7 @@ const NavMenu = ({
                     >
                         Contact Us
                     </NavLink>
-                </NavItem> */}
+                </NavItem>
             </CenteredNavList>
 
             {/* 모바일에서만 표시되는 UserActions */}

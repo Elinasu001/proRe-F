@@ -175,20 +175,20 @@ export default function useChatRoom(estimateNo, userNo, navi) {
         const tempId = `temp_${Date.now()}`;
 
         const tempMessage = {
-        messageNo: tempId,
-        tempId,
-        type: "FILE",
-        content: filesArr[0].name,
-        userNo,
-        mine: true,
-        status: "UPLOADING",
-        progress: 0,
-        sentDate: new Date().toISOString(),
-        attachments: filesArr.map((file) => ({
-            originName: file.name,
-            fileSize: file.size,
-            filePath: URL.createObjectURL(file), // 미리보기
-        })),
+            messageNo: tempId,
+            tempId,
+            type: "FILE",
+            content: filesArr[0].name,
+            userNo,
+            mine: true,
+            status: "UPLOADING",
+            progress: 0,
+            sentDate: new Date().toISOString(),
+            attachments: filesArr.map((file) => ({
+                originName: file.name,
+                fileSize: file.size,
+                filePath: URL.createObjectURL(file), // 미리보기
+            })),
         };
 
         // 1. 임시 메시지 추가 (업로드 중 표시)

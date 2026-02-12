@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { hasAdminAccess } from "../../utils/authUtils";
-import { getAdminMembers, updateMemberStatus, updateMemberPenalty } from "../../api/Admin/adminMemberApi.js";
-import { getReportsByTarget } from "../../api/Admin/adminReportApi.js";
+import { getAdminMembers, updateMemberStatus, updateMemberPenalty, updateUserRole} from "../../api/admin/adminMemberApi.js";
+import { getReportsByTarget } from "../../api/admin/adminReportApi.js";
 import * as S from './AdminMemberList.styled';
 
 const AdminMemberList = () => {
@@ -66,6 +66,29 @@ const AdminMemberList = () => {
       fetchMembers();
     }
   }, [currentPage, currentUser]);
+
+// 권한 변경
+const handleRoleChange = async (userNo, newRole) => {
+  const roleNames = {
+    'ROLE_USER': '일반 회원',
+    'ROLE_EXPERT': '전문가',
+    'ROLE_ADMIN': '관리자'
+  };
+
+  if (!confirm(`권한을 ${roleNames[newRole]}(으)로 변경하시겠습니까?`)) {
+    fetchMembers(); // 드롭다운 원래대로 되돌리기
+    return;
+  }
+
+  try {
+    await updateUserRole(userNo, newRole);
+    alert(`권한이 ${roleNames[newRole]}(으)로 변경되었습니다.`);
+    fetchMembers();
+  } catch (err) {
+    alert(err.response?.data?.message || '권한 변경 실패');
+    fetchMembers();
+  }
+};
 
   // 상태 변경
   const handleStatusChange = async (userNo, newStatus) => {
@@ -145,7 +168,7 @@ const AdminMemberList = () => {
 
             <S.Input
               type="text"
-              placeholder="이메일 또는 닉네임 검색"
+              placeholder="닉네임 검색"
               value={searchParams.searchKeyword}
               onChange={(e) => setSearchParams({ ...searchParams, searchKeyword: e.target.value })}
             />
@@ -167,7 +190,7 @@ const AdminMemberList = () => {
               <S.Th>상태</S.Th>
               <S.Th>페널티</S.Th>
               <S.Th>가입일</S.Th>
-              <S.Th>관리</S.Th>
+              <S.Th>신고 내역</S.Th>
             </tr>
           </thead>
           <tbody>
@@ -177,10 +200,24 @@ const AdminMemberList = () => {
                 <S.Td>{member.email}</S.Td>
                 <S.Td>{member.nickname}</S.Td>
                 <S.Td>
-                  {member.userRole === "ROLE_USER" && "일반"}
-                  {member.userRole === "ROLE_EXPERT" && "전문가"}
-                  {member.userRole === "ROLE_ADMIN" && "관리자"}
-                </S.Td>
+                {currentUser?.userRole === 'ROLE_ROOT' ? (
+                 <S.Select
+                    value={member.userRole}
+                    onClick={(e) => e.stopPropagation()}
+                    onChange={(e) => handleRoleChange(member.userNo, e.target.value)}
+                  >
+                    <option value="ROLE_USER">일반</option>
+                    <option value="ROLE_EXPERT">전문가</option>
+                    <option value="ROLE_ADMIN">관리자</option>
+                  </S.Select>
+                ) : (
+                <>
+                    {member.userRole === "ROLE_USER" && "일반"}
+                    {member.userRole === "ROLE_EXPERT" && "전문가"}
+                    {member.userRole === "ROLE_ADMIN" && "관리자"}
+                </>
+                )}
+              </S.Td>
                 <S.Td>
                   <S.Select
                     value={member.status}
