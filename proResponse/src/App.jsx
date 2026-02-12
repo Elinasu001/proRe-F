@@ -27,6 +27,7 @@ import AdminDashboard from './component/Admin/AdminDashboard.jsx';
 import AdminLayout from './component/Common/Layout/AdminLayout.jsx';
 import AdminMemberList from './component/Admin/AdminMemberList.jsx';
 import AdminReportList from './component/Admin/AdminReportList.jsx';
+import ProtectedRoute from './component/Common/ProtectedRoute';  
 import { AuthProvider } from './context/AuthContext';
 
 function App() {
@@ -59,8 +60,13 @@ function App() {
           <Route path="/estimateUser" element={<EstimateUser />} />
           <Route path="/estimateExpert" element={<EstimateExpert />} />
         </Route>
+
         {/* 관리자 페이지 */}
-        <Route element={<AdminLayout />}>
+        <Route element={
+          <ProtectedRoute roles={['ROLE_ADMIN', 'ROLE_ROOT']}>
+            <AdminLayout />
+          </ProtectedRoute>
+}>
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/members" element={<AdminMemberList />} />
           <Route path="/admin/reports" element={<AdminReportList />} />
