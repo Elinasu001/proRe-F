@@ -211,6 +211,7 @@ const NavMenu = ({
                                         </ProfileDropdownItem>
                                     </a>
                                     {/* 전문가면 일반 회원 전환 버튼 */}
+                                    {/* 
                                     <ProfileDropdownItem
                                         onClick={() => {
                                             setIsProfileOpen(false);
@@ -222,7 +223,7 @@ const NavMenu = ({
                                     >
                                         <img src={transIcon} alt="일반 회원 전환" />
                                         일반 회원 전환
-                                    </ProfileDropdownItem>
+                                    </ProfileDropdownItem>*/}
                                 </>
                             ) : (
                                 <>
@@ -249,11 +250,12 @@ const NavMenu = ({
                                         </ProfileDropdownItem>
                                     </a>
                                     {/* 일반 회원이면 전문가 전환 버튼 */}
+                                    {currentUser?.userRole === "ROLE_USER" && (
                                     <ProfileDropdownItem
                                         onClick={() => {
                                             setIsProfileOpen(false);
                                             closeMobileMenu();
-                                            navigate("/switch/expert")
+                                            navigate("/expert/register")
                                             // 기능 없음
                                         }}
                                         role="menuitem"
@@ -261,6 +263,7 @@ const NavMenu = ({
                                         <img src={transIcon} alt="전문가 전환" />
                                         전문가 전환
                                     </ProfileDropdownItem>
+                                    )}
                                 </>
                             )}
 
