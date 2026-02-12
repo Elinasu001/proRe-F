@@ -154,9 +154,6 @@ export default function Login() {
               <button type="button" className="link-btn" onClick={() => navigate("/signup")}>
                 회원가입
               </button>
-              <button type="button" className="link-btn" onClick={() => navigate("/reset/password")}>
-                비밀번호 찾기
-              </button>
             </div>
 
           </form>
