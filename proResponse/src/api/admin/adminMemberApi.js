@@ -36,3 +36,13 @@ export const updateMemberPenalty = async (userNo, penaltyStatus) => {
   });
   return response.data;
 };
+
+/**
+ * 회원 권한 변경
+ */
+export const updateUserRole = async (userNo, userRole) => {
+  const response = await api.put(`/api/admin/members/${userNo}/role`, null, {
+    params: { userRole }
+  });
+  return response.data;
+};
