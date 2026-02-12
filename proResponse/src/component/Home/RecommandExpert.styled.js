@@ -149,6 +149,7 @@ export const SlideLocation = styled.div`
 `;
 
 export const DetailButton = styled.button`
+    align-self: flex-end;
     margin-bottom:12px;
     background: none;
     border: none;
