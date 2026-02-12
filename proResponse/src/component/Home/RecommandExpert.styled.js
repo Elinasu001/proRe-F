@@ -28,21 +28,27 @@ export const RecommandSection = styled.section`
 `;
 
 export const QuoteImg = styled.img`
+    display: block;
     width: 32px;
     height: 32px;
     object-fit: contain;
-    margin-bottom: 16px;
+    /* margin-bottom: 16px; */
     pointer-events: none;
 `;
 
-export const Desc = styled.div`
+export const Desc = styled.span`
     font-size: 16px;
     font-weight: var(--font-w-r);
     color: #6A7685;
-    min-width:300px;
-    white-space: pre-line;
+    letter-spacing: -0.5px;
     line-height:1.5;
-    padding-bottom:32px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 8;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 `;
 
 export const RecommandTitleWrap = styled.div`
@@ -99,8 +105,8 @@ export const SlideCard = styled.div`
     box-shadow: 0 4px 16px rgba(30,90,142,0.08);
     padding: 32px 24px 24px 24px;
     min-width: 320px;
-    max-width: 360px;
-    min-height:400px;
+    width: 360px;
+    height:415px;
     flex: 1 0 0;
     display: flex;
     flex-direction: column;
@@ -114,7 +120,11 @@ export const SlideCard = styled.div`
 `;
 
 export const Top = styled.div`
-    flex-grow: 1;
+    overflow: hidden;
+    height:240px;
+    /* flex-grow: 1; */
+    /* margin-bottom:16px; */
+    text-overflow: ellipsis;
 `;
 
 export const SlideProfile = styled.div`
@@ -136,6 +146,31 @@ export const SlideLocation = styled.div`
     font-size: var(--font14);
     margin-top:0.5rem;
     color: #888;
+`;
+
+export const DetailButton = styled.button`
+    margin-bottom:12px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+
+    &:hover {
+        text-decoration: underline;
+    }
+`;
+
+export const ModalBody = styled.div`
+    padding: 24px;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: keep-all;
+    overflow-wrap: break-word;
 `;
 
 export const ProfileImg = styled.img`
