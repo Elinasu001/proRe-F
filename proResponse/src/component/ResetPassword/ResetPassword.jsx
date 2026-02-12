@@ -67,7 +67,7 @@ export default function FindPassword() {
 
     try {
       
-      const res = await axiosPublic.post(`/api/emails/sendcode/password`, {
+      const res = await axiosPublic.post(`/api/members/sendcode/password`, {
         email: email.trim(),
       });
 
@@ -89,7 +89,7 @@ export default function FindPassword() {
 
     try {
       
-      const res = await axiosPublic.post(`/api/emails/temporary-password`, {
+      const res = await axiosPublic.post(`/api/members/temporary-password`, {
         email: email.trim(),
       });
 
