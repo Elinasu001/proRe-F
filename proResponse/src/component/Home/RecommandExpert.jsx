@@ -1,6 +1,8 @@
 import {
     Desc,
+    DetailButton,
     LineImg,
+    ModalBody,
     ProfileImg,
     QuoteImg,
     RecommandSection,
@@ -17,9 +19,10 @@ import { default as expert6 } from '../../assets/images/common/default_profile.p
 import lineImg from '../../assets/images/common/line.png';
 import quote from '../../assets/images/common/quote.png';
 
-
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getMainExperts } from '../../api/main/mainApi';
+import CommonModal from '../Common/Modal/CommonModal';
+import { ModalHeader, ModalTitle } from '../Common/Modal/Review/Modal.styled';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -29,10 +32,14 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 
 const RecommandExpert = () => {
     const [expertData, setExpertData] = useState([]);
+    const [selectedExpert, setSelectedExpert] = useState(null);
 
     useEffect(() => {
         getMainExperts().then(setExpertData);
     }, []);
+
+    const handleOpen = useCallback((expert) => setSelectedExpert(expert), []);
+    const handleClose = useCallback(() => setSelectedExpert(null), []);
 
     return (
         <RecommandSection>
@@ -69,6 +76,7 @@ const RecommandExpert = () => {
                             />
                             <Desc className="desc">{expert.content}</Desc>
                         </Top>
+                        <DetailButton type="button" onClick={() => handleOpen(expert)}>상세보기 &gt;</DetailButton>
                         <SlideProfile>
                             <ProfileImg src={expert.profileImg || expert6} alt={expert.nickname}/>
                             <div>
@@ -80,6 +88,14 @@ const RecommandExpert = () => {
                 </SwiperSlide>
                 ))}
             </Swiper>
+
+            <CommonModal isOpen={!!selectedExpert} onClose={handleClose} ariaLabelledby="expert-detail-title">
+                <ModalHeader>
+                    <ModalTitle id="expert-detail-title">{selectedExpert?.nickname}</ModalTitle>
+                    <button onClick={handleClose} style={{ background:'none', border:'none', fontSize:'1.5rem', cursor:'pointer' }}>✕</button>
+                </ModalHeader>
+                <ModalBody>{selectedExpert?.content}</ModalBody>
+            </CommonModal>
         </RecommandSection>
     );
 };
