@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { axiosPublic } from "../../api/reqApi"; 
+import axios from "axios";
 
 import Button from "../Common/Button/Button";
 import Input from "../Common/Input/Input";
@@ -8,8 +8,34 @@ import Alert from "../Common/Alert/Alert";
 import useAlert from "../Common/Alert/useAlert";
 import styles from "./ResetPassword.module.css";
 
-
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/* 토큰이 절대 안 붙는 순수 axios 인스턴스 */
+const apiUrl = window.ENV?.API_URL || window.Env?.API_URL || "http://localhost:8080";
+const axiosNoAuth = axios.create({
+  baseURL: apiUrl,
+  withCredentials: true,
+});
+
+/* Authorization이 섞이면 제거 */
+axiosNoAuth.interceptors.request.use((config) => {
+  if (config?.headers?.Authorization) delete config.headers.Authorization;
+  if (config?.headers?.authorization) delete config.headers.authorization;
+  return config;
+});
+
+
+const unwrap = (res) => {
+ 
+  const body = res?.data ?? res;
+
+  if (body && typeof body === "object") {
+    if ("success" in body) return body;
+    if (body.data && typeof body.data === "object" && "success" in body.data) return body.data;
+  }
+
+  return { success: true, message: "", data: body };
+};
 
 export default function FindPassword() {
   const navigate = useNavigate();
@@ -55,6 +81,7 @@ export default function FindPassword() {
     });
   };
 
+  /* 1) 인증코드 발송 */
   const sendVerificationCode = async () => {
     const err = validateEmail();
     if (err) {
@@ -66,17 +93,17 @@ export default function FindPassword() {
     setEmailError("");
 
     try {
-      
-      const res = await axiosPublic.post(`/api/members/sendcode/password`, {
+      const raw = await axiosNoAuth.post("/api/members/sendcode/password", {
         email: email.trim(),
       });
 
-      if (res?.success) {
-        showAlert("인증번호 발송", res?.message || "인증번호가 발송됐습니다.");
-        return;
-      }
+      const res = unwrap(raw);
 
-      showAlert("안내", res?.message || "인증번호 발송에 실패했습니다.");
+      if (res.success) {
+        showAlert("인증번호 발송", res.message || "인증번호가 발송됐습니다.");
+      } else {
+        showAlert("안내", res.message || "인증번호 발송에 실패했습니다.");
+      }
     } catch (e) {
       showAlert("안내", e?.response?.data?.message || "서버 오류로 인증번호 발송에 실패했습니다.");
     } finally {
@@ -84,16 +111,18 @@ export default function FindPassword() {
     }
   };
 
+  /* 2) 임시비밀번호 발송 */
   const issueTempPassword = async () => {
     setIssuing(true);
 
     try {
-      
-      const res = await axiosPublic.post(`/api/members/temporary-password`, {
+      const raw = await axiosNoAuth.post("/api/members/temporary-password", {
         email: email.trim(),
       });
 
-      if (res?.success) {
+      const res = unwrap(raw);
+
+      if (res.success) {
         openAlert({
           title: "임시비밀번호 발송",
           message: "임시비밀번호가 발송됐습니다. 로그인 후 비밀번호를 변경해주세요.",
@@ -106,10 +135,9 @@ export default function FindPassword() {
           },
           onCancel: closeAlert,
         });
-        return;
+      } else {
+        showAlert("안내", res.message || "임시비밀번호 발송에 실패했습니다.");
       }
-
-      showAlert("안내", res?.message || "임시비밀번호 발송에 실패했습니다.");
     } catch (e) {
       showAlert("안내", e?.response?.data?.message || "서버 오류로 임시비밀번호 발송에 실패했습니다.");
     } finally {
@@ -117,6 +145,7 @@ export default function FindPassword() {
     }
   };
 
+  /* 3) 인증번호 검증 -> 임시비밀번호 발송 */
   const verifyCodeAndSendTempPassword = async () => {
     const emailErr = validateEmail();
     if (emailErr) {
@@ -135,18 +164,18 @@ export default function FindPassword() {
     setCodeError("");
 
     try {
-      
-      const res = await axiosPublic.post(`/api/emails/verifications`, {
+      const raw = await axiosNoAuth.post("/api/emails/verifications", {
         email: email.trim(),
         code: code.trim(),
       });
 
-      if (res?.success) {
-        await issueTempPassword();
-        return;
-      }
+      const res = unwrap(raw);
 
-      showAlert("안내", res?.message || "인증번호가 올바르지 않습니다.");
+      if (res.success) {
+        await issueTempPassword();
+      } else {
+        showAlert("안내", res.message || "인증번호가 올바르지 않습니다.");
+      }
     } catch (e) {
       showAlert("안내", e?.response?.data?.message || "서버 오류로 인증에 실패했습니다.");
     } finally {
