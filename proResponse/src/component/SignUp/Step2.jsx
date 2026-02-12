@@ -35,7 +35,7 @@ const handleSelectAddress = async (data) => {
   // 1) 우편번호/주소 반영
   onChange("zipCode", zipCode);
   onChange("address", address);
-
+  setOpen(false);
   // 2) 좌표 초기화
   onChange("lat", "");
   onChange("lng", "");
