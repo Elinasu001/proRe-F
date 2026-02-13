@@ -34,7 +34,7 @@ import ExpertRegister from './component/ExpertRegister/ExpertRegister.jsx';
 import ExpertEdit from './component/ExpertEdit/ExpertEdit.jsx';
 import EditMe from "./component/MyPage/sections/EditMe.jsx";
 import DeleteMember from './component/MyPage/sections/DeleteMember.jsx';
-
+import Contact from './component/Contact/Contact.jsx';
 
 function App() {
   return (
@@ -76,6 +76,7 @@ function App() {
             <Route path="/Testpayment" element={<PaymentModal />} />
             <Route path="/mypageUser" element={<MypageUser />} />
             <Route path="/mypageExpert" element={<MypageExpert />} />
+            <Route path="/contact" element={<Contact />} />
         </Route>
         <Route element={<EstimateLayout />}>
           <Route path="/estimateUser" element={
